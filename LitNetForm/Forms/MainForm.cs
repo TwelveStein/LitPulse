@@ -1,0 +1,431 @@
+﻿using Lit_net_bot_test;
+using LitNetForm.Data;
+using LitNetForm.Settings;
+using Microsoft.Playwright;
+using net_market_bot;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace LitNetForm.Forms
+{
+    public partial class MainForm : Form
+    {
+        public MainForm()
+        {
+            InitializeComponent();
+
+            dataGridViewAccounts.DataSource = Accounts;
+            dataGridViewLinks.DataSource = Links;
+
+            SetParameters();
+        }
+
+
+
+        #region Litnet_LitMarket_Parameters
+
+        private Settings.Settings Settings = new Settings.Settings();
+
+        private static string Link_login = "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
+
+        private string[] ProfileDescription = {
+            "Минимум пауз, почти без возвратов. Подходит для ознакомительного чтения или поиска ключевых моментов. Как человек, который «пробегает глазами».",
+            "Читает медленно, часто возвращается к предыдущим абзацам, делает длинные паузы. Имитирует внимательного, сосредоточенного читателя — как при изучении сложного текста.",
+            "Начинает бодро, но постепенно замедляется, дольше думает, чаще «теряет концентрацию» (доп. паузы в середине и ближе к концу). Реалистично для вечернего чтения." };
+
+        private BindingList<Links> Links = new BindingList<Links>();
+
+        private BindingList<Accounts> Accounts = new BindingList<Accounts>();
+
+        #endregion
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveParameters();
+        }
+
+        private async void buttonStartSession_Click(object sender, EventArgs e)
+        {
+            var links = SplitLinksByDomain(Links);
+
+            string[] litmarketArray = links.litmarketLinks;
+            string[] litnetArray = links.litnetLinks;
+
+            Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
+
+            if (litnetArray.Length == 0 & litmarketArray.Length == 0)
+            {
+                AppendLog("[X] URL не указан.");
+                return;
+            }
+
+            foreach (Accounts account in Accounts)
+            {
+                // Litnet
+                var serviceLitNet = new PlaywrightService_for_litnet();
+                try
+                {
+                    if (litnetArray.Length != 0)
+                    {
+                        AppendLog("Запуск эмуляции чтения https://litnet.com ...");
+
+                        await serviceLitNet.InitializeAsync();
+                        foreach (var link in litnetArray.Take(3))
+                        {
+                            await serviceLitNet.Primary_activity(link, AppendLog);
+                        }
+
+                        await serviceLitNet.Login(account.Login, account.Password, Link_login);
+
+                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
+
+                        foreach (var link in litnetArray)
+                        {
+                            await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile);
+
+                            AppendLog($"Выполнено чтение по ссылке {link}");
+
+                        }
+                        await serviceLitNet.DisposeAsync();
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    AppendLog("Остановлено пользователем.");
+                    return;
+                }
+                catch (PlaywrightException ex)
+                {
+                    // Проверяем по сообщению
+                    if (ex.Message.Contains("Target closed") ||
+                        ex.Message.Contains("closed") ||
+                        ex.Message.Contains("Session closed"))
+                    {
+                        AppendLog($"Браузер был закрыт.");
+                        return;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    AppendLog($"[X] Ошибка: {ex.Message}");
+                    return;
+                }
+                finally
+                {
+                    await serviceLitNet.DisposeAsync();
+                }
+
+                // Litmarket
+                var serviceLitMarket = new Lit_market();
+                try
+                {
+                    if (litmarketArray.Length != 0)
+                    {
+                        AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
+
+                        await serviceLitMarket.InitializeAsync();
+                        await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
+
+                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
+
+                        foreach (string link in litmarketArray)
+                        {
+                            await serviceLitMarket.Reader_books(link, AppendLog, profile);
+
+                            AppendLog($"Выполнено чтение по ссылке {link}");
+
+                        }
+                        await serviceLitMarket.DisposeAsync();
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    AppendLog("Остановлено пользователем.");
+                    return;
+                }
+                catch (PlaywrightException ex)
+                {
+                    // Проверяем по сообщению
+                    if (ex.Message.Contains("Target closed") ||
+                        ex.Message.Contains("closed") ||
+                        ex.Message.Contains("Session closed"))
+                    {
+                        AppendLog($"Браузер был закрыт.");
+                        return;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[X] Ошибка: {ex.Message}");
+                    return;
+                }
+                finally
+                {
+                    await serviceLitNet.DisposeAsync();
+                }
+            }
+        }
+        
+        private void buttonStop_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void comboBoxReadProfiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
+
+            Settings.ReadProfile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
+
+            SaveParameters();
+        }
+
+        private void buttonOtherSettings_Click(object sender, EventArgs e)
+        {
+            using (var settingsForm = new SettingsForm(Settings))
+            {
+                // Открываем форму как диалог
+                if (settingsForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Получаем настройки
+                    Settings = settingsForm.Settings;
+
+                    SaveParameters();
+                }
+            }
+        }
+
+        #region Accounts
+
+        private void buttonImportAccounts_Click(object sender, EventArgs e)
+        {
+
+            string[] accounts = TxtFileInList();
+
+            AddAccounts(accounts);
+
+        }
+
+        private void buttonAddAccount_Click(object sender, EventArgs e)
+        {
+            Accounts.Add(new Accounts("", ""));
+        }
+
+        private void buttonDeleteAccount_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewAccounts.CurrentRow != null && dataGridViewAccounts.CurrentRow.DataBoundItem is Accounts account)
+            {
+                Accounts.Remove(account);
+            }
+        }
+
+        private void buttonClearAccounts_Click(object sender, EventArgs e)
+        {
+            Accounts.Clear();
+        }
+
+        #endregion
+
+        #region Links
+        private void buttonImportLinks_Click(object sender, EventArgs e)
+        {
+
+            string[] links = TxtFileInList();
+
+            AddLinks(links);
+
+        }
+
+        private void buttonAddLink_Click(object sender, EventArgs e)
+        {
+            Links.Add(new Links(""));
+        }
+
+        private void buttonDeleteLink_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewLinks.CurrentRow != null && dataGridViewLinks.CurrentRow.DataBoundItem is Links link)
+            {
+                Links.Remove(link);
+            }
+        }
+
+        private void buttonClearLinks_Click(object sender, EventArgs e)
+        {
+            Links.Clear();
+        }
+
+        #endregion
+
+        #region Logs
+
+        private void buttonUploadLogs_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.Title = "Сохранить логи в файл";
+            saveFileDialog1.DefaultExt = "txt";
+
+            // Предлагаем имя файла с датой
+            saveFileDialog1.FileName = $"logs_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Сохраняем текст из RichTextBox
+                    File.WriteAllText(saveFileDialog1.FileName, richTextBoxLog.Text);
+                    MessageBox.Show($"Логи сохранены в файл:\n{saveFileDialog1.FileName}",
+                        "Успешно", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при сохранении:\n{ex.Message}",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Service_Methods
+
+        private void SetParameters()
+        {
+            Settings = SettingsManager.Load();
+
+            comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
+        }
+
+        private string[] TxtFileInList()
+        {
+            openFileDialog1.Title = "Выберите текстовый файл";
+            openFileDialog1.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+
+            // Если пользователь выбрал файл и нажал OK
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Читаем все строки из файла в массив
+                    return File.ReadAllLines(openFileDialog1.FileName);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при чтении файла:\n{ex.Message}",
+                                  "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return Array.Empty<string>();
+                }
+            }
+            else
+            {
+                return Array.Empty<string>();
+            }
+        }
+
+        public void AddAccounts(string[] inputArray)
+        {
+            if (inputArray == null || inputArray.Length == 0)
+                return;
+
+            foreach (string line in inputArray)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                // Разделяем строку по двоеточию
+                string[] parts = line.Split(':', StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length == 2)
+                {
+                    string login = parts[0].Trim();
+                    string password = parts[1].Trim();
+
+                    Accounts.Add(new Accounts(login, password));
+                }
+                else if (parts.Length > 2)
+                {
+                    // Если в пароле есть двоеточие, обрабатываем особым образом
+                    string login = parts[0].Trim();
+                    string password = string.Join(":", parts.Skip(1)).Trim();
+
+                    Accounts.Add(new Accounts(login, password));
+                }
+                // Игнорируем строки с неверным форматом
+            }
+        }
+
+        public void AddLinks(string[] inputArray)
+        {
+            if (inputArray == null || inputArray.Length == 0)
+                return;
+
+            foreach (string line in inputArray)
+            {
+                if (string.IsNullOrWhiteSpace(line)
+                || (!line.StartsWith("https://litnet.com/ru/book/") & !line.StartsWith("https://litmarket.ru/books/")))
+                    continue;
+
+                Links.Add(new Links(line));
+            }
+        }
+
+        public static (string[] litmarketLinks, string[] litnetLinks) SplitLinksByDomain(BindingList<Links> links)
+        {
+            List<string> litmarket = new List<string>();
+            List<string> litnet = new List<string>();
+
+            foreach (Links link in links)
+            {
+                if (link.Link.StartsWith("https://litmarket.ru/"))
+                    litmarket.Add(link.Link);
+                else if (link.Link.StartsWith("https://litnet.com"))
+                    litnet.Add(link.Link);
+            }
+
+            return (litmarket.ToArray(), litnet.ToArray());
+        }
+
+        public void AppendLog(string message)
+        {
+            if (richTextBoxLog?.InvokeRequired == true)
+            {
+                richTextBoxLog.Invoke(new Action(() => AppendLog(message)));
+            }
+            else
+            {
+                string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                richTextBoxLog?.AppendText($"[{timestamp}] {message}\n");
+                richTextBoxLog?.ScrollToCaret();
+            }
+        }
+
+        public void SaveParameters()
+        {
+            SettingsManager.Save(Settings);
+        }
+
+        #endregion
+        
+    }
+}

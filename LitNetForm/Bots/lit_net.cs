@@ -24,15 +24,24 @@ namespace Lit_net_bot_test
         {
             _playwright = await Playwright.CreateAsync();
 
-
             _browser = await _playwright.Chromium.LaunchAsync(new()
             {
                 Channel = "chrome",
                 Headless = false,
                 SlowMo = 1000,
+                Args = new string[]
+                 {
+                     "--start-maximized"
+
+                 }
             });
 
-            _page = await _browser.NewPageAsync();
+            var context = await _browser.NewContextAsync(new()
+            {
+                ViewportSize = ViewportSize.NoViewport
+            });
+
+            _page = await context.NewPageAsync();
         }
 
         /// <summary>

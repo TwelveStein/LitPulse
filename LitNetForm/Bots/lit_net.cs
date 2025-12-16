@@ -23,7 +23,6 @@ namespace Lit_net_bot_test
         public async Task InitializeAsync()
         {
             _playwright = await Playwright.CreateAsync();
-
             _browser = await _playwright.Chromium.LaunchAsync(new()
             {
                 Channel = "chrome",

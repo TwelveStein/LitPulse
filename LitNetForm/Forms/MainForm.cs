@@ -21,13 +21,13 @@ namespace LitNetForm.Forms
         {
             InitializeComponent();
 
+            SetParameters();
+
+            LoadData();
+
             dataGridViewAccounts.DataSource = Accounts;
             dataGridViewLinks.DataSource = Links;
-
-            SetParameters();
         }
-
-
 
         #region Litnet_LitMarket_Parameters
 
@@ -49,6 +49,7 @@ namespace LitNetForm.Forms
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveParameters();
+            SaveData();
         }
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
@@ -220,11 +221,14 @@ namespace LitNetForm.Forms
 
             AddAccounts(accounts);
 
+            SaveData();
         }
 
         private void buttonAddAccount_Click(object sender, EventArgs e)
         {
             Accounts.Add(new Accounts("", ""));
+
+            SaveData();
         }
 
         private void buttonDeleteAccount_Click(object sender, EventArgs e)
@@ -232,12 +236,16 @@ namespace LitNetForm.Forms
             if (dataGridViewAccounts.CurrentRow != null && dataGridViewAccounts.CurrentRow.DataBoundItem is Accounts account)
             {
                 Accounts.Remove(account);
+
+                SaveData();
             }
         }
 
         private void buttonClearAccounts_Click(object sender, EventArgs e)
         {
             Accounts.Clear();
+
+            SaveData();
         }
 
         #endregion
@@ -250,11 +258,15 @@ namespace LitNetForm.Forms
 
             AddLinks(links);
 
+            SaveData();
+
         }
 
         private void buttonAddLink_Click(object sender, EventArgs e)
         {
             Links.Add(new Links(""));
+
+            SaveData();
         }
 
         private void buttonDeleteLink_Click(object sender, EventArgs e)
@@ -262,12 +274,16 @@ namespace LitNetForm.Forms
             if (dataGridViewLinks.CurrentRow != null && dataGridViewLinks.CurrentRow.DataBoundItem is Links link)
             {
                 Links.Remove(link);
+
+                SaveData();
             }
         }
 
         private void buttonClearLinks_Click(object sender, EventArgs e)
         {
             Links.Clear();
+
+            SaveData();
         }
 
         #endregion
@@ -311,6 +327,13 @@ namespace LitNetForm.Forms
             Settings = SettingsManager.Load();
 
             comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
+        }
+
+        private void LoadData()
+        {
+            Accounts = AccountsManager.Load();
+
+            Links = LinksManager.Load();
         }
 
         private string[] TxtFileInList()
@@ -425,7 +448,13 @@ namespace LitNetForm.Forms
             SettingsManager.Save(Settings);
         }
 
+        public void SaveData()
+        {
+            AccountsManager.Save(Accounts);
+            LinksManager.Save(Links);
+        }
+
         #endregion
-        
+
     }
 }

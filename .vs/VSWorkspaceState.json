@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\LitNetForm",
+    "\\LitNetForm\\Settings"
   ],
+  "SelectedNode": "\\LitNetForm\\Settings\\Settings.cs",
   "PreviewInSolutionExplorer": false
 }

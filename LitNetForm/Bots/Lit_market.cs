@@ -161,13 +161,14 @@ namespace net_market_bot
         /// Метод прохода по ссылкам 
         /// </summary>
         /// <returns></returns>
-        public async Task Reader_books(string link, Action<string> log, Scroll_model.Profile profile) 
+        public async Task Reader_books(string link, Action<string> log, Scroll_model.Profile profile , LitNetForm.Settings.Settings settings) 
         {
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
             await _page.GotoAsync(link);
             await _page.WaitForTimeoutAsync(3000);
-            await IsButtonClickable("a:has-text('В библиотеку')");
+            if(settings.AddToLibrary)
+                await IsButtonClickable("a:has-text('В библиотеку')");
             await IsButtonClickable("button:has-text('Избранное')");
             await _page.ClickAsync("div.btn-reader");
 

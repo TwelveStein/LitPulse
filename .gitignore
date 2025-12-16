@@ -21,6 +21,8 @@ bld/
 # Visual Studio files
 *.VisualState.xml
 .vs/
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
 *.user
 *.suo
 *.userosscache

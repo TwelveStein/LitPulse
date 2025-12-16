@@ -23,7 +23,6 @@ namespace Lit_net_bot_test
         public async Task InitializeAsync()
         {
             _playwright = await Playwright.CreateAsync();
-
             _browser = await _playwright.Chromium.LaunchAsync(new()
             {
                 Channel = "chrome",
@@ -79,7 +78,7 @@ namespace Lit_net_bot_test
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public async Task Base_Activuty_bot(string url, Action<string> log, Scroll_model.Profile profile)
+        public async Task Base_Activuty_bot(string url, Action<string> log, Scroll_model.Profile profile, LitNetForm.Settings.Settings settings)
         {
 
             if (_page == null)
@@ -88,7 +87,7 @@ namespace Lit_net_bot_test
             }
             await _page.GotoAsync(url);
             var elements = await _page.QuerySelectorAllAsync("text=Добавить в библиотеку");
-            if (elements.Count > 0)
+            if (elements.Count > 0 && settings.AddToLibrary)
             {
                 await _page.GetByText("Добавить в библиотеку").ClickAsync();
             }

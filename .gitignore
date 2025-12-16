@@ -20,6 +20,11 @@ bld/
 
 # Visual Studio files
 *.VisualState.xml
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 *.cache
 *.ilk
 *.log

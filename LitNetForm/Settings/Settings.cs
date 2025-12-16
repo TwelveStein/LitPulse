@@ -157,6 +157,11 @@ namespace LitNetForm.Settings
 
         private static Settings CreateDefaultSettings()
         {
+            Dictionary<Scroll_model.Profile, ProfileSettings> ReadProfileSettings = new Dictionary<Scroll_model.Profile, ProfileSettings>();
+            ReadProfileSettings.Add(Scroll_model.Profile.SpeedReader, CreateDefaultReadProfileSettings(Scroll_model.Profile.SpeedReader));
+            ReadProfileSettings.Add(Scroll_model.Profile.TiredReader, CreateDefaultReadProfileSettings(Scroll_model.Profile.TiredReader));
+            ReadProfileSettings.Add(Scroll_model.Profile.DeepReader, CreateDefaultReadProfileSettings(Scroll_model.Profile.DeepReader));
+
             return new Settings
             {
                 AddToLibrary = false,
@@ -166,7 +171,7 @@ namespace LitNetForm.Settings
                 MakeADonationToTheAuthor = false,
                 BuyABook = false,
                 ReadProfile = Scroll_model.Profile.SpeedReader,
-                ReadProfileSettings = new Dictionary<Scroll_model.Profile, ProfileSettings>()
+                ReadProfileSettings = ReadProfileSettings
             };
         }
 

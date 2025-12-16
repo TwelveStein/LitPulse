@@ -1,38 +1,50 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "K:\\C# projects\\LitNetBot\\LitNetForm\\",
+  "WorkspaceRootPath": "K:\\GitHub\\LitPulse\\LitNetForm\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\c# projects\\litnetbot\\litnetform\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\settings\\settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:settings\\settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|K:\\GitHub\\LitPulse\\LitNetForm\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\forms\\settingsform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:forms\\settingsform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|k:\\c# projects\\litnetbot\\litnetform\\bots\\scroll_model.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|solutionrelative:bots\\scroll_model.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\bots\\lit_net.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:bots\\lit_net.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|k:\\c# projects\\litnetbot\\litnetform\\bots\\lit_net.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|solutionrelative:bots\\lit_net.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\bots\\scroll_model.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:bots\\scroll_model.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|k:\\c# projects\\litnetbot\\litnetform\\bots\\lit_market.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|solutionrelative:bots\\lit_market.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\bots\\lit_market.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:bots\\lit_market.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\c# projects\\litnetbot\\litnetform\\properties\\publishprofiles\\folderprofile.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:properties\\publishprofiles\\folderprofile.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\c# projects\\litnetbot\\litnetform\\litpulse.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\litpulse.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:litpulse.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|k:\\c# projects\\litnetbot\\litnetform\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|solutionrelative:forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|K:\\GitHub\\LitPulse\\LitNetForm\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|solutionrelative:forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|K:\\C# projects\\LitNetBot\\LitNetForm\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitNetForm.csproj|solutionrelative:forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|k:\\github\\litpulse\\litnetform\\properties\\publishprofiles\\folderprofile.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{620A6002-03A1-4E94-A8A6-EF16EAEB47C7}|LitPulse.csproj|solutionrelative:properties\\publishprofiles\\folderprofile.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,64 +59,113 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Title": "Settings.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Settings\\Settings.cs",
+              "RelativeDocumentMoniker": "Settings\\Settings.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Settings\\Settings.cs",
+              "RelativeToolTip": "Settings\\Settings.cs",
+              "ViewState": "AgIAAJgAAAAAAAAAAAAswKcAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T16:48:18.641Z",
+              "WhenOpened": "2025-12-16T18:01:12.398Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "FolderProfile.pubxml",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Properties\\PublishProfiles\\FolderProfile.pubxml",
-              "RelativeDocumentMoniker": "Properties\\PublishProfiles\\FolderProfile.pubxml",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Properties\\PublishProfiles\\FolderProfile.pubxml",
-              "RelativeToolTip": "Properties\\PublishProfiles\\FolderProfile.pubxml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
-              "WhenOpened": "2025-12-16T16:48:02.34Z",
+              "DocumentIndex": 3,
+              "Title": "SettingsForm.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\SettingsForm.cs",
+              "RelativeDocumentMoniker": "Forms\\SettingsForm.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\SettingsForm.cs",
+              "RelativeToolTip": "Forms\\SettingsForm.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAWwHQAAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T17:57:10.642Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "LitPulse",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\LitPulse.csproj",
+              "DocumentIndex": 9,
+              "Title": "MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\MainForm.cs",
+              "RelativeDocumentMoniker": "Forms\\MainForm.cs",
+              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Forms\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "RelativeToolTip": "..\\..\\..\\C# projects\\LitNetBot\\LitNetForm\\Forms\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T16:16:06.777Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\MainForm.cs",
+              "RelativeDocumentMoniker": "Forms\\MainForm.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "RelativeToolTip": "Forms\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T16:47:50.438Z",
+              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\MainForm.cs",
+              "RelativeDocumentMoniker": "Forms\\MainForm.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Forms\\MainForm.cs",
+              "RelativeToolTip": "Forms\\MainForm.cs",
+              "ViewState": "AgIAAM8AAAAAAAAAAAAswDYBAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T16:16:09.176Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LitPulse.csproj",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\LitPulse.csproj",
               "RelativeDocumentMoniker": "LitPulse.csproj",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\LitPulse.csproj",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\LitPulse.csproj",
               "RelativeToolTip": "LitPulse.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2025-12-16T16:47:55.31Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "scroll_model.cs",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Bots\\scroll_model.cs",
-              "RelativeDocumentMoniker": "Bots\\scroll_model.cs",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Bots\\scroll_model.cs",
-              "RelativeToolTip": "Bots\\scroll_model.cs",
-              "ViewState": "AgIAACEBAAAAAAAAAAAEwC4BAAAhAAAAAAAAAA==",
+              "DocumentIndex": 7,
+              "Title": "Lit_market.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Bots\\Lit_market.cs",
+              "RelativeDocumentMoniker": "Bots\\Lit_market.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Bots\\Lit_market.cs",
+              "RelativeToolTip": "Bots\\Lit_market.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAmwAgAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T16:22:25.164Z",
+              "WhenOpened": "2025-12-16T16:15:47.311Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAnwA8AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T16:48:18.641Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "lit_net.cs",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Bots\\lit_net.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Bots\\lit_net.cs",
               "RelativeDocumentMoniker": "Bots\\lit_net.cs",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Bots\\lit_net.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Bots\\lit_net.cs",
               "RelativeToolTip": "Bots\\lit_net.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEsAAABGAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-16T16:18:02.532Z",
               "EditorCaption": ""
@@ -112,39 +173,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "MainForm.cs",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Forms\\MainForm.cs",
-              "RelativeDocumentMoniker": "Forms\\MainForm.cs",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Forms\\MainForm.cs",
-              "RelativeToolTip": "Forms\\MainForm.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKYAAAAYAAAAAAAAAA==",
+              "Title": "scroll_model.cs",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Bots\\scroll_model.cs",
+              "RelativeDocumentMoniker": "Bots\\scroll_model.cs",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Bots\\scroll_model.cs",
+              "RelativeToolTip": "Bots\\scroll_model.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4BAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T16:16:09.176Z",
+              "WhenOpened": "2025-12-16T16:22:25.164Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Forms\\MainForm.cs",
-              "RelativeDocumentMoniker": "Forms\\MainForm.cs",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Forms\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "RelativeToolTip": "Forms\\MainForm.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T16:16:06.777Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Lit_market.cs",
-              "DocumentMoniker": "K:\\C# projects\\LitNetBot\\LitNetForm\\Bots\\Lit_market.cs",
-              "RelativeDocumentMoniker": "Bots\\Lit_market.cs",
-              "ToolTip": "K:\\C# projects\\LitNetBot\\LitNetForm\\Bots\\Lit_market.cs",
-              "RelativeToolTip": "Bots\\Lit_market.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKIAAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T16:15:47.311Z",
-              "EditorCaption": ""
+              "DocumentIndex": 10,
+              "Title": "FolderProfile.pubxml",
+              "DocumentMoniker": "K:\\GitHub\\LitPulse\\LitNetForm\\Properties\\PublishProfiles\\FolderProfile.pubxml",
+              "RelativeDocumentMoniker": "Properties\\PublishProfiles\\FolderProfile.pubxml",
+              "ToolTip": "K:\\GitHub\\LitPulse\\LitNetForm\\Properties\\PublishProfiles\\FolderProfile.pubxml",
+              "RelativeToolTip": "Properties\\PublishProfiles\\FolderProfile.pubxml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-12-16T16:48:02.34Z"
             }
           ]
         }

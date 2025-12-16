@@ -58,12 +58,17 @@ namespace LitNetForm.Forms
         {
             richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
 
-            ProfileSettings profileSettings = Settings.ReadProfileSettings[(Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex];
-
-            numericUpDownChanceOfRegression.Value = profileSettings.ChanceOfRegression;
-            numericUpDownMinMaxPauseAfterScrolling.Value = profileSettings.MinMaxPauseAfterScrolling;
-            numericUpDownMinMaxScrollDuration.Value = profileSettings.MinMaxScrollDuration;
-            numericUpDownMinMaxScrollStep.Value = profileSettings.MinMaxScrollStep;
+            if (Settings.ReadProfileSettings.ContainsKey((Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex))
+            {
+                ProfileSettings profileSettings = Settings.ReadProfileSettings[(Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex];
+           
+                numericUpDownChanceOfRegression.Value = profileSettings.ChanceOfRegression;
+                numericUpDownMinMaxPauseAfterScrolling.Value = profileSettings.MinMaxPauseAfterScrolling;
+                numericUpDownMinMaxScrollDuration.Value = profileSettings.MinMaxScrollDuration;
+                numericUpDownMinMaxScrollStep.Value = profileSettings.MinMaxScrollStep;
+            }
+            
+            
         }
         private void numericUpDownProfileSetttings_Leave(object sender, EventArgs e)
         {
@@ -106,16 +111,13 @@ namespace LitNetForm.Forms
             {
                 Scroll_model.Profile readProfile = (Scroll_model.Profile)i;
 
-                if (Settings.ReadProfileSettings.ContainsKey(readProfile))
-                {
-                    // Ключ уже существует - обновляем значение
-                    //Settings.ReadProfileSettings[readProfile] = newSettings;
-                }
-                else
+                if (!Settings.ReadProfileSettings.ContainsKey(readProfile))
                 {
                     // Ключа нет - добавляем новую пару
                     Settings.ReadProfileSettings.Add(readProfile, SettingsManager.CreateDefaultReadProfileSettings(readProfile));
+   
                 }
+       
             }
         }
 

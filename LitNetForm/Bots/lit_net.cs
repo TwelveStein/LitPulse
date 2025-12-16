@@ -53,19 +53,24 @@ namespace Lit_net_bot_test
         /// <exception cref="InvalidOperationException"></exception>
         public async Task Primary_activity(string url, Action<string> log)
         {
-            if (_page == null)
+            try
             {
-                throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
+                if (_page == null)
+                {
+                    throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
+                }
+
+                await _page.GotoAsync(url);
+                await _page.GetByText("Добавить в библиотеку").ClickAsync();
+                await _page.Mouse.ClickAsync(100, 100);
+
+
+                _cts = new CancellationTokenSource();
+                var token = _cts.Token;
+                await Scroll_model.ReadPageAsync(_page, Scroll_model.Profile.SpeedReader, log, token);
             }
-
-            await _page.GotoAsync(url);
-            await _page.GetByText("Добавить в библиотеку").ClickAsync();
-            await _page.Mouse.ClickAsync(100, 100);
-
-
-            _cts = new CancellationTokenSource();
-            var token = _cts.Token;
-            await Scroll_model.ReadPageAsync(_page, Scroll_model.Profile.SpeedReader, log, token);
+            catch (Exception ex){}
+           
         }
 
         /// <summary>

@@ -46,6 +46,9 @@ namespace LitNetForm.Forms
 
         #endregion
 
+        private List<PlaywrightService_for_litnet> _activeServices = new();
+        private CancellationTokenSource _cts = new();
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveParameters();
@@ -54,6 +57,7 @@ namespace LitNetForm.Forms
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
         {
+
             var links = SplitLinksByDomain(Links);
 
             string[] litmarketArray = links.litmarketLinks;
@@ -67,10 +71,14 @@ namespace LitNetForm.Forms
                 return;
             }
 
+            _cts = new CancellationTokenSource();
+
             foreach (Accounts account in Accounts)
             {
                 // Litnet
                 var serviceLitNet = new PlaywrightService_for_litnet();
+                _activeServices.Add(serviceLitNet);
+
                 try
                 {
                     if (litnetArray.Length != 0)
@@ -81,15 +89,18 @@ namespace LitNetForm.Forms
                         foreach (var link in litnetArray.Take(3))
                         {
                             await serviceLitNet.Primary_activity(link, AppendLog);
+                            _cts.Token.ThrowIfCancellationRequested();
                         }
 
                         await serviceLitNet.Login(account.Login, account.Password, Link_login);
+                        _cts.Token.ThrowIfCancellationRequested();
 
                         AppendLog($"Выполнен вход в аккаунт {account.Login}");
 
                         foreach (var link in litnetArray)
                         {
                             await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile);
+                            _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
 
@@ -125,6 +136,7 @@ namespace LitNetForm.Forms
                 }
                 finally
                 {
+                    _activeServices.Remove(serviceLitNet);
                     await serviceLitNet.DisposeAsync();
                 }
 
@@ -185,7 +197,7 @@ namespace LitNetForm.Forms
         
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            
+            StopAllServicesAsync();
         }
 
         private void comboBoxReadProfiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -452,6 +464,28 @@ namespace LitNetForm.Forms
         {
             AccountsManager.Save(Accounts);
             LinksManager.Save(Links);
+        }
+
+        public async Task StopAllServicesAsync()
+        {
+            // Отменяем выполнение
+            _cts?.Cancel();
+
+            // Останавливаем все сервисы
+            var tasks = _activeServices.Select(async service =>
+            {
+                try
+                {
+                    await service.DisposeAsync();
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"Ошибка при остановке сервиса: {ex.Message}");
+                }
+            }).ToList();
+
+            await Task.WhenAll(tasks);
+            _activeServices.Clear();
         }
 
         #endregion

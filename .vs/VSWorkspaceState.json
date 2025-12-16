@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\LitNetForm",
+    "\\LitNetForm\\Forms",
     "\\LitNetForm\\Settings"
   ],
-  "SelectedNode": "\\LitNetForm\\LitNetForm.sln",
+  "SelectedNode": "\\LitNetForm\\Forms\\MainForm.cs",
   "PreviewInSolutionExplorer": false
 }

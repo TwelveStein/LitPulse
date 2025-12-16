@@ -50,8 +50,6 @@
             buttonImportLinks = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
             dataGridViewAccounts = new DataGridView();
-            Login = new DataGridViewTextBoxColumn();
-            Password = new DataGridViewTextBoxColumn();
             label1 = new Label();
             tableLayoutPanel9 = new TableLayoutPanel();
             buttonClearAccounts = new Button();
@@ -71,6 +69,8 @@
             label5 = new Label();
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
+            Login = new DataGridViewTextBoxColumn();
+            Password = new DataGridViewTextBoxColumn();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -377,22 +377,6 @@
             dataGridViewAccounts.Size = new Size(378, 264);
             dataGridViewAccounts.TabIndex = 1;
             // 
-            // Login
-            // 
-            Login.DataPropertyName = "Login";
-            Login.HeaderText = "Логин";
-            Login.MinimumWidth = 6;
-            Login.Name = "Login";
-            Login.Width = 350;
-            // 
-            // Password
-            // 
-            Password.DataPropertyName = "Password";
-            Password.HeaderText = "Пароль";
-            Password.MinimumWidth = 6;
-            Password.Name = "Password";
-            Password.Width = 350;
-            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -447,6 +431,7 @@
             // 
             // buttonImportAccounts
             // 
+            buttonImportAccounts.Dock = DockStyle.Fill;
             buttonImportAccounts.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonImportAccounts.Location = new Point(3, 3);
             buttonImportAccounts.Name = "buttonImportAccounts";
@@ -611,6 +596,22 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
+            // Login
+            // 
+            Login.DataPropertyName = "Login";
+            Login.HeaderText = "Логин";
+            Login.MinimumWidth = 6;
+            Login.Name = "Login";
+            Login.Width = 250;
+            // 
+            // Password
+            // 
+            Password.DataPropertyName = "Password";
+            Password.HeaderText = "Пароль";
+            Password.MinimumWidth = 6;
+            Password.Name = "Password";
+            Password.Width = 350;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -675,8 +676,6 @@
         private RichTextBox richTextBoxLog;
         private OpenFileDialog openFileDialog1;
         private DataGridViewTextBoxColumn Link;
-        private DataGridViewTextBoxColumn Login;
-        private DataGridViewTextBoxColumn Password;
         private TableLayoutPanel tableLayoutPanel9;
         private Button buttonImportAccounts;
         private TableLayoutPanel tableLayoutPanel10;
@@ -688,5 +687,7 @@
         private Button buttonClearLinks;
         private Button buttonClearAccounts;
         private SaveFileDialog saveFileDialog1;
+        private DataGridViewTextBoxColumn Login;
+        private DataGridViewTextBoxColumn Password;
     }
 }

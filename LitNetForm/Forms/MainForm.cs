@@ -100,7 +100,7 @@ namespace LitNetForm.Forms
 
                         foreach (var link in litnetArray)
                         {
-                            await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile);
+                            await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
@@ -159,7 +159,7 @@ namespace LitNetForm.Forms
 
                         foreach (string link in litmarketArray)
                         {
-                            await serviceLitMarket.Reader_books(link, AppendLog, profile);
+                            await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");

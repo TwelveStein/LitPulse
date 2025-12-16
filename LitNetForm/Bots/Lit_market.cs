@@ -60,70 +60,78 @@ namespace net_market_bot
 
         public async Task<bool> Login(string login, string password, string Link_login, Action<string> log)
         {
-            if (_page == null)
+            try
             {
-                throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
-            }
-
-            await _page.GotoAsync(Link_login);
-            await _page.ClickAsync(".login-btn");
-            await _page.Locator("#email").FillAsync(login);
-            await _page.Locator("#password").FillAsync(password);
-            await _page.Keyboard.PressAsync("Enter");
-            var isTextVisible = await _page.TextContentAsync("body").ContinueWith(t =>
-            t.Result?.Contains("Пользователь с таким имэйлом не зарегистрирован на портале") ?? false);
-            var isTextVisible_password = await _page.TextContentAsync("body").ContinueWith(t =>
-            t.Result?.Contains("Пароль неверный. Проверьте правильность ввода, убедитесь что \"caps lock\" не включен и язык ввода пароля верный. ") ?? false);
-            if (isTextVisible && !isTextVisible_password)
-            {
-                //неправльный логин или пароль лог
-                // лог провожу попытку регистрации 
-                var check_regist = await _page.TextContentAsync("body").ContinueWith(t =>
-                t.Result?.Contains("Пользователь с таким имэйлом уже существует. Попробуйте авторизоваться вместо повторной регистрации") ?? false);
-
-
-                if (check_regist)
+                if (_page == null)
                 {
-                    Log(log, "[X] Регистрация не удалась");
+                    throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
                 }
-                else
+
+                await _page.GotoAsync(Link_login);
+                await _page.ClickAsync(".login-btn");
+                await _page.Locator("#email").FillAsync(login);
+                await _page.Locator("#password").FillAsync(password);
+                await _page.Keyboard.PressAsync("Enter");
+                var isTextVisible = await _page.TextContentAsync("body").ContinueWith(t =>
+                t.Result?.Contains("Пользователь с таким имэйлом не зарегистрирован на портале") ?? false);
+                var isTextVisible_password = await _page.TextContentAsync("body").ContinueWith(t =>
+                t.Result?.Contains("Пароль неверный. Проверьте правильность ввода, убедитесь что \"caps lock\" не включен и язык ввода пароля верный. ") ?? false);
+                if (isTextVisible && !isTextVisible_password)
                 {
-
-                    await _page.WaitForTimeoutAsync(5000);
-                    await _page.GetByRole(AriaRole.Button, new() { Name = "Регистрация" }).ClickAsync();
-                    // 2. Найдите и установите флажок "Я согласен с..." (eula_agree)
-                    // Используем ID для более точного выбора.
-                    await _page.WaitForTimeoutAsync(5000);
-                    var elem = await _page.QuerySelectorAsync("#eula_agree");
-                    var box = await elem.BoundingBoxAsync();
-                    await _page.Mouse.ClickAsync((box.X + 5), (box.Y + 5));
-
-                    // 3. Найдите и установите флажок "Мне уже исполнилось 18" (eula_18_years)
-                    // Используем ID для более точного выбора.
-                    elem = await _page.QuerySelectorAsync("#eula_18_years");
-                    box = await elem.BoundingBoxAsync();
-                    await _page.Mouse.ClickAsync((box.X + 5), (box.Y + 5));
+                    //неправльный логин или пароль лог
+                    // лог провожу попытку регистрации 
+                    var check_regist = await _page.TextContentAsync("body").ContinueWith(t =>
+                    t.Result?.Contains("Пользователь с таким имэйлом уже существует. Попробуйте авторизоваться вместо повторной регистрации") ?? false);
 
 
-                    // 4. Найдите и нажмите кнопку "Подтвердить" (approve_role)
-                    // Используем ID для более точного выбора.
-                    await _page.ClickAsync("#approve_role");
+                    if (check_regist)
+                    {
+                        Log(log, "[X] Регистрация не удалась");
+                    }
+                    else
+                    {
 
-                    // 5. (Опционально) Добавьте ожидание, чтобы увидеть результат действия (например, закрытие модального окна или переход).
-                    // Ожидаем, что элемент '.card' больше не будет виден (модальное окно закрылось).
+                        await _page.WaitForTimeoutAsync(5000);
+                        await _page.GetByRole(AriaRole.Button, new() { Name = "Регистрация" }).ClickAsync();
+                        // 2. Найдите и установите флажок "Я согласен с..." (eula_agree)
+                        // Используем ID для более точного выбора.
+                        await _page.WaitForTimeoutAsync(5000);
+                        var elem = await _page.QuerySelectorAsync("#eula_agree");
+                        var box = await elem.BoundingBoxAsync();
+                        await _page.Mouse.ClickAsync((box.X + 5), (box.Y + 5));
 
-                    return true;
+                        // 3. Найдите и установите флажок "Мне уже исполнилось 18" (eula_18_years)
+                        // Используем ID для более точного выбора.
+                        elem = await _page.QuerySelectorAsync("#eula_18_years");
+                        box = await elem.BoundingBoxAsync();
+                        await _page.Mouse.ClickAsync((box.X + 5), (box.Y + 5));
+
+
+                        // 4. Найдите и нажмите кнопку "Подтвердить" (approve_role)
+                        // Используем ID для более точного выбора.
+                        await _page.ClickAsync("#approve_role");
+
+                        // 5. (Опционально) Добавьте ожидание, чтобы увидеть результат действия (например, закрытие модального окна или переход).
+                        // Ожидаем, что элемент '.card' больше не будет виден (модальное окно закрылось).
+
+                        return true;
+                    }
                 }
+                else if (!isTextVisible && isTextVisible_password)
+                {
+                    Log(log, $"[WARN] У аккаунта {login} не верный пароль");
+                    return false;
+                }
+
+                Log(log, $"[INFO] Вход в аккаунт {login} выполнен успешно");
+
+                return true;
+
             }
-            else if (!isTextVisible && isTextVisible_password)
+            catch(Exception ex)
             {
-                Log(log, $"[WARN] У аккаунта {login} не верный пароль");
                 return false;
             }
-
-            Log(log, $"[INFO] Вход в аккаунт {login} выполнен успешно");
-
-            return true;
 
         }
 

@@ -200,6 +200,7 @@
             // checkBoxPostComment
             // 
             checkBoxPostComment.AutoSize = true;
+            checkBoxPostComment.Enabled = false;
             checkBoxPostComment.Location = new Point(3, 93);
             checkBoxPostComment.Name = "checkBoxPostComment";
             checkBoxPostComment.Size = new Size(194, 24);
@@ -210,6 +211,7 @@
             // checkBoxMakeADonationToTheAuthor
             // 
             checkBoxMakeADonationToTheAuthor.AutoSize = true;
+            checkBoxMakeADonationToTheAuthor.Enabled = false;
             checkBoxMakeADonationToTheAuthor.Location = new Point(3, 123);
             checkBoxMakeADonationToTheAuthor.Name = "checkBoxMakeADonationToTheAuthor";
             checkBoxMakeADonationToTheAuthor.Size = new Size(183, 24);
@@ -220,6 +222,7 @@
             // checkBoxBuyABook
             // 
             checkBoxBuyABook.AutoSize = true;
+            checkBoxBuyABook.Enabled = false;
             checkBoxBuyABook.Location = new Point(3, 153);
             checkBoxBuyABook.Name = "checkBoxBuyABook";
             checkBoxBuyABook.Size = new Size(200, 24);

@@ -47,6 +47,7 @@ namespace LitNetForm.Forms
         #endregion
 
         private List<PlaywrightService_for_litnet> _activeServices = new();
+        private List<Lit_market> _activeServicesMarket = new();
         private CancellationTokenSource _cts = new();
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -142,6 +143,8 @@ namespace LitNetForm.Forms
 
                 // Litmarket
                 var serviceLitMarket = new Lit_market();
+                _activeServicesMarket.Add(serviceLitMarket);
+
                 try
                 {
                     if (litmarketArray.Length != 0)
@@ -150,17 +153,20 @@ namespace LitNetForm.Forms
 
                         await serviceLitMarket.InitializeAsync();
                         await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
+                        _cts.Token.ThrowIfCancellationRequested();
 
                         AppendLog($"Выполнен вход в аккаунт {account.Login}");
 
                         foreach (string link in litmarketArray)
                         {
                             await serviceLitMarket.Reader_books(link, AppendLog, profile);
+                            _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
 
                         }
                         await serviceLitMarket.DisposeAsync();
+                        _cts.Token.ThrowIfCancellationRequested();
                     }
                 }
                 catch (OperationCanceledException)
@@ -190,6 +196,7 @@ namespace LitNetForm.Forms
                 }
                 finally
                 {
+                    _activeServicesMarket.Remove(serviceLitMarket);
                     await serviceLitNet.DisposeAsync();
                 }
             }
@@ -473,6 +480,18 @@ namespace LitNetForm.Forms
 
             // Останавливаем все сервисы
             var tasks = _activeServices.Select(async service =>
+            {
+                try
+                {
+                    await service.DisposeAsync();
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"Ошибка при остановке сервиса: {ex.Message}");
+                }
+            }).ToList();
+
+            var tasksMarket = _activeServicesMarket.Select(async service =>
             {
                 try
                 {

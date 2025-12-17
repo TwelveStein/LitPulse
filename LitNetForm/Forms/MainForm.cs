@@ -207,11 +207,15 @@ namespace LitNetForm.Forms
         {
             StopAllServicesAsync();
         }
-        
+
         private void button_instruction_Click(object sender, EventArgs e)
         {
             InstructionForm instructionForm = new InstructionForm();
             instructionForm.Show();
+        }
+        private void buttonAccountGenerator_Click(object sender, EventArgs e)
+        {
+
         }
 
         #region Settings
@@ -520,5 +524,6 @@ namespace LitNetForm.Forms
 
         #endregion
 
+        
     }
 }

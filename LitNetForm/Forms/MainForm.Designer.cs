@@ -665,6 +665,8 @@
             buttonAccountGenerator.Dock = DockStyle.Fill;
             buttonAccountGenerator.Enabled = false;
             buttonAccountGenerator.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            buttonAccountGenerator.Image = LitPulse.Properties.Resources.AccountGeneratorIcon;
+            buttonAccountGenerator.ImageAlign = ContentAlignment.MiddleLeft;
             buttonAccountGenerator.Location = new Point(3, 42);
             buttonAccountGenerator.Margin = new Padding(3, 2, 3, 2);
             buttonAccountGenerator.Name = "buttonAccountGenerator";
@@ -677,6 +679,8 @@
             // 
             button_instruction.Dock = DockStyle.Fill;
             button_instruction.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            button_instruction.Image = LitPulse.Properties.Resources.InstructionIcon;
+            button_instruction.ImageAlign = ContentAlignment.MiddleLeft;
             button_instruction.Location = new Point(3, 82);
             button_instruction.Margin = new Padding(3, 2, 3, 2);
             button_instruction.Name = "button_instruction";
@@ -690,6 +694,8 @@
             // 
             buttonOtherSettings.Dock = DockStyle.Fill;
             buttonOtherSettings.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            buttonOtherSettings.Image = LitPulse.Properties.Resources.SettingsIcon;
+            buttonOtherSettings.ImageAlign = ContentAlignment.MiddleLeft;
             buttonOtherSettings.Location = new Point(3, 2);
             buttonOtherSettings.Margin = new Padding(3, 2, 3, 2);
             buttonOtherSettings.Name = "buttonOtherSettings";

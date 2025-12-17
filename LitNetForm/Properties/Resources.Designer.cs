@@ -63,6 +63,16 @@ namespace LitPulse.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AccountGeneratorIcon {
+            get {
+                object obj = ResourceManager.GetObject("AccountGeneratorIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap AddIcon {
             get {
                 object obj = ResourceManager.GetObject("AddIcon", resourceCulture);
@@ -103,6 +113,16 @@ namespace LitPulse.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap InstructionIcon {
+            get {
+                object obj = ResourceManager.GetObject("InstructionIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RemoveIcon {
             get {
                 object obj = ResourceManager.GetObject("RemoveIcon", resourceCulture);
@@ -116,6 +136,16 @@ namespace LitPulse.Properties {
         internal static System.Drawing.Bitmap RemoveIcon_Full {
             get {
                 object obj = ResourceManager.GetObject("RemoveIcon_Full", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SettingsIcon {
+            get {
+                object obj = ResourceManager.GetObject("SettingsIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

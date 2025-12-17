@@ -132,7 +132,7 @@ namespace Lit_net_bot_test
             }
         }
 
-        public async Task Login(string login, string password, string Link_login)
+        public async Task<bool> Login(string login, string password, string Link_login)
         {
             if (_page == null)
             {
@@ -149,7 +149,11 @@ namespace Lit_net_bot_test
             {
                 // ЛОГИ ПО КАПЧЕ
                 await _page.WaitForTimeoutAsync(40000);
+                if (_page.Url == Link_login)
+                    return false;
             }
+
+            return true;
         }
 
         // Метод для очистки ресурсов (не забудьте вызывать его при завершении)

@@ -77,6 +77,8 @@ namespace net_market_bot
                 t.Result?.Contains("Пользователь с таким имэйлом не зарегистрирован на портале") ?? false);
                 var isTextVisible_password = await _page.TextContentAsync("body").ContinueWith(t =>
                 t.Result?.Contains("Пароль неверный. Проверьте правильность ввода, убедитесь что \"caps lock\" не включен и язык ввода пароля верный. ") ?? false);
+                var timeout = await _page.TextContentAsync("body").ContinueWith(t =>
+                t.Result?.Contains("Превышен лимит запросов авторизации. следующая попытка разрешена через 15 минут.") ?? false);
                 if (isTextVisible && !isTextVisible_password)
                 {
                     //неправльный логин или пароль лог
@@ -118,7 +120,7 @@ namespace net_market_bot
                         return true;
                     }
                 }
-                else if (!isTextVisible && isTextVisible_password)
+                else if (isTextVisible_password || timeout)
                 {
                     Log(log, $"[WARN] У аккаунта {login} не верный пароль");
                     return false;

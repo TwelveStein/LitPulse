@@ -94,18 +94,24 @@ namespace LitNetForm.Forms
                             _cts.Token.ThrowIfCancellationRequested();
                         }
 
-                        await serviceLitNet.Login(account.Login, account.Password, Link_login);
-                        _cts.Token.ThrowIfCancellationRequested();
 
-                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
-
-                        foreach (var link in litnetArray)
+                        if (await serviceLitNet.Login(account.Login, account.Password, Link_login)) 
                         {
-                            await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
+                        
                             _cts.Token.ThrowIfCancellationRequested();
 
-                            AppendLog($"Выполнено чтение по ссылке {link}");
+                            AppendLog($"Выполнен вход в аккаунт {account.Login}");
 
+                            foreach (var link in litnetArray)
+                            {
+                                await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
+                                _cts.Token.ThrowIfCancellationRequested();
+
+                                AppendLog($"Выполнено чтение по ссылке {link}");
+
+                            }
+                            await serviceLitNet.DisposeAsync();
+                        
                         }
                         await serviceLitNet.DisposeAsync();
                     }
@@ -153,21 +159,29 @@ namespace LitNetForm.Forms
                         AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
                         await serviceLitMarket.InitializeAsync();
-                        await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
-                        _cts.Token.ThrowIfCancellationRequested();
-
-                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
-
-                        foreach (string link in litmarketArray)
+                        if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog))
                         {
-                            await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
+
                             _cts.Token.ThrowIfCancellationRequested();
 
-                            AppendLog($"Выполнено чтение по ссылке {link}");
+                            AppendLog($"Выполнен вход в аккаунт {account.Login}");
+
+                            foreach (string link in litmarketArray)
+                            {
+                                await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
+                                _cts.Token.ThrowIfCancellationRequested();
+
+                                AppendLog($"Выполнено чтение по ссылке {link}");
+
+                            }
+                            await serviceLitMarket.DisposeAsync();
+                            _cts.Token.ThrowIfCancellationRequested();
 
                         }
-                        await serviceLitMarket.DisposeAsync();
-                        _cts.Token.ThrowIfCancellationRequested();
+                        else 
+                        {
+                            await serviceLitMarket.DisposeAsync();
+                        }
                     }
                 }
                 catch (OperationCanceledException)

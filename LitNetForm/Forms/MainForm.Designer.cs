@@ -151,6 +151,7 @@
             // buttonSaveReport
             // 
             buttonSaveReport.Dock = DockStyle.Fill;
+            buttonSaveReport.Enabled = false;
             buttonSaveReport.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonSaveReport.Image = LitPulse.Properties.Resources.DownLoadIcon;
             buttonSaveReport.ImageAlign = ContentAlignment.MiddleLeft;
@@ -169,6 +170,7 @@
             dataGridViewReport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewReport.Columns.AddRange(new DataGridViewColumn[] { Status, Operation });
             dataGridViewReport.Dock = DockStyle.Fill;
+            dataGridViewReport.Enabled = false;
             dataGridViewReport.Location = new Point(3, 57);
             dataGridViewReport.Margin = new Padding(3, 2, 3, 2);
             dataGridViewReport.Name = "dataGridViewReport";
@@ -201,7 +203,7 @@
             label3.Name = "label3";
             label3.Size = new Size(330, 15);
             label3.TabIndex = 3;
-            label3.Text = "Отчет";
+            label3.Text = "Отчет (Не реализовано)";
             // 
             // tableLayoutPanel5
             // 

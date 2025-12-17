@@ -1,6 +1,7 @@
 ﻿using Lit_net_bot_test;
 using LitNetForm.Data;
 using LitNetForm.Settings;
+using LitPulse.Forms;
 using Microsoft.Playwright;
 using net_market_bot;
 using System;
@@ -206,6 +207,14 @@ namespace LitNetForm.Forms
         {
             StopAllServicesAsync();
         }
+        
+        private void button_instruction_Click(object sender, EventArgs e)
+        {
+            InstructionForm instructionForm = new InstructionForm();
+            instructionForm.Show();
+        }
+
+        #region Settings
 
         private void comboBoxReadProfiles_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -230,6 +239,8 @@ namespace LitNetForm.Forms
                 }
             }
         }
+
+        #endregion
 
         #region Accounts
 
@@ -509,9 +520,5 @@ namespace LitNetForm.Forms
 
         #endregion
 
-        private void button_instruction_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

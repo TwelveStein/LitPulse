@@ -201,7 +201,7 @@ namespace LitNetForm.Forms
                 }
             }
         }
-        
+
         private void buttonStop_Click(object sender, EventArgs e)
         {
             StopAllServicesAsync();
@@ -509,5 +509,9 @@ namespace LitNetForm.Forms
 
         #endregion
 
+        private void button_instruction_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

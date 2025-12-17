@@ -58,15 +58,16 @@ namespace Lit_net_bot_test
                 {
                     throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
                 }
+                _cts = new CancellationTokenSource();
+                var token = _cts.Token;
+
 
                 await _page.GotoAsync(url);
                 await _page.GetByText("Добавить в библиотеку").ClickAsync();
                 await _page.Mouse.ClickAsync(100, 100);
+                await Scroll_model.BrowseBookPageAsync(_page, log, token);
 
-
-                _cts = new CancellationTokenSource();
-                var token = _cts.Token;
-                await Scroll_model.ReadPageAsync(_page, Scroll_model.Profile.SpeedReader, log, token);
+                
             }
             catch (Exception ex){}
            

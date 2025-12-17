@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -166,10 +167,50 @@ namespace net_market_bot
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
             await _page.GotoAsync(link);
-            await _page.WaitForTimeoutAsync(3000);
-            if(settings.AddToLibrary)
+            await _page.WaitForTimeoutAsync(2000);
+            if (settings.AddToLibrary) 
+            {
                 await IsButtonClickable("a:has-text('В библиотеку')");
-            await IsButtonClickable("button:has-text('Избранное')");
+                await IsButtonClickable("button:has-text('Избранное')");
+            
+            }
+            if (settings.LikeTheBook) 
+            {
+
+                var Like_button = await _page.QuerySelectorAsync("span.rating-like-label");
+
+                if (Like_button != null) 
+                {
+                        try 
+                        {
+                            await _page.GetByRole(AriaRole.Button, new() 
+                            {
+                                Name = "Нравится", 
+                           
+                            }).ClickAsync();
+                    
+                        }
+                        catch { }
+
+                    await _page.WaitForTimeoutAsync(3000);
+                    var like_book = await _page.QuerySelectorAsync(".lmSimpleModal__close");
+                    if (like_book != null) 
+                    {
+
+                        var box = await like_book.BoundingBoxAsync();
+                        await _page.Mouse.ClickAsync(box.X + 2,box.Y + 2 );
+                
+                    }
+                
+                }
+            }
+                if (settings.SubscribeToTheAuthor) 
+                {
+                    await IsButtonClickable(".card-share__subscribe-button");
+
+                }
+
+            await Scroll_model.BrowseBookPageAsync(_page, log, token);
             await _page.ClickAsync("div.btn-reader");
 
             await _page.WaitForTimeoutAsync(3000);

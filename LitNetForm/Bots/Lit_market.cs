@@ -120,9 +120,14 @@ namespace net_market_bot
                         return true;
                     }
                 }
-                else if (isTextVisible_password || timeout)
+                else if (isTextVisible_password)
                 {
                     Log(log, $"[WARN] У аккаунта {login} не верный пароль");
+                    return false;
+                }
+                else if (timeout) 
+                {
+                    Log(log, $"[WARN] Сайтом установлен 15ти минутный таймаут на вход");
                     return false;
                 }
 

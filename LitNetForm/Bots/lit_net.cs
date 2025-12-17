@@ -92,7 +92,15 @@ namespace Lit_net_bot_test
             {
                 await _page.GetByText("Добавить в библиотеку").ClickAsync();
             }
-
+            if (settings.LikeTheBook) 
+            {
+                try
+                {
+                    await _page.ClickAsync("a.rate-btn.rate-btn-like" , new() { Timeout = 4000 });
+                }
+                catch { }
+                await _page.WaitForTimeoutAsync(2000);
+            }
             var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
             if (locator_learn.Result > 0)
             {

@@ -162,10 +162,13 @@ namespace LitNetForm.Forms
                     {
                         
                          
-                            AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
+                        AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
-                            await serviceLitMarket.InitializeAsync();
-                            await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
+                        await serviceLitMarket.InitializeAsync();
+
+                        if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog)) 
+                        {
+                        
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнен вход в аккаунт {account.Login}");
@@ -179,7 +182,11 @@ namespace LitNetForm.Forms
 
                             }
                             await serviceLitMarket.DisposeAsync();
-                            _cts.Token.ThrowIfCancellationRequested();
+                        
+                        
+                        }
+                        await serviceLitMarket.DisposeAsync();
+                        _cts.Token.ThrowIfCancellationRequested();
                          
                          
                          

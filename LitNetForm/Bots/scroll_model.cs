@@ -178,16 +178,16 @@ public static class Scroll_model
             if (i > 0 && rnd.NextDouble() < 0.12)
             {
                 int to = Math.Max(0, i - 1);
-                await ScrollToParagraph(page, to, 800, ct);
-                await Task.Delay(500 + rnd.Next(400), ct);
+                await ScrollToParagraph(page, to, 100, ct);
+                await Task.Delay(100 + rnd.Next(100), ct);
                 i = Math.Max(0, i - 2);
                 continue;
             }
 
-            int dur = 1000 + rnd.Next(500) * (int)(profile == Profile.TiredReader ? fatigue : 1.0);
+            int dur = 200 + rnd.Next(50) * (int)(profile == Profile.TiredReader ? fatigue : 1.0);
             await ScrollToParagraph(page, i, dur, ct);
 
-            int pause = 900 + rnd.Next(750) * (int)(profile == Profile.TiredReader ? fatigue : 1.0);
+            int pause = 200 + rnd.Next(150) * (int)(profile == Profile.TiredReader ? fatigue : 1.0);
             await Task.Delay(pause, ct);
 
             if (profile == Profile.TiredReader)

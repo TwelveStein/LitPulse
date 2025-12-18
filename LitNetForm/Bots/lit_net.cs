@@ -101,34 +101,39 @@ namespace Lit_net_bot_test
                 catch { }
                 await _page.WaitForTimeoutAsync(2000);
             }
-            var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
-            if (locator_learn.Result > 0)
-            {
-                await _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).ClickAsync();
-            }
-            else
-            {
-                await _page.GetByRole(AriaRole.Link, new() { Name = "Продолжить чтение", Exact = true }).ClickAsync();
-            }
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
-            string url_page_book;
-            while (true)
+            await Scroll_model.BrowseBookPageAsync(_page, log, token);
+            if (settings.ReadBook) 
             {
-                url_page_book = _page.Url;
-
-                var nextButton1 = await _page.QuerySelectorAsync("a.pull-right:has-text('Вперед')");
-                var nextButton2 = await _page.QuerySelectorAsync("a.pull-right:has-text('След. часть')");
-
-                if ((nextButton1 != null || nextButton2 != null) && await _page.Locator("#link-right").CountAsync() > 0)
+                var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
+                if (locator_learn.Result > 0)
                 {
-
-                    await Scroll_model.ReadPageAsync(_page, profile, log, token);
-
-                    await _page.ClickAsync("#link-right");
-
+                    await _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).ClickAsync();
                 }
-                else { break; }
+                else
+                {
+                    await _page.GetByRole(AriaRole.Link, new() { Name = "Продолжить чтение", Exact = true }).ClickAsync();
+                }
+                
+                string url_page_book;
+                while (true)
+                {
+                    url_page_book = _page.Url;
+
+                    var nextButton1 = await _page.QuerySelectorAsync("a.pull-right:has-text('Вперед')");
+                    var nextButton2 = await _page.QuerySelectorAsync("a.pull-right:has-text('След. часть')");
+
+                    if ((nextButton1 != null || nextButton2 != null) && await _page.Locator("#link-right").CountAsync() > 0)
+                    {
+
+                        await Scroll_model.ReadPageAsync(_page, profile, log, token);
+
+                        await _page.ClickAsync("#link-right");
+
+                    }
+                    else { break; }
+                }
             }
         }
 

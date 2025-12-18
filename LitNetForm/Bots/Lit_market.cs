@@ -218,45 +218,49 @@ namespace net_market_bot
                 }
 
             await Scroll_model.BrowseBookPageAsync(_page, log, token);
-            await _page.ClickAsync("div.btn-reader");
+            if (settings.ReadBook) 
+            {
+            
+                await _page.ClickAsync("div.btn-reader");
 
-            await _page.WaitForTimeoutAsync(3000);
-            var button_continue = "div:has-text('Далее&nbsp;→')";
+                await _page.WaitForTimeoutAsync(3000);
+                var button_continue = "div:has-text('Далее&nbsp;→')";
 
-            var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
-            try {
+                var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
+                try {
 
-                while (true)
-                {
-                    var url_page = _page.Url;
-                    await Scroll_model.ReadPageAsync(_page, profile, log, token);
-
-
-                    if (nextButton != null && await nextButton.IsVisibleAsync())
+                    while (true)
                     {
+                        var url_page = _page.Url;
+                        await Scroll_model.ReadPageAsync(_page, profile, log, token);
 
-                        // Нажатие на кнопку
-                        await nextButton.ClickAsync();
 
-                        await _page.WaitForTimeoutAsync(4500); // Пауза для полной загрузки
-                        if (_page.Url == url_page) 
+                        if (nextButton != null && await nextButton.IsVisibleAsync())
+                        {
+
+                            // Нажатие на кнопку
+                            await nextButton.ClickAsync();
+
+                            await _page.WaitForTimeoutAsync(4500); // Пауза для полной загрузки
+                            if (_page.Url == url_page) 
+                            {
+                                break;
+                            }
+                                // Ожидание загрузки
+                                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+                        }
+                        else
                         {
                             break;
                         }
-                            // Ожидание загрузки
-                            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-                    }
-                    else
-                    {
-                        break;
-                    }
+                        // Прокрутка к кнопке для гарантии видимости
 
-                    // Прокрутка к кнопке для гарантии видимости
-
-                } 
+                    } 
+                }
+                catch { }
             }
-            catch { }
 
         }
 

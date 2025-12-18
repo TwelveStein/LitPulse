@@ -56,6 +56,7 @@
             comboBoxReadProfiles = new ComboBox();
             label5 = new Label();
             tableLayoutPanel3 = new TableLayoutPanel();
+            label9 = new Label();
             numericUpDownMinMaxPauseAfterScrolling = new NumericUpDown();
             numericUpDownMinMaxScrollDuration = new NumericUpDown();
             numericUpDownMinMaxScrollStep = new NumericUpDown();
@@ -378,6 +379,7 @@
             // comboBoxReadProfiles
             // 
             comboBoxReadProfiles.Dock = DockStyle.Top;
+            comboBoxReadProfiles.Enabled = false;
             comboBoxReadProfiles.FormattingEnabled = true;
             comboBoxReadProfiles.Items.AddRange(new object[] { "Быстрое чтение", "Глубокое чтение", "Уставшее чтение" });
             comboBoxReadProfiles.Location = new Point(3, 43);
@@ -402,6 +404,7 @@
             tableLayoutPanel3.ColumnCount = 2;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 79.2F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.8F));
+            tableLayoutPanel3.Controls.Add(label9, 0, 4);
             tableLayoutPanel3.Controls.Add(numericUpDownMinMaxPauseAfterScrolling, 1, 3);
             tableLayoutPanel3.Controls.Add(numericUpDownMinMaxScrollDuration, 1, 2);
             tableLayoutPanel3.Controls.Add(numericUpDownMinMaxScrollStep, 1, 1);
@@ -422,9 +425,21 @@
             tableLayoutPanel3.Size = new Size(375, 271);
             tableLayoutPanel3.TabIndex = 12;
             // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Dock = DockStyle.Fill;
+            label9.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label9.Location = new Point(3, 140);
+            label9.Name = "label9";
+            label9.Size = new Size(290, 131);
+            label9.TabIndex = 19;
+            label9.Text = "(Не реализовано)";
+            // 
             // numericUpDownMinMaxPauseAfterScrolling
             // 
             numericUpDownMinMaxPauseAfterScrolling.Dock = DockStyle.Fill;
+            numericUpDownMinMaxPauseAfterScrolling.Enabled = false;
             numericUpDownMinMaxPauseAfterScrolling.Location = new Point(299, 108);
             numericUpDownMinMaxPauseAfterScrolling.Maximum = new decimal(new int[] { 5000, 0, 0, 0 });
             numericUpDownMinMaxPauseAfterScrolling.Minimum = new decimal(new int[] { 200, 0, 0, 0 });
@@ -437,6 +452,7 @@
             // numericUpDownMinMaxScrollDuration
             // 
             numericUpDownMinMaxScrollDuration.Dock = DockStyle.Fill;
+            numericUpDownMinMaxScrollDuration.Enabled = false;
             numericUpDownMinMaxScrollDuration.Location = new Point(299, 73);
             numericUpDownMinMaxScrollDuration.Maximum = new decimal(new int[] { 5000, 0, 0, 0 });
             numericUpDownMinMaxScrollDuration.Minimum = new decimal(new int[] { 300, 0, 0, 0 });
@@ -449,6 +465,7 @@
             // numericUpDownMinMaxScrollStep
             // 
             numericUpDownMinMaxScrollStep.Dock = DockStyle.Fill;
+            numericUpDownMinMaxScrollStep.Enabled = false;
             numericUpDownMinMaxScrollStep.Location = new Point(299, 38);
             numericUpDownMinMaxScrollStep.Maximum = new decimal(new int[] { 1500, 0, 0, 0 });
             numericUpDownMinMaxScrollStep.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
@@ -501,6 +518,7 @@
             // numericUpDownChanceOfRegression
             // 
             numericUpDownChanceOfRegression.Dock = DockStyle.Fill;
+            numericUpDownChanceOfRegression.Enabled = false;
             numericUpDownChanceOfRegression.Location = new Point(299, 3);
             numericUpDownChanceOfRegression.Name = "numericUpDownChanceOfRegression";
             numericUpDownChanceOfRegression.Size = new Size(73, 27);
@@ -579,5 +597,6 @@
         private Label label8;
         private NumericUpDown numericUpDownConstantDelay;
         private NumericUpDown numericUpDownFloatingIncrementalDelay;
+        private Label label9;
     }
 }

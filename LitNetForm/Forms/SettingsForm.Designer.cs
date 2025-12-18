@@ -35,12 +35,19 @@
             tabControl2 = new TabControl();
             tabPage4 = new TabPage();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            checkBoxAddToLibrary = new CheckBox();
+            checkBoxReadBook = new CheckBox();
             checkBoxLikeTheBook = new CheckBox();
+            checkBoxAddToLibrary = new CheckBox();
             checkBoxSubscribeToTheAuthor = new CheckBox();
             checkBoxPostComment = new CheckBox();
             checkBoxMakeADonationToTheAuthor = new CheckBox();
             checkBoxBuyABook = new CheckBox();
+            groupBox2 = new GroupBox();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            label7 = new Label();
+            label8 = new Label();
+            numericUpDownConstantDelay = new NumericUpDown();
+            numericUpDownFloatingIncrementalDelay = new NumericUpDown();
             tabPage5 = new TabPage();
             flowLayoutPanel2 = new FlowLayoutPanel();
             groupBox1 = new GroupBox();
@@ -57,12 +64,15 @@
             label2 = new Label();
             label1 = new Label();
             numericUpDownChanceOfRegression = new NumericUpDown();
-            tabPage6 = new TabPage();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tabControl2.SuspendLayout();
             tabPage4.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownConstantDelay).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).BeginInit();
             tabPage5.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -133,7 +143,6 @@
             // 
             tabControl2.Controls.Add(tabPage4);
             tabControl2.Controls.Add(tabPage5);
-            tabControl2.Controls.Add(tabPage6);
             tabControl2.Dock = DockStyle.Fill;
             tabControl2.Location = new Point(3, 3);
             tabControl2.Name = "tabControl2";
@@ -154,12 +163,14 @@
             // 
             // flowLayoutPanel1
             // 
-            flowLayoutPanel1.Controls.Add(checkBoxAddToLibrary);
+            flowLayoutPanel1.Controls.Add(checkBoxReadBook);
             flowLayoutPanel1.Controls.Add(checkBoxLikeTheBook);
+            flowLayoutPanel1.Controls.Add(checkBoxAddToLibrary);
             flowLayoutPanel1.Controls.Add(checkBoxSubscribeToTheAuthor);
             flowLayoutPanel1.Controls.Add(checkBoxPostComment);
             flowLayoutPanel1.Controls.Add(checkBoxMakeADonationToTheAuthor);
             flowLayoutPanel1.Controls.Add(checkBoxBuyABook);
+            flowLayoutPanel1.Controls.Add(groupBox2);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(3, 3);
@@ -167,15 +178,15 @@
             flowLayoutPanel1.Size = new Size(668, 278);
             flowLayoutPanel1.TabIndex = 2;
             // 
-            // checkBoxAddToLibrary
+            // checkBoxReadBook
             // 
-            checkBoxAddToLibrary.AutoSize = true;
-            checkBoxAddToLibrary.Location = new Point(3, 3);
-            checkBoxAddToLibrary.Name = "checkBoxAddToLibrary";
-            checkBoxAddToLibrary.Size = new Size(195, 24);
-            checkBoxAddToLibrary.TabIndex = 0;
-            checkBoxAddToLibrary.Text = "Добавить в библиотеку";
-            checkBoxAddToLibrary.UseVisualStyleBackColor = true;
+            checkBoxReadBook.AutoSize = true;
+            checkBoxReadBook.Location = new Point(3, 3);
+            checkBoxReadBook.Name = "checkBoxReadBook";
+            checkBoxReadBook.Size = new Size(120, 24);
+            checkBoxReadBook.TabIndex = 6;
+            checkBoxReadBook.Text = "Читать книгу";
+            checkBoxReadBook.UseVisualStyleBackColor = true;
             // 
             // checkBoxLikeTheBook
             // 
@@ -187,10 +198,20 @@
             checkBoxLikeTheBook.Text = "Поставить лайк книге";
             checkBoxLikeTheBook.UseVisualStyleBackColor = true;
             // 
+            // checkBoxAddToLibrary
+            // 
+            checkBoxAddToLibrary.AutoSize = true;
+            checkBoxAddToLibrary.Location = new Point(3, 63);
+            checkBoxAddToLibrary.Name = "checkBoxAddToLibrary";
+            checkBoxAddToLibrary.Size = new Size(195, 24);
+            checkBoxAddToLibrary.TabIndex = 0;
+            checkBoxAddToLibrary.Text = "Добавить в библиотеку";
+            checkBoxAddToLibrary.UseVisualStyleBackColor = true;
+            // 
             // checkBoxSubscribeToTheAuthor
             // 
             checkBoxSubscribeToTheAuthor.AutoSize = true;
-            checkBoxSubscribeToTheAuthor.Location = new Point(3, 63);
+            checkBoxSubscribeToTheAuthor.Location = new Point(3, 93);
             checkBoxSubscribeToTheAuthor.Name = "checkBoxSubscribeToTheAuthor";
             checkBoxSubscribeToTheAuthor.Size = new Size(194, 24);
             checkBoxSubscribeToTheAuthor.TabIndex = 2;
@@ -201,7 +222,7 @@
             // 
             checkBoxPostComment.AutoSize = true;
             checkBoxPostComment.Enabled = false;
-            checkBoxPostComment.Location = new Point(3, 93);
+            checkBoxPostComment.Location = new Point(3, 123);
             checkBoxPostComment.Name = "checkBoxPostComment";
             checkBoxPostComment.Size = new Size(194, 24);
             checkBoxPostComment.TabIndex = 3;
@@ -212,7 +233,7 @@
             // 
             checkBoxMakeADonationToTheAuthor.AutoSize = true;
             checkBoxMakeADonationToTheAuthor.Enabled = false;
-            checkBoxMakeADonationToTheAuthor.Location = new Point(3, 123);
+            checkBoxMakeADonationToTheAuthor.Location = new Point(3, 153);
             checkBoxMakeADonationToTheAuthor.Name = "checkBoxMakeADonationToTheAuthor";
             checkBoxMakeADonationToTheAuthor.Size = new Size(183, 24);
             checkBoxMakeADonationToTheAuthor.TabIndex = 4;
@@ -223,12 +244,79 @@
             // 
             checkBoxBuyABook.AutoSize = true;
             checkBoxBuyABook.Enabled = false;
-            checkBoxBuyABook.Location = new Point(3, 153);
+            checkBoxBuyABook.Location = new Point(3, 183);
             checkBoxBuyABook.Name = "checkBoxBuyABook";
             checkBoxBuyABook.Size = new Size(200, 24);
             checkBoxBuyABook.TabIndex = 5;
             checkBoxBuyABook.Text = "Купить книгу из читалки";
             checkBoxBuyABook.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(tableLayoutPanel4);
+            groupBox2.Location = new Point(209, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(377, 93);
+            groupBox2.TabIndex = 7;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Таймаут запуска сеансов";
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.ColumnCount = 2;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 70F));
+            tableLayoutPanel4.Controls.Add(label7, 0, 0);
+            tableLayoutPanel4.Controls.Add(label8, 0, 1);
+            tableLayoutPanel4.Controls.Add(numericUpDownConstantDelay, 1, 0);
+            tableLayoutPanel4.Controls.Add(numericUpDownFloatingIncrementalDelay, 1, 1);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(3, 23);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel4.Size = new Size(371, 67);
+            tableLayoutPanel4.TabIndex = 0;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(3, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(205, 20);
+            label7.TabIndex = 0;
+            label7.Text = "Постоянная задержка (сек.):";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(3, 30);
+            label8.Name = "label8";
+            label8.Size = new Size(292, 20);
+            label8.TabIndex = 1;
+            label8.Text = "Плавающая добавочная задержка (сек.):";
+            // 
+            // numericUpDownConstantDelay
+            // 
+            numericUpDownConstantDelay.Location = new Point(304, 3);
+            numericUpDownConstantDelay.Maximum = new decimal(new int[] { 600, 0, 0, 0 });
+            numericUpDownConstantDelay.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownConstantDelay.Name = "numericUpDownConstantDelay";
+            numericUpDownConstantDelay.Size = new Size(64, 27);
+            numericUpDownConstantDelay.TabIndex = 2;
+            numericUpDownConstantDelay.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            // 
+            // numericUpDownFloatingIncrementalDelay
+            // 
+            numericUpDownFloatingIncrementalDelay.Location = new Point(304, 33);
+            numericUpDownFloatingIncrementalDelay.Maximum = new decimal(new int[] { 600, 0, 0, 0 });
+            numericUpDownFloatingIncrementalDelay.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownFloatingIncrementalDelay.Name = "numericUpDownFloatingIncrementalDelay";
+            numericUpDownFloatingIncrementalDelay.Size = new Size(64, 27);
+            numericUpDownFloatingIncrementalDelay.TabIndex = 3;
+            numericUpDownFloatingIncrementalDelay.Value = new decimal(new int[] { 2, 0, 0, 0 });
             // 
             // tabPage5
             // 
@@ -419,15 +507,6 @@
             numericUpDownChanceOfRegression.TabIndex = 15;
             numericUpDownChanceOfRegression.Leave += numericUpDownProfileSetttings_Leave;
             // 
-            // tabPage6
-            // 
-            tabPage6.Location = new Point(4, 29);
-            tabPage6.Name = "tabPage6";
-            tabPage6.Size = new Size(674, 284);
-            tabPage6.TabIndex = 2;
-            tabPage6.Text = "Запуск";
-            tabPage6.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -444,6 +523,11 @@
             tabPage4.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownConstantDelay).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).EndInit();
             tabPage5.ResumeLayout(false);
             flowLayoutPanel2.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
@@ -473,7 +557,6 @@
         private CheckBox checkBoxMakeADonationToTheAuthor;
         private CheckBox checkBoxBuyABook;
         private TabPage tabPage5;
-        private TabPage tabPage6;
         private FlowLayoutPanel flowLayoutPanel2;
         private GroupBox groupBox1;
         private RichTextBox richTextBoxProfile;
@@ -489,5 +572,12 @@
         private NumericUpDown numericUpDownMinMaxPauseAfterScrolling;
         private NumericUpDown numericUpDownMinMaxScrollDuration;
         private NumericUpDown numericUpDownMinMaxScrollStep;
+        private CheckBox checkBoxReadBook;
+        private GroupBox groupBox2;
+        private TableLayoutPanel tableLayoutPanel4;
+        private Label label7;
+        private Label label8;
+        private NumericUpDown numericUpDownConstantDelay;
+        private NumericUpDown numericUpDownFloatingIncrementalDelay;
     }
 }

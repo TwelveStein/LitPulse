@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Scroll_model;
@@ -61,13 +62,37 @@ namespace LitNetForm.Forms
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
         {
+            Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
+
+            int ConstantDelay = Settings.ConstantDelay;
+
+            int FloatingIncrementalDelay = Settings.FloatingIncrementalDelay;
+
+            Random random = new Random();
+
+            foreach (Accounts account in Accounts)
+            {
+                
+                int FloatingDelay = random.Next(FloatingIncrementalDelay);
+
+                int Delay = (ConstantDelay + FloatingDelay) * 1000;
+
+                AppendLog($"Задержка перед запуском: {Delay / 1000}");
+
+                // Создаем поток с делегатом, который будет выполнять синхронную обертку
+                Thread thread = new Thread(() => StartSession(account, profile, Delay));
+                thread.Start();
+            }
+        }
+
+        private async void StartSession(Accounts account, Scroll_model.Profile profile, int Delay)
+        {
+            await Task.Delay(Delay);
 
             var links = SplitLinksByDomain(Links);
 
             string[] litmarketArray = links.litmarketLinks;
             string[] litnetArray = links.litnetLinks;
-
-            Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
 
             if (litnetArray.Length == 0 & litmarketArray.Length == 0)
             {
@@ -79,175 +104,140 @@ namespace LitNetForm.Forms
             // Litmarket
             var serviceLitMarket = new Lit_market();
             _activeServicesMarket.Add(serviceLitMarket);
-            
 
-            foreach (Accounts account in Accounts)
+            // Litnet
+            var serviceLitNet = new PlaywrightService_for_litnet();
+            _activeServices.Add(serviceLitNet);
+
+            try
             {
-                // Litnet
-                var serviceLitNet = new PlaywrightService_for_litnet();
-                _activeServices.Add(serviceLitNet);
-
-                try
+                if (litnetArray.Length != 0)
                 {
-                    if (litnetArray.Length != 0)
+                    AppendLog("Запуск эмуляции чтения https://litnet.com ...");
+
+                    await serviceLitNet.InitializeAsync();
+                    foreach (var link in litnetArray.Take(3))
                     {
-                        AppendLog("Запуск эмуляции чтения https://litnet.com ...");
+                        await serviceLitNet.Primary_activity(link, AppendLog);
+                        _cts.Token.ThrowIfCancellationRequested();
+                    }
 
-                        await serviceLitNet.InitializeAsync();
-                        foreach (var link in litnetArray.Take(3))
+                    if (await serviceLitNet.Login(account.Login, account.Password, Link_login))
+                    {
+
+                        _cts.Token.ThrowIfCancellationRequested();
+
+                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
+
+                        foreach (var link in litnetArray)
                         {
-                            await serviceLitNet.Primary_activity(link, AppendLog);
-                            _cts.Token.ThrowIfCancellationRequested();
-                        }
-
-
-                        if (await serviceLitNet.Login(account.Login, account.Password, Link_login)) 
-                        {
-                        
+                            await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
-                            AppendLog($"Выполнен вход в аккаунт {account.Login}");
+                            AppendLog($"Выполнено чтение по ссылке {link}");
 
-                            foreach (var link in litnetArray)
-                            {
-                                await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
-                                _cts.Token.ThrowIfCancellationRequested();
-
-                                AppendLog($"Выполнено чтение по ссылке {link}");
-
-                            }
-                            await serviceLitNet.DisposeAsync();
-                        
                         }
                         await serviceLitNet.DisposeAsync();
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    AppendLog("Остановлено пользователем.");
-                    return;
-                }
-                catch (PlaywrightException ex)
-                {
-                    // Проверяем по сообщению
-                    if (ex.Message.Contains("Target closed") ||
-                        ex.Message.Contains("closed") ||
-                        ex.Message.Contains("Session closed"))
-                    {
-                        AppendLog($"Браузер был закрыт.");
-                        return;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (Exception ex)
-                {
 
-                    AppendLog($"[X] Ошибка: {ex.Message}");
-                    return;
-                }
-                finally
-                {
-                    _activeServices.Remove(serviceLitNet);
+                    }
                     await serviceLitNet.DisposeAsync();
                 }
-
-              
-
-                try
+            }
+            catch (OperationCanceledException)
+            {
+                AppendLog("Остановлено пользователем.");
+                return;
+            }
+            catch (PlaywrightException ex)
+            {
+                // Проверяем по сообщению
+                if (ex.Message.Contains("Target closed") ||
+                    ex.Message.Contains("closed") ||
+                    ex.Message.Contains("Session closed"))
                 {
-                    if (litmarketArray.Length != 0)
+                    AppendLog($"Браузер был закрыт.");
+                    return;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[X] Ошибка: {ex.Message}");
+                return;
+            }
+            finally
+            {
+                _activeServices.Remove(serviceLitNet);
+                await serviceLitNet.DisposeAsync();
+            }
+
+            try
+            {
+                if (litmarketArray.Length != 0)
+                {
+
+                    AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
+
+                    await serviceLitMarket.InitializeAsync();
+
+                    if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog))
                     {
-                        
-                         
-                        AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
-                        await serviceLitMarket.InitializeAsync();
+                        _cts.Token.ThrowIfCancellationRequested();
 
-                        if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog)) 
+                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
+
+                        foreach (string link in litmarketArray)
                         {
-                        
+                            await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
-                            AppendLog($"Выполнен вход в аккаунт {account.Login}");
+                            AppendLog($"Выполнено чтение по ссылке {link}");
 
-                            foreach (string link in litmarketArray)
-                            {
-                                await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
-                                _cts.Token.ThrowIfCancellationRequested();
-
-                                AppendLog($"Выполнено чтение по ссылке {link}");
-
-                            }
-                            await serviceLitMarket.DisposeAsync();
-                        
-                        
                         }
                         await serviceLitMarket.DisposeAsync();
-                        _cts.Token.ThrowIfCancellationRequested();
-                         
-                         
-                         
-                        
-                        
 
                     }
-                }
-                catch (OperationCanceledException)
-                {
-                    AppendLog("Остановлено пользователем.");
-                    return;
-                }
-                catch (PlaywrightException ex)
-                {
-                    // Проверяем по сообщению
-                    if (ex.Message.Contains("Target closed") ||
-                        ex.Message.Contains("closed") ||
-                        ex.Message.Contains("Session closed"))
-                    {
-                        AppendLog($"Браузер был закрыт.");
-                        return;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"[X] Ошибка: {ex.Message}");
-                    return;
-                }
-                finally
-                {
-                    _activeServicesMarket.Remove(serviceLitMarket);
-                    await serviceLitNet.DisposeAsync();
+                    await serviceLitMarket.DisposeAsync();
+                    _cts.Token.ThrowIfCancellationRequested();
+
                 }
             }
-        }
-        private async Task Litmarket_more_treads(string[] litmarketArray, Lit_market serviceLitMarket , Data.Accounts account , Profile profile) 
-        {
-            AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
-
-            await serviceLitMarket.InitializeAsync();
-            await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
-            _cts.Token.ThrowIfCancellationRequested();
-
-            AppendLog($"Выполнен вход в аккаунт {account.Login}");
-
-            foreach (string link in litmarketArray)
+            catch (OperationCanceledException)
             {
-                await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
-                _cts.Token.ThrowIfCancellationRequested();
-
-                AppendLog($"Выполнено чтение по ссылке {link}");
-
+                AppendLog("Остановлено пользователем.");
+                return;
             }
-            await serviceLitMarket.DisposeAsync();
-            _cts.Token.ThrowIfCancellationRequested();
+            catch (PlaywrightException ex)
+            {
+                // Проверяем по сообщению
+                if (ex.Message.Contains("Target closed") ||
+                    ex.Message.Contains("closed") ||
+                    ex.Message.Contains("Session closed"))
+                {
+                    AppendLog($"Браузер был закрыт.");
+                    return;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[X] Ошибка: {ex.Message}");
+                return;
+            }
+            finally
+            {
+                _activeServicesMarket.Remove(serviceLitMarket);
+                await serviceLitNet.DisposeAsync();
+            }
         }
+
         private void buttonStop_Click(object sender, EventArgs e)
         {
             StopAllServicesAsync();
@@ -568,7 +558,6 @@ namespace LitNetForm.Forms
         }
 
         #endregion
-
         
     }
 }

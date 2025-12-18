@@ -13,6 +13,9 @@ namespace LitNetForm.Settings
 {
     public class Settings
     {
+        [JsonPropertyName("ReadBook")]
+        public bool ReadBook { get; set; }
+
         [JsonPropertyName("AddToLibrary")]
         public bool AddToLibrary { get; set; }
 
@@ -30,6 +33,12 @@ namespace LitNetForm.Settings
 
         [JsonPropertyName("BuyABook")]
         public bool BuyABook {  get; set; }
+
+        [JsonPropertyName("ConstantDelay")]
+        public int ConstantDelay { get; set; }
+
+        [JsonPropertyName("FloatingIncrementalDelay")]
+        public int FloatingIncrementalDelay { get; set; }
 
         [JsonPropertyName("ReadProfile")]
         public Scroll_model.Profile ReadProfile { get; set; }
@@ -154,7 +163,6 @@ namespace LitNetForm.Settings
             }
         }
 
-
         private static Settings CreateDefaultSettings()
         {
             Dictionary<Scroll_model.Profile, ProfileSettings> ReadProfileSettings = new Dictionary<Scroll_model.Profile, ProfileSettings>();
@@ -164,12 +172,15 @@ namespace LitNetForm.Settings
 
             return new Settings
             {
+                ReadBook = true,
                 AddToLibrary = false,
-                LikeTheBook = false,
+                LikeTheBook = true,
                 SubscribeToTheAuthor = false,
                 PostComment = false,
                 MakeADonationToTheAuthor = false,
                 BuyABook = false,
+                ConstantDelay = 1,
+                FloatingIncrementalDelay = 1,
                 ReadProfile = Scroll_model.Profile.SpeedReader,
                 ReadProfileSettings = ReadProfileSettings
             };

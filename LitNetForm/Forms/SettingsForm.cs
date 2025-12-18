@@ -61,14 +61,14 @@ namespace LitNetForm.Forms
             if (Settings.ReadProfileSettings.ContainsKey((Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex))
             {
                 ProfileSettings profileSettings = Settings.ReadProfileSettings[(Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex];
-           
+
                 numericUpDownChanceOfRegression.Value = profileSettings.ChanceOfRegression;
                 numericUpDownMinMaxPauseAfterScrolling.Value = profileSettings.MinMaxPauseAfterScrolling;
                 numericUpDownMinMaxScrollDuration.Value = profileSettings.MinMaxScrollDuration;
                 numericUpDownMinMaxScrollStep.Value = profileSettings.MinMaxScrollStep;
             }
-            
-            
+
+
         }
         private void numericUpDownProfileSetttings_Leave(object sender, EventArgs e)
         {
@@ -77,6 +77,8 @@ namespace LitNetForm.Forms
 
         private void LoadSettings()
         {
+            checkBoxReadBook.Checked = Settings.ReadBook;
+
             checkBoxAddToLibrary.Checked = Settings.AddToLibrary;
 
             checkBoxLikeTheBook.Checked = Settings.LikeTheBook;
@@ -89,11 +91,17 @@ namespace LitNetForm.Forms
 
             checkBoxBuyABook.Checked = Settings.BuyABook;
 
+            numericUpDownConstantDelay.Value = Settings.ConstantDelay;
+
+            numericUpDownFloatingIncrementalDelay.Value = Settings.FloatingIncrementalDelay;
+
             comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
         }
 
         private void SaveSettings()
         {
+            Settings.ReadBook = checkBoxReadBook.Checked;
+
             Settings.AddToLibrary = checkBoxAddToLibrary.Checked;
 
             Settings.LikeTheBook = checkBoxLikeTheBook.Checked;
@@ -106,6 +114,10 @@ namespace LitNetForm.Forms
 
             Settings.BuyABook = checkBoxBuyABook.Checked;
 
+            Settings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
+
+            Settings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
+
             // Сохранение настроек профилей
             for (int i = 0; i < comboBoxReadProfiles.Items.Count; i++)
             {
@@ -115,9 +127,9 @@ namespace LitNetForm.Forms
                 {
                     // Ключа нет - добавляем новую пару
                     Settings.ReadProfileSettings.Add(readProfile, SettingsManager.CreateDefaultReadProfileSettings(readProfile));
-   
+
                 }
-       
+
             }
         }
 
@@ -126,10 +138,9 @@ namespace LitNetForm.Forms
             ProfileSettings profileSettings = Settings.ReadProfileSettings[(Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex];
 
             profileSettings.ChanceOfRegression = Convert.ToUInt32(numericUpDownChanceOfRegression.Value);
-            profileSettings.MinMaxPauseAfterScrolling  = Convert.ToUInt32(numericUpDownMinMaxPauseAfterScrolling.Value);
+            profileSettings.MinMaxPauseAfterScrolling = Convert.ToUInt32(numericUpDownMinMaxPauseAfterScrolling.Value);
             profileSettings.MinMaxScrollDuration = Convert.ToUInt32(numericUpDownMinMaxScrollDuration.Value);
             profileSettings.MinMaxScrollStep = Convert.ToUInt32(numericUpDownMinMaxScrollStep.Value);
         }
-        
     }
 }

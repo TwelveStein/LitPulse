@@ -101,11 +101,12 @@
             tableLayoutPanel1.Controls.Add(tableLayoutPanel7, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 200F));
-            tableLayoutPanel1.Size = new Size(1182, 553);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 150F));
+            tableLayoutPanel1.Size = new Size(1034, 415);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -118,12 +119,13 @@
             tableLayoutPanel2.Controls.Add(tableLayoutPanel6, 1, 0);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(5, 5);
+            tableLayoutPanel2.Location = new Point(5, 4);
+            tableLayoutPanel2.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 340F));
-            tableLayoutPanel2.Size = new Size(1172, 341);
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 256F));
+            tableLayoutPanel2.Size = new Size(1024, 255);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel4
@@ -135,14 +137,15 @@
             tableLayoutPanel4.Controls.Add(label3, 0, 1);
             tableLayoutPanel4.Controls.Add(tableLayoutPanel5, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(783, 3);
+            tableLayoutPanel4.Location = new Point(685, 2);
+            tableLayoutPanel4.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 4;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel4.Size = new Size(386, 335);
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel4.Size = new Size(336, 251);
             tableLayoutPanel4.TabIndex = 2;
             // 
             // buttonSaveReport
@@ -152,9 +155,10 @@
             buttonSaveReport.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonSaveReport.Image = LitPulse.Properties.Resources.DownLoadIcon;
             buttonSaveReport.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonSaveReport.Location = new Point(3, 285);
+            buttonSaveReport.Location = new Point(3, 213);
+            buttonSaveReport.Margin = new Padding(3, 2, 3, 2);
             buttonSaveReport.Name = "buttonSaveReport";
-            buttonSaveReport.Size = new Size(380, 47);
+            buttonSaveReport.Size = new Size(330, 36);
             buttonSaveReport.TabIndex = 7;
             buttonSaveReport.Text = "Скачать отчет";
             buttonSaveReport.UseVisualStyleBackColor = true;
@@ -167,10 +171,11 @@
             dataGridViewReport.Columns.AddRange(new DataGridViewColumn[] { Status, Operation });
             dataGridViewReport.Dock = DockStyle.Fill;
             dataGridViewReport.Enabled = false;
-            dataGridViewReport.Location = new Point(3, 76);
+            dataGridViewReport.Location = new Point(3, 57);
+            dataGridViewReport.Margin = new Padding(3, 2, 3, 2);
             dataGridViewReport.Name = "dataGridViewReport";
             dataGridViewReport.RowHeadersWidth = 51;
-            dataGridViewReport.Size = new Size(380, 203);
+            dataGridViewReport.Size = new Size(330, 152);
             dataGridViewReport.TabIndex = 6;
             // 
             // Status
@@ -194,9 +199,9 @@
             label3.AutoSize = true;
             label3.Dock = DockStyle.Fill;
             label3.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            label3.Location = new Point(3, 53);
+            label3.Location = new Point(3, 40);
             label3.Name = "label3";
-            label3.Size = new Size(380, 20);
+            label3.Size = new Size(330, 15);
             label3.TabIndex = 3;
             label3.Text = "Отчет (Не реализовано)";
             // 
@@ -208,12 +213,13 @@
             tableLayoutPanel5.Controls.Add(buttonStop, 1, 0);
             tableLayoutPanel5.Controls.Add(buttonStartSession, 0, 0);
             tableLayoutPanel5.Dock = DockStyle.Fill;
-            tableLayoutPanel5.Location = new Point(3, 3);
+            tableLayoutPanel5.Location = new Point(3, 2);
+            tableLayoutPanel5.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-            tableLayoutPanel5.Size = new Size(380, 47);
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
+            tableLayoutPanel5.Size = new Size(330, 36);
             tableLayoutPanel5.TabIndex = 8;
             // 
             // buttonStop
@@ -224,9 +230,10 @@
             buttonStop.ForeColor = SystemColors.ControlText;
             buttonStop.Image = LitPulse.Properties.Resources.StopIcon;
             buttonStop.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonStop.Location = new Point(224, 3);
+            buttonStop.Location = new Point(195, 2);
+            buttonStop.Margin = new Padding(3, 2, 3, 2);
             buttonStop.Name = "buttonStop";
-            buttonStop.Size = new Size(153, 41);
+            buttonStop.Size = new Size(132, 32);
             buttonStop.TabIndex = 7;
             buttonStop.Text = "СТОП";
             buttonStop.UseVisualStyleBackColor = false;
@@ -240,9 +247,10 @@
             buttonStartSession.ForeColor = SystemColors.ControlText;
             buttonStartSession.Image = LitPulse.Properties.Resources.StartIcon;
             buttonStartSession.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonStartSession.Location = new Point(3, 3);
+            buttonStartSession.Location = new Point(3, 2);
+            buttonStartSession.Margin = new Padding(3, 2, 3, 2);
             buttonStartSession.Name = "buttonStartSession";
-            buttonStartSession.Size = new Size(215, 41);
+            buttonStartSession.Size = new Size(186, 32);
             buttonStartSession.TabIndex = 6;
             buttonStartSession.Text = "ЗАПУСК СЕАНСА";
             buttonStartSession.UseVisualStyleBackColor = false;
@@ -256,13 +264,14 @@
             tableLayoutPanel6.Controls.Add(label2, 0, 0);
             tableLayoutPanel6.Controls.Add(tableLayoutPanel10, 0, 2);
             tableLayoutPanel6.Dock = DockStyle.Fill;
-            tableLayoutPanel6.Location = new Point(393, 3);
+            tableLayoutPanel6.Location = new Point(344, 2);
+            tableLayoutPanel6.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 3;
-            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel6.Size = new Size(384, 335);
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel6.Size = new Size(335, 251);
             tableLayoutPanel6.TabIndex = 1;
             // 
             // dataGridViewLinks
@@ -271,10 +280,11 @@
             dataGridViewLinks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewLinks.Columns.AddRange(new DataGridViewColumn[] { Link });
             dataGridViewLinks.Dock = DockStyle.Fill;
-            dataGridViewLinks.Location = new Point(3, 23);
+            dataGridViewLinks.Location = new Point(3, 17);
+            dataGridViewLinks.Margin = new Padding(3, 2, 3, 2);
             dataGridViewLinks.Name = "dataGridViewLinks";
             dataGridViewLinks.RowHeadersWidth = 51;
-            dataGridViewLinks.Size = new Size(378, 256);
+            dataGridViewLinks.Size = new Size(329, 192);
             dataGridViewLinks.TabIndex = 1;
             // 
             // Link
@@ -291,7 +301,7 @@
             label2.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label2.Location = new Point(3, 0);
             label2.Name = "label2";
-            label2.Size = new Size(71, 20);
+            label2.Size = new Size(59, 15);
             label2.TabIndex = 2;
             label2.Text = "Ссылки";
             // 
@@ -299,19 +309,20 @@
             // 
             tableLayoutPanel10.ColumnCount = 4;
             tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
-            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
-            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel10.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
             tableLayoutPanel10.Controls.Add(buttonClearLinks, 3, 0);
             tableLayoutPanel10.Controls.Add(buttonDeleteLink, 2, 0);
             tableLayoutPanel10.Controls.Add(buttonAddLink, 1, 0);
             tableLayoutPanel10.Controls.Add(buttonImportLinks, 0, 0);
             tableLayoutPanel10.Dock = DockStyle.Fill;
-            tableLayoutPanel10.Location = new Point(3, 285);
+            tableLayoutPanel10.Location = new Point(3, 213);
+            tableLayoutPanel10.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel10.Name = "tableLayoutPanel10";
             tableLayoutPanel10.RowCount = 1;
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel10.Size = new Size(378, 47);
+            tableLayoutPanel10.Size = new Size(329, 36);
             tableLayoutPanel10.TabIndex = 3;
             // 
             // buttonClearLinks
@@ -319,9 +330,10 @@
             buttonClearLinks.BackColor = Color.Red;
             buttonClearLinks.Dock = DockStyle.Fill;
             buttonClearLinks.Image = LitPulse.Properties.Resources.ClearIcon_White;
-            buttonClearLinks.Location = new Point(335, 3);
+            buttonClearLinks.Location = new Point(292, 2);
+            buttonClearLinks.Margin = new Padding(3, 2, 3, 2);
             buttonClearLinks.Name = "buttonClearLinks";
-            buttonClearLinks.Size = new Size(40, 41);
+            buttonClearLinks.Size = new Size(34, 32);
             buttonClearLinks.TabIndex = 8;
             buttonClearLinks.UseVisualStyleBackColor = false;
             buttonClearLinks.Click += buttonClearLinks_Click;
@@ -330,9 +342,10 @@
             // 
             buttonDeleteLink.Dock = DockStyle.Fill;
             buttonDeleteLink.Image = LitPulse.Properties.Resources.RemoveIcon_Full;
-            buttonDeleteLink.Location = new Point(289, 3);
+            buttonDeleteLink.Location = new Point(252, 2);
+            buttonDeleteLink.Margin = new Padding(3, 2, 3, 2);
             buttonDeleteLink.Name = "buttonDeleteLink";
-            buttonDeleteLink.Size = new Size(40, 41);
+            buttonDeleteLink.Size = new Size(34, 32);
             buttonDeleteLink.TabIndex = 7;
             buttonDeleteLink.UseVisualStyleBackColor = true;
             buttonDeleteLink.Click += buttonDeleteLink_Click;
@@ -341,9 +354,10 @@
             // 
             buttonAddLink.Dock = DockStyle.Fill;
             buttonAddLink.Image = LitPulse.Properties.Resources.AddIcon;
-            buttonAddLink.Location = new Point(243, 3);
+            buttonAddLink.Location = new Point(212, 2);
+            buttonAddLink.Margin = new Padding(3, 2, 3, 2);
             buttonAddLink.Name = "buttonAddLink";
-            buttonAddLink.Size = new Size(40, 41);
+            buttonAddLink.Size = new Size(34, 32);
             buttonAddLink.TabIndex = 6;
             buttonAddLink.UseVisualStyleBackColor = true;
             buttonAddLink.Click += buttonAddLink_Click;
@@ -354,9 +368,10 @@
             buttonImportLinks.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonImportLinks.Image = LitPulse.Properties.Resources.uploadIcon;
             buttonImportLinks.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonImportLinks.Location = new Point(3, 3);
+            buttonImportLinks.Location = new Point(3, 2);
+            buttonImportLinks.Margin = new Padding(3, 2, 3, 2);
             buttonImportLinks.Name = "buttonImportLinks";
-            buttonImportLinks.Size = new Size(234, 41);
+            buttonImportLinks.Size = new Size(203, 32);
             buttonImportLinks.TabIndex = 5;
             buttonImportLinks.Text = "Импорт ссылок";
             buttonImportLinks.UseVisualStyleBackColor = true;
@@ -370,13 +385,14 @@
             tableLayoutPanel3.Controls.Add(label1, 0, 0);
             tableLayoutPanel3.Controls.Add(tableLayoutPanel9, 0, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(3, 3);
+            tableLayoutPanel3.Location = new Point(3, 2);
+            tableLayoutPanel3.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 3;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel3.Size = new Size(384, 335);
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel3.Size = new Size(335, 251);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // dataGridViewAccounts
@@ -385,10 +401,11 @@
             dataGridViewAccounts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewAccounts.Columns.AddRange(new DataGridViewColumn[] { Login, Password });
             dataGridViewAccounts.Dock = DockStyle.Fill;
-            dataGridViewAccounts.Location = new Point(3, 23);
+            dataGridViewAccounts.Location = new Point(3, 17);
+            dataGridViewAccounts.Margin = new Padding(3, 2, 3, 2);
             dataGridViewAccounts.Name = "dataGridViewAccounts";
             dataGridViewAccounts.RowHeadersWidth = 51;
-            dataGridViewAccounts.Size = new Size(378, 256);
+            dataGridViewAccounts.Size = new Size(329, 192);
             dataGridViewAccounts.TabIndex = 1;
             // 
             // Login
@@ -413,7 +430,7 @@
             label1.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(87, 20);
+            label1.Size = new Size(71, 15);
             label1.TabIndex = 2;
             label1.Text = "Аккаунты";
             // 
@@ -421,19 +438,20 @@
             // 
             tableLayoutPanel9.ColumnCount = 4;
             tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 40F));
             tableLayoutPanel9.Controls.Add(buttonClearAccounts, 3, 0);
             tableLayoutPanel9.Controls.Add(buttonDeleteAccount, 2, 0);
             tableLayoutPanel9.Controls.Add(buttonImportAccounts, 0, 0);
             tableLayoutPanel9.Controls.Add(buttonAddAccount, 1, 0);
             tableLayoutPanel9.Dock = DockStyle.Fill;
-            tableLayoutPanel9.Location = new Point(3, 285);
+            tableLayoutPanel9.Location = new Point(3, 213);
+            tableLayoutPanel9.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel9.Name = "tableLayoutPanel9";
             tableLayoutPanel9.RowCount = 1;
             tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel9.Size = new Size(378, 47);
+            tableLayoutPanel9.Size = new Size(329, 36);
             tableLayoutPanel9.TabIndex = 3;
             // 
             // buttonClearAccounts
@@ -441,9 +459,10 @@
             buttonClearAccounts.BackColor = Color.Red;
             buttonClearAccounts.Dock = DockStyle.Fill;
             buttonClearAccounts.Image = LitPulse.Properties.Resources.ClearIcon_White;
-            buttonClearAccounts.Location = new Point(335, 3);
+            buttonClearAccounts.Location = new Point(292, 2);
+            buttonClearAccounts.Margin = new Padding(3, 2, 3, 2);
             buttonClearAccounts.Name = "buttonClearAccounts";
-            buttonClearAccounts.Size = new Size(40, 41);
+            buttonClearAccounts.Size = new Size(34, 32);
             buttonClearAccounts.TabIndex = 7;
             buttonClearAccounts.UseVisualStyleBackColor = false;
             buttonClearAccounts.Click += buttonClearAccounts_Click;
@@ -452,9 +471,10 @@
             // 
             buttonDeleteAccount.Dock = DockStyle.Fill;
             buttonDeleteAccount.Image = LitPulse.Properties.Resources.RemoveIcon_Full;
-            buttonDeleteAccount.Location = new Point(289, 3);
+            buttonDeleteAccount.Location = new Point(252, 2);
+            buttonDeleteAccount.Margin = new Padding(3, 2, 3, 2);
             buttonDeleteAccount.Name = "buttonDeleteAccount";
-            buttonDeleteAccount.Size = new Size(40, 41);
+            buttonDeleteAccount.Size = new Size(34, 32);
             buttonDeleteAccount.TabIndex = 6;
             buttonDeleteAccount.UseVisualStyleBackColor = true;
             buttonDeleteAccount.Click += buttonDeleteAccount_Click;
@@ -465,9 +485,10 @@
             buttonImportAccounts.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonImportAccounts.Image = LitPulse.Properties.Resources.uploadIcon;
             buttonImportAccounts.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonImportAccounts.Location = new Point(3, 3);
+            buttonImportAccounts.Location = new Point(3, 2);
+            buttonImportAccounts.Margin = new Padding(3, 2, 3, 2);
             buttonImportAccounts.Name = "buttonImportAccounts";
-            buttonImportAccounts.Size = new Size(234, 41);
+            buttonImportAccounts.Size = new Size(203, 32);
             buttonImportAccounts.TabIndex = 4;
             buttonImportAccounts.Text = "Импорт аккаунтов";
             buttonImportAccounts.UseVisualStyleBackColor = true;
@@ -477,9 +498,10 @@
             // 
             buttonAddAccount.Dock = DockStyle.Fill;
             buttonAddAccount.Image = LitPulse.Properties.Resources.AddIcon;
-            buttonAddAccount.Location = new Point(243, 3);
+            buttonAddAccount.Location = new Point(212, 2);
+            buttonAddAccount.Margin = new Padding(3, 2, 3, 2);
             buttonAddAccount.Name = "buttonAddAccount";
-            buttonAddAccount.Size = new Size(40, 41);
+            buttonAddAccount.Size = new Size(34, 32);
             buttonAddAccount.TabIndex = 5;
             buttonAddAccount.UseVisualStyleBackColor = true;
             buttonAddAccount.Click += buttonAddAccount_Click;
@@ -494,12 +516,13 @@
             tableLayoutPanel7.Controls.Add(tableLayoutPanel8, 2, 0);
             tableLayoutPanel7.Controls.Add(tableLayoutPanel11, 1, 0);
             tableLayoutPanel7.Dock = DockStyle.Fill;
-            tableLayoutPanel7.Location = new Point(5, 354);
+            tableLayoutPanel7.Location = new Point(5, 265);
+            tableLayoutPanel7.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             tableLayoutPanel7.RowCount = 1;
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel7.Size = new Size(1172, 194);
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
+            tableLayoutPanel7.Size = new Size(1024, 146);
             tableLayoutPanel7.TabIndex = 1;
             // 
             // groupBox1
@@ -510,9 +533,11 @@
             groupBox1.Controls.Add(label6);
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            groupBox1.Location = new Point(3, 3);
+            groupBox1.Location = new Point(3, 2);
+            groupBox1.Margin = new Padding(3, 2, 3, 2);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(384, 188);
+            groupBox1.Padding = new Padding(3, 2, 3, 2);
+            groupBox1.Size = new Size(335, 142);
             groupBox1.TabIndex = 10;
             groupBox1.TabStop = false;
             groupBox1.Text = "Параметры";
@@ -523,9 +548,10 @@
             richTextBoxProfile.BorderStyle = BorderStyle.None;
             richTextBoxProfile.Dock = DockStyle.Fill;
             richTextBoxProfile.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            richTextBoxProfile.Location = new Point(3, 91);
+            richTextBoxProfile.Location = new Point(3, 71);
+            richTextBoxProfile.Margin = new Padding(3, 2, 3, 2);
             richTextBoxProfile.Name = "richTextBoxProfile";
-            richTextBoxProfile.Size = new Size(378, 94);
+            richTextBoxProfile.Size = new Size(329, 69);
             richTextBoxProfile.TabIndex = 9;
             richTextBoxProfile.Text = "";
             // 
@@ -534,9 +560,9 @@
             label4.AutoSize = true;
             label4.Dock = DockStyle.Top;
             label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            label4.Location = new Point(3, 71);
+            label4.Location = new Point(3, 56);
             label4.Name = "label4";
-            label4.Size = new Size(150, 20);
+            label4.Size = new Size(118, 15);
             label4.TabIndex = 8;
             label4.Text = "Описание профиля:";
             // 
@@ -545,9 +571,10 @@
             comboBoxReadProfiles.Dock = DockStyle.Top;
             comboBoxReadProfiles.FormattingEnabled = true;
             comboBoxReadProfiles.Items.AddRange(new object[] { "Быстрое чтение", "Глубокое чтение", "Уставшее чтение" });
-            comboBoxReadProfiles.Location = new Point(3, 43);
+            comboBoxReadProfiles.Location = new Point(3, 33);
+            comboBoxReadProfiles.Margin = new Padding(3, 2, 3, 2);
             comboBoxReadProfiles.Name = "comboBoxReadProfiles";
-            comboBoxReadProfiles.Size = new Size(378, 28);
+            comboBoxReadProfiles.Size = new Size(329, 23);
             comboBoxReadProfiles.TabIndex = 7;
             comboBoxReadProfiles.SelectedIndexChanged += comboBoxReadProfiles_SelectedIndexChanged;
             // 
@@ -556,9 +583,9 @@
             label6.AutoSize = true;
             label6.Dock = DockStyle.Top;
             label6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            label6.Location = new Point(3, 23);
+            label6.Location = new Point(3, 18);
             label6.Name = "label6";
-            label6.Size = new Size(128, 20);
+            label6.Size = new Size(101, 15);
             label6.TabIndex = 6;
             label6.Text = "Профили чтения";
             // 
@@ -570,13 +597,14 @@
             tableLayoutPanel8.Controls.Add(richTextBoxLog, 0, 1);
             tableLayoutPanel8.Controls.Add(label5, 0, 0);
             tableLayoutPanel8.Dock = DockStyle.Fill;
-            tableLayoutPanel8.Location = new Point(783, 3);
+            tableLayoutPanel8.Location = new Point(685, 2);
+            tableLayoutPanel8.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel8.Name = "tableLayoutPanel8";
             tableLayoutPanel8.RowCount = 3;
-            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel8.Size = new Size(386, 188);
+            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel8.Size = new Size(336, 142);
             tableLayoutPanel8.TabIndex = 12;
             // 
             // buttonUploadLogs
@@ -585,9 +613,10 @@
             buttonUploadLogs.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonUploadLogs.Image = LitPulse.Properties.Resources.DownLoadIcon;
             buttonUploadLogs.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonUploadLogs.Location = new Point(3, 138);
+            buttonUploadLogs.Location = new Point(3, 104);
+            buttonUploadLogs.Margin = new Padding(3, 2, 3, 2);
             buttonUploadLogs.Name = "buttonUploadLogs";
-            buttonUploadLogs.Size = new Size(380, 47);
+            buttonUploadLogs.Size = new Size(330, 36);
             buttonUploadLogs.TabIndex = 8;
             buttonUploadLogs.Text = "Выгрузить логи";
             buttonUploadLogs.UseVisualStyleBackColor = true;
@@ -596,10 +625,11 @@
             // richTextBoxLog
             // 
             richTextBoxLog.Dock = DockStyle.Fill;
-            richTextBoxLog.Location = new Point(3, 23);
+            richTextBoxLog.Location = new Point(3, 17);
+            richTextBoxLog.Margin = new Padding(3, 2, 3, 2);
             richTextBoxLog.Name = "richTextBoxLog";
             richTextBoxLog.ReadOnly = true;
-            richTextBoxLog.Size = new Size(380, 109);
+            richTextBoxLog.Size = new Size(330, 83);
             richTextBoxLog.TabIndex = 2;
             richTextBoxLog.Text = "";
             // 
@@ -609,7 +639,7 @@
             label5.Dock = DockStyle.Top;
             label5.Location = new Point(3, 0);
             label5.Name = "label5";
-            label5.Size = new Size(380, 20);
+            label5.Size = new Size(330, 15);
             label5.TabIndex = 1;
             label5.Text = "Лог";
             // 
@@ -622,15 +652,14 @@
             tableLayoutPanel11.Controls.Add(buttonOtherSettings, 0, 0);
             tableLayoutPanel11.Dock = DockStyle.Fill;
             tableLayoutPanel11.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            tableLayoutPanel11.Location = new Point(393, 4);
-            tableLayoutPanel11.Margin = new Padding(3, 4, 3, 4);
+            tableLayoutPanel11.Location = new Point(344, 3);
             tableLayoutPanel11.Name = "tableLayoutPanel11";
             tableLayoutPanel11.RowCount = 4;
-            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
-            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
+            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel11.Size = new Size(384, 186);
+            tableLayoutPanel11.Size = new Size(335, 140);
             tableLayoutPanel11.TabIndex = 13;
             // 
             // buttonAccountGenerator
@@ -640,9 +669,10 @@
             buttonAccountGenerator.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonAccountGenerator.Image = LitPulse.Properties.Resources.AccountGeneratorIcon;
             buttonAccountGenerator.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonAccountGenerator.Location = new Point(3, 56);
+            buttonAccountGenerator.Location = new Point(3, 42);
+            buttonAccountGenerator.Margin = new Padding(3, 2, 3, 2);
             buttonAccountGenerator.Name = "buttonAccountGenerator";
-            buttonAccountGenerator.Size = new Size(378, 47);
+            buttonAccountGenerator.Size = new Size(329, 36);
             buttonAccountGenerator.TabIndex = 15;
             buttonAccountGenerator.Text = "Генератор аккаунтов";
             buttonAccountGenerator.UseVisualStyleBackColor = true;
@@ -654,9 +684,10 @@
             button_instruction.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             button_instruction.Image = LitPulse.Properties.Resources.InstructionIcon;
             button_instruction.ImageAlign = ContentAlignment.MiddleLeft;
-            button_instruction.Location = new Point(3, 109);
+            button_instruction.Location = new Point(3, 82);
+            button_instruction.Margin = new Padding(3, 2, 3, 2);
             button_instruction.Name = "button_instruction";
-            button_instruction.Size = new Size(378, 47);
+            button_instruction.Size = new Size(329, 36);
             button_instruction.TabIndex = 14;
             button_instruction.Text = "Инструкция";
             button_instruction.UseVisualStyleBackColor = true;
@@ -668,9 +699,10 @@
             buttonOtherSettings.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
             buttonOtherSettings.Image = LitPulse.Properties.Resources.SettingsIcon;
             buttonOtherSettings.ImageAlign = ContentAlignment.MiddleLeft;
-            buttonOtherSettings.Location = new Point(3, 3);
+            buttonOtherSettings.Location = new Point(3, 2);
+            buttonOtherSettings.Margin = new Padding(3, 2, 3, 2);
             buttonOtherSettings.Name = "buttonOtherSettings";
-            buttonOtherSettings.Size = new Size(378, 47);
+            buttonOtherSettings.Size = new Size(329, 36);
             buttonOtherSettings.TabIndex = 12;
             buttonOtherSettings.Text = "Дополнительные параметры";
             buttonOtherSettings.UseVisualStyleBackColor = true;
@@ -682,11 +714,12 @@
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1182, 553);
+            ClientSize = new Size(1034, 415);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 2, 3, 2);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LitPulse";

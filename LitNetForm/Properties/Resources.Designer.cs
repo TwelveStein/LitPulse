@@ -123,6 +123,16 @@ namespace LitPulse.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap LitPulse_Logo {
+            get {
+                object obj = ResourceManager.GetObject("LitPulse_Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RemoveIcon {
             get {
                 object obj = ResourceManager.GetObject("RemoveIcon", resourceCulture);

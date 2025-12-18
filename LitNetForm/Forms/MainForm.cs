@@ -10,9 +10,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Scroll_model;
 
 namespace LitNetForm.Forms
 {
@@ -74,6 +76,10 @@ namespace LitNetForm.Forms
             }
 
             _cts = new CancellationTokenSource();
+            // Litmarket
+            var serviceLitMarket = new Lit_market();
+            _activeServicesMarket.Add(serviceLitMarket);
+            
 
             foreach (Accounts account in Accounts)
             {
@@ -148,20 +154,18 @@ namespace LitNetForm.Forms
                     await serviceLitNet.DisposeAsync();
                 }
 
-                // Litmarket
-                var serviceLitMarket = new Lit_market();
-                _activeServicesMarket.Add(serviceLitMarket);
+              
 
                 try
                 {
                     if (litmarketArray.Length != 0)
                     {
-                        AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
+                        
+                         
+                            AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
-                        await serviceLitMarket.InitializeAsync();
-                        if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog))
-                        {
-
+                            await serviceLitMarket.InitializeAsync();
+                            await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнен вход в аккаунт {account.Login}");
@@ -176,12 +180,12 @@ namespace LitNetForm.Forms
                             }
                             await serviceLitMarket.DisposeAsync();
                             _cts.Token.ThrowIfCancellationRequested();
+                         
+                         
+                         
+                        
+                        
 
-                        }
-                        else 
-                        {
-                            await serviceLitMarket.DisposeAsync();
-                        }
                     }
                 }
                 catch (OperationCanceledException)
@@ -216,7 +220,27 @@ namespace LitNetForm.Forms
                 }
             }
         }
+        private async Task Litmarket_more_treads(string[] litmarketArray, Lit_market serviceLitMarket , Data.Accounts account , Profile profile) 
+        {
+            AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
+            await serviceLitMarket.InitializeAsync();
+            await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog);
+            _cts.Token.ThrowIfCancellationRequested();
+
+            AppendLog($"Выполнен вход в аккаунт {account.Login}");
+
+            foreach (string link in litmarketArray)
+            {
+                await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
+                _cts.Token.ThrowIfCancellationRequested();
+
+                AppendLog($"Выполнено чтение по ссылке {link}");
+
+            }
+            await serviceLitMarket.DisposeAsync();
+            _cts.Token.ThrowIfCancellationRequested();
+        }
         private void buttonStop_Click(object sender, EventArgs e)
         {
             StopAllServicesAsync();

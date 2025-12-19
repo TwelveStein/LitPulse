@@ -888,6 +888,7 @@
             ClientSize = new Size(1582, 653);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(1600, 700);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LitPulse";

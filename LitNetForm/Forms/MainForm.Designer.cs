@@ -39,6 +39,7 @@
             Operation = new DataGridViewTextBoxColumn();
             label3 = new Label();
             tableLayoutPanel5 = new TableLayoutPanel();
+            checkBoxRunningInMultithreadingMode = new CheckBox();
             buttonStop = new Button();
             buttonStartSession = new Button();
             tableLayoutPanel6 = new TableLayoutPanel();
@@ -161,7 +162,7 @@
             tableLayoutPanel4.Location = new Point(989, 3);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 4;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 93F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
@@ -190,10 +191,10 @@
             dataGridViewReport.Columns.AddRange(new DataGridViewColumn[] { Status, Operation });
             dataGridViewReport.Dock = DockStyle.Fill;
             dataGridViewReport.Enabled = false;
-            dataGridViewReport.Location = new Point(3, 76);
+            dataGridViewReport.Location = new Point(3, 116);
             dataGridViewReport.Name = "dataGridViewReport";
             dataGridViewReport.RowHeadersWidth = 51;
-            dataGridViewReport.Size = new Size(574, 283);
+            dataGridViewReport.Size = new Size(574, 243);
             dataGridViewReport.TabIndex = 6;
             // 
             // Status
@@ -217,7 +218,7 @@
             label3.AutoSize = true;
             label3.Dock = DockStyle.Fill;
             label3.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            label3.Location = new Point(3, 53);
+            label3.Location = new Point(3, 93);
             label3.Name = "label3";
             label3.Size = new Size(574, 20);
             label3.TabIndex = 3;
@@ -226,18 +227,30 @@
             // tableLayoutPanel5
             // 
             tableLayoutPanel5.ColumnCount = 2;
-            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58.3333321F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58.33333F));
             tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 41.6666679F));
+            tableLayoutPanel5.Controls.Add(checkBoxRunningInMultithreadingMode, 0, 1);
             tableLayoutPanel5.Controls.Add(buttonStop, 1, 0);
             tableLayoutPanel5.Controls.Add(buttonStartSession, 0, 0);
             tableLayoutPanel5.Dock = DockStyle.Fill;
             tableLayoutPanel5.Location = new Point(3, 3);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
-            tableLayoutPanel5.RowCount = 1;
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 48F));
-            tableLayoutPanel5.Size = new Size(574, 47);
+            tableLayoutPanel5.RowCount = 2;
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 53F));
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel5.Size = new Size(574, 87);
             tableLayoutPanel5.TabIndex = 8;
+            // 
+            // checkBoxRunningInMultithreadingMode
+            // 
+            checkBoxRunningInMultithreadingMode.AutoSize = true;
+            checkBoxRunningInMultithreadingMode.Location = new Point(3, 56);
+            checkBoxRunningInMultithreadingMode.Name = "checkBoxRunningInMultithreadingMode";
+            checkBoxRunningInMultithreadingMode.Size = new Size(300, 24);
+            checkBoxRunningInMultithreadingMode.TabIndex = 8;
+            checkBoxRunningInMultithreadingMode.Text = "Запускать в режиме многопоточности";
+            toolTip1.SetToolTip(checkBoxRunningInMultithreadingMode, "При включенном параметре программа начинает работать в режиме многопоточности, \r\nгде каждый аккаунт - это отдельное окно браузера. (!!!Требует больших ресурсов компьютера!!!)");
+            checkBoxRunningInMultithreadingMode.UseVisualStyleBackColor = true;
             // 
             // buttonStop
             // 
@@ -249,7 +262,7 @@
             buttonStop.ImageAlign = ContentAlignment.MiddleLeft;
             buttonStop.Location = new Point(337, 3);
             buttonStop.Name = "buttonStop";
-            buttonStop.Size = new Size(234, 41);
+            buttonStop.Size = new Size(234, 47);
             buttonStop.TabIndex = 7;
             buttonStop.Text = "СТОП";
             buttonStop.UseVisualStyleBackColor = false;
@@ -265,7 +278,7 @@
             buttonStartSession.ImageAlign = ContentAlignment.MiddleLeft;
             buttonStartSession.Location = new Point(3, 3);
             buttonStartSession.Name = "buttonStartSession";
-            buttonStartSession.Size = new Size(328, 41);
+            buttonStartSession.Size = new Size(328, 47);
             buttonStartSession.TabIndex = 6;
             buttonStartSession.Text = "ЗАПУСК СЕАНСА";
             buttonStartSession.UseVisualStyleBackColor = false;
@@ -899,6 +912,7 @@
             tableLayoutPanel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReport).EndInit();
             tableLayoutPanel5.ResumeLayout(false);
+            tableLayoutPanel5.PerformLayout();
             tableLayoutPanel6.ResumeLayout(false);
             tableLayoutPanel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewLinks).EndInit();
@@ -989,5 +1003,6 @@
         private Label label8;
         private NumericUpDown numericUpDownConstantDelay;
         private NumericUpDown numericUpDownFloatingIncrementalDelay;
+        private CheckBox checkBoxRunningInMultithreadingMode;
     }
 }

@@ -68,32 +68,50 @@ namespace LitNetForm.Forms
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
         {
+            bool RunningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
+            
             Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
 
-            int ConstantDelay = Settings.ConstantDelay;
-
-            int FloatingIncrementalDelay = Settings.FloatingIncrementalDelay;
-
-            Random random = new Random();
-
-            foreach (Accounts account in Accounts)
+            if (RunningInMultithreadingMode)
             {
+                int ConstantDelay = Settings.ConstantDelay;
 
-                int FloatingDelay = random.Next(FloatingIncrementalDelay);
+                int FloatingIncrementalDelay = Settings.FloatingIncrementalDelay;
 
-                int Delay = (ConstantDelay + FloatingDelay) * 1000;
+                Random random = new Random();
 
-                AppendLog($"Задержка перед запуском: {Delay / 1000}");
+                foreach (Accounts account in Accounts)
+                {
+                    int FloatingDelay = random.Next(FloatingIncrementalDelay);
 
-                // Создаем поток с делегатом, который будет выполнять синхронную обертку
-                Thread thread = new Thread(() => StartSession(account, profile, Delay));
-                thread.Start();
+                    int Delay = (ConstantDelay + FloatingDelay) * 1000;
+
+                    AppendLog($"Задержка перед запуском: {Delay / 1000}");
+
+                    // Создаем поток с делегатом, который будет выполнять синхронную обертку
+                    Thread thread = new Thread(() => StartSettionInThread(account, profile, Delay));
+                    thread.Start();
+                }
             }
+            else
+            {
+                foreach (Accounts account in Accounts)
+                {
+                    await StartSession(account, profile);
+                }
+            }
+            
         }
 
-        private async void StartSession(Accounts account, Scroll_model.Profile profile, int Delay)
+        private async void StartSettionInThread(Accounts account, Scroll_model.Profile profile, int Delay)
         {
             await Task.Delay(Delay);
+
+            StartSession(account, profile);
+        }
+
+        private async Task StartSession(Accounts account, Scroll_model.Profile profile)
+        {      
 
             var links = SplitLinksByDomain(Links);
 

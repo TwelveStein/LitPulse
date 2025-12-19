@@ -142,5 +142,10 @@ namespace LitNetForm.Forms
             profileSettings.MinMaxScrollDuration = Convert.ToUInt32(numericUpDownMinMaxScrollDuration.Value);
             profileSettings.MinMaxScrollStep = Convert.ToUInt32(numericUpDownMinMaxScrollStep.Value);
         }
+
+        private void checkBoxAddToLibrary_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

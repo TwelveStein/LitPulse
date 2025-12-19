@@ -21,13 +21,19 @@ namespace LitNetForm.Forms
 {
     public partial class MainForm : Form
     {
+        private bool SettingsAreLoaded = false;
+
         public MainForm()
         {
             InitializeComponent();
 
             SetParameters();
 
+            LoadSettings();
+
             LoadData();
+
+            SettingsAreLoaded = true;
 
             dataGridViewAccounts.DataSource = Accounts;
             dataGridViewLinks.DataSource = Links;
@@ -72,7 +78,7 @@ namespace LitNetForm.Forms
 
             foreach (Accounts account in Accounts)
             {
-                
+
                 int FloatingDelay = random.Next(FloatingIncrementalDelay);
 
                 int Delay = (ConstantDelay + FloatingDelay) * 1000;
@@ -253,34 +259,6 @@ namespace LitNetForm.Forms
 
         }
 
-        #region Settings
-
-        private void comboBoxReadProfiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
-
-            Settings.ReadProfile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
-
-            SaveParameters();
-        }
-
-        private void buttonOtherSettings_Click(object sender, EventArgs e)
-        {
-            using (var settingsForm = new SettingsForm(Settings))
-            {
-                // Открываем форму как диалог
-                if (settingsForm.ShowDialog() == DialogResult.OK)
-                {
-                    // Получаем настройки
-                    Settings = settingsForm.Settings;
-
-                    SaveParameters();
-                }
-            }
-        }
-
-        #endregion
-
         #region Accounts
 
         private void buttonImportAccounts_Click(object sender, EventArgs e)
@@ -385,6 +363,129 @@ namespace LitNetForm.Forms
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        #endregion
+
+        #region Settings
+
+        private void comboBoxReadProfiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
+
+            Settings.ReadProfile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
+
+            SaveParameters();
+        }
+
+        private void checkBoxReadBook_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void checkBoxLikeTheBook_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void checkBoxAddToLibrary_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void checkBoxSubscribeToTheAuthor_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void checkBoxPostComment_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void checkBoxMakeADonationToTheAuthor_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void checkBoxBuyABook_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void numericUpDownConstantDelay_ValueChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void numericUpDownFloatingIncrementalDelay_ValueChanged(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void LoadSettings()
+        {
+            checkBoxReadBook.Checked = Settings.ReadBook;
+
+            checkBoxAddToLibrary.Checked = Settings.AddToLibrary;
+
+            checkBoxLikeTheBook.Checked = Settings.LikeTheBook;
+
+            checkBoxSubscribeToTheAuthor.Checked = Settings.SubscribeToTheAuthor;
+
+            checkBoxPostComment.Checked = Settings.PostComment;
+
+            checkBoxMakeADonationToTheAuthor.Checked = Settings.MakeADonationToTheAuthor;
+
+            checkBoxBuyABook.Checked = Settings.BuyABook;
+
+            numericUpDownConstantDelay.Value = Settings.ConstantDelay;
+
+            numericUpDownFloatingIncrementalDelay.Value = Settings.FloatingIncrementalDelay;
+
+            comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
+        }
+
+        private void SaveSettings()
+        {
+            if (!SettingsAreLoaded)
+            {
+                return;
+            }
+
+            Settings.ReadBook = checkBoxReadBook.Checked;
+
+            Settings.AddToLibrary = checkBoxAddToLibrary.Checked;
+
+            Settings.LikeTheBook = checkBoxLikeTheBook.Checked;
+
+            Settings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
+
+            Settings.PostComment = checkBoxPostComment.Checked;
+
+            Settings.MakeADonationToTheAuthor = checkBoxMakeADonationToTheAuthor.Checked;
+
+            Settings.BuyABook = checkBoxBuyABook.Checked;
+
+            Settings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
+
+            Settings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
+
+            // Сохранение настроек профилей
+            for (int i = 0; i < comboBoxReadProfiles.Items.Count; i++)
+            {
+                Scroll_model.Profile readProfile = (Scroll_model.Profile)i;
+
+                if (!Settings.ReadProfileSettings.ContainsKey(readProfile))
+                {
+                    // Ключа нет - добавляем новую пару
+                    Settings.ReadProfileSettings.Add(readProfile, SettingsManager.CreateDefaultReadProfileSettings(readProfile));
+
+                }
+
+            }
+
+            SaveParameters();
         }
 
         #endregion

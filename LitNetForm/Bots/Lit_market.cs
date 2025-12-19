@@ -263,7 +263,7 @@ namespace net_market_bot
                     await IsButtonClickable(".card-share__subscribe-button");
 
                 }
-
+            await _page.WaitForTimeoutAsync(3000);
 
         }
 

@@ -233,7 +233,7 @@
             // 
             // SheetsCount
             // 
-            SheetsCount.HeaderText = "Кол-во листов";
+            SheetsCount.HeaderText = "Кол-во страниц";
             SheetsCount.MinimumWidth = 6;
             SheetsCount.Name = "SheetsCount";
             SheetsCount.ReadOnly = true;

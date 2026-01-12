@@ -36,6 +36,9 @@ bld/
 *.sdf
 *.cachefile
 
+# Rider files
+.idea/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

@@ -155,11 +155,18 @@ namespace LitNetForm.Forms
 
                         foreach (var link in litnetArray)
                         {
-                            await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
+                            int sheetsCount = await serviceLitNet.Base_Activuty_bot(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
-
+                            
+                            WriteDataToTheReport(new ReportData(
+                                account.Login,
+                                "111",
+                                nameof(Operations.Чтение),
+                                link,
+                                sheetsCount,
+                                nameof(Statuses.Успешно)));
                         }
                         await serviceLitNet.DisposeAsync();
 
@@ -202,12 +209,14 @@ namespace LitNetForm.Forms
             {
                 if (litmarketArray.Length != 0)
                 {
-
                     AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
                     await serviceLitMarket.InitializeAsync();
 
-                    if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog))
+                    if (await serviceLitMarket.Login(
+                            account.Login,
+                            account.Password, 
+                            "https://litmarket.ru/", AppendLog))
                     {
 
                         _cts.Token.ThrowIfCancellationRequested();
@@ -216,11 +225,18 @@ namespace LitNetForm.Forms
 
                         foreach (string link in litmarketArray)
                         {
-                            await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
+                            var sheetsCount = await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
-
+                            
+                            WriteDataToTheReport(new ReportData(
+                                account.Login,
+                                "111",
+                                nameof(Operations.Чтение),
+                                link,
+                                sheetsCount,
+                                nameof(Statuses.Успешно)));
                         }
                         await serviceLitMarket.DisposeAsync();
 
@@ -674,6 +690,45 @@ namespace LitNetForm.Forms
 
             await Task.WhenAll(tasks);
             _activeServices.Clear();
+        }
+
+        #endregion
+        
+        #region Reports
+
+        private enum Operations
+        {
+            Чтение
+        }
+
+        private enum Statuses
+        {
+            Успешно,
+            Неудачно
+        }
+
+        private record ReportData(
+            string User,
+            string IpAddress,
+            string Operation,
+            string Book,
+            int SheetsCount,
+            string Status);
+
+        private void WriteDataToTheReport(ReportData reportData)
+        {
+            dataGridViewReport.Rows.Add(
+                reportData.User,
+                reportData.IpAddress,
+                reportData.Operation,
+                reportData.Book,
+                reportData.SheetsCount,
+                reportData.Status);
+        }
+
+        private void buttonSaveReport_Click(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

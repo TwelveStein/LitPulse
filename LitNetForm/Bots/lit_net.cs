@@ -79,7 +79,7 @@ namespace Lit_net_bot_test
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public async Task Base_Activuty_bot(string url, Action<string> log, Scroll_model.Profile profile, LitNetForm.Settings.Settings settings)
+        public async Task<int> Base_Activuty_bot(string url, Action<string> log, Scroll_model.Profile profile, LitNetForm.Settings.Settings settings)
         {
 
             if (_page == null)
@@ -106,6 +106,8 @@ namespace Lit_net_bot_test
             await Scroll_model.BrowseBookPageAsync(_page, log, token);
             if (settings.ReadBook) 
             {
+                int sheetsCounter = 0; 
+                
                 var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
                 if (locator_learn.Result > 0)
                 {
@@ -130,11 +132,16 @@ namespace Lit_net_bot_test
                         await Scroll_model.ReadPageAsync(_page, profile, log, token);
 
                         await _page.ClickAsync("#link-right");
-
+                        
+                        sheetsCounter++;
                     }
                     else { break; }
+                    
+                    return sheetsCounter;
                 }
             }
+
+            return 0;
         }
 
         public async Task<bool> Login(string login, string password, string Link_login)

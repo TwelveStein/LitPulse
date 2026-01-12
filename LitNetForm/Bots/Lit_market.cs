@@ -169,7 +169,7 @@ namespace net_market_bot
         /// Метод прохода по ссылкам 
         /// </summary>
         /// <returns></returns>
-        public async Task Reader_books(string link, Action<string> log, Scroll_model.Profile profile , LitNetForm.Settings.Settings settings) 
+        public async Task<int> Reader_books(string link, Action<string> log, Scroll_model.Profile profile , LitNetForm.Settings.Settings settings) 
         {
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
@@ -179,7 +179,8 @@ namespace net_market_bot
             
             if (settings.ReadBook) 
             {
-            
+                int sheetsCounter = 0; 
+                
                 await _page.ClickAsync("div.btn-reader");
 
                 await _page.WaitForTimeoutAsync(3000);
@@ -191,6 +192,7 @@ namespace net_market_bot
                     {
                         var url_page = _page.Url;
                         await Scroll_model.ReadPageAsync(_page, profile, log, token);
+                        sheetsCounter++;
 
                         var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
 
@@ -217,6 +219,8 @@ namespace net_market_bot
                         // Прокрутка к кнопке для гарантии видимости
 
                     } 
+                    
+                    return sheetsCounter;
                 }
                 catch { }
 
@@ -258,13 +262,14 @@ namespace net_market_bot
                 
                 }
             }
-                if (settings.SubscribeToTheAuthor) 
-                {
-                    await IsButtonClickable(".card-share__subscribe-button");
+            if (settings.SubscribeToTheAuthor) 
+            {
+                await IsButtonClickable(".card-share__subscribe-button");
 
-                }
+            }
             await _page.WaitForTimeoutAsync(3000);
 
+            return 0;
         }
 
         private static void Log(Action<string>? cb, string m) =>

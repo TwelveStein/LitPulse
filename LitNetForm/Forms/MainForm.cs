@@ -741,8 +741,8 @@ namespace LitNetForm.Forms
                         Status: row.Cells["Status"].Value?.ToString() ?? string.Empty));
                 }
 
-                ExcelProvider excelProvider = new ExcelProvider(reportDataList);
-                await excelProvider.SaveFileAsync(cancellationToken);
+                ReportExcelProvider reportExcelProvider = new ReportExcelProvider(reportDataList);
+                await reportExcelProvider.SaveFileAsync(cancellationToken);
             }
         }
 

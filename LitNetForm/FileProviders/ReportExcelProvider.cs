@@ -3,7 +3,7 @@ using LitPulse.Shared;
 
 namespace LitPulse.FileProviders;
 
-public class ExcelProvider : IFileProvider
+public class ReportExcelProvider : IFileProvider
 {
     private const string DIALOG_FILE_FILTER = "Excel (*.xlsx)|*.xlsx";
     private const int EXCEL_COLUMN_WIDTH = 20;
@@ -13,7 +13,7 @@ public class ExcelProvider : IFileProvider
     private readonly IReadOnlyList<ReportDataDto> _reportsData;
     private readonly string[] _columnNames = ["User", "UserIpAddress", "Operation", "Book", "SheetsCount", "Status"];
 
-    public ExcelProvider(IEnumerable<ReportDataDto> reportsData)
+    public ReportExcelProvider(IEnumerable<ReportDataDto> reportsData)
     {
         _reportsData = reportsData.ToList();
     }

@@ -15,6 +15,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LitPulse.FileProviders;
+using LitPulse.Shared;
 using static Scroll_model;
 
 namespace LitNetForm.Forms
@@ -43,12 +45,15 @@ namespace LitNetForm.Forms
 
         private Settings.Settings Settings = new Settings.Settings();
 
-        private static string Link_login = "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
+        private static string Link_login =
+            "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
 
-        private string[] ProfileDescription = {
+        private string[] ProfileDescription =
+        {
             "Минимум пауз, почти без возвратов. Подходит для ознакомительного чтения или поиска ключевых моментов. Как человек, который «пробегает глазами».",
             "Читает медленно, часто возвращается к предыдущим абзацам, делает длинные паузы. Имитирует внимательного, сосредоточенного читателя — как при изучении сложного текста.",
-            "Начинает бодро, но постепенно замедляется, дольше думает, чаще «теряет концентрацию» (доп. паузы в середине и ближе к концу). Реалистично для вечернего чтения." };
+            "Начинает бодро, но постепенно замедляется, дольше думает, чаще «теряет концентрацию» (доп. паузы в середине и ближе к концу). Реалистично для вечернего чтения."
+        };
 
         private BindingList<Links> Links = new BindingList<Links>();
 
@@ -69,7 +74,7 @@ namespace LitNetForm.Forms
         private async void buttonStartSession_Click(object sender, EventArgs e)
         {
             bool RunningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
-            
+
             Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
 
             if (RunningInMultithreadingMode)
@@ -100,7 +105,6 @@ namespace LitNetForm.Forms
                     await StartSession(account, profile);
                 }
             }
-            
         }
 
         private async void StartSettionInThread(Accounts account, Scroll_model.Profile profile, int Delay)
@@ -111,8 +115,7 @@ namespace LitNetForm.Forms
         }
 
         private async Task StartSession(Accounts account, Scroll_model.Profile profile)
-        {      
-
+        {
             var links = SplitLinksByDomain(Links);
 
             string[] litmarketArray = links.litmarketLinks;
@@ -148,7 +151,6 @@ namespace LitNetForm.Forms
 
                     if (await serviceLitNet.Login(account.Login, account.Password, Link_login))
                     {
-
                         _cts.Token.ThrowIfCancellationRequested();
 
                         AppendLog($"Выполнен вход в аккаунт {account.Login}");
@@ -159,8 +161,8 @@ namespace LitNetForm.Forms
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
-                            
-                            WriteDataToTheReport(new ReportData(
+
+                            WriteDataToTheReport(new ReportDataDto(
                                 account.Login,
                                 "111",
                                 nameof(Operations.Чтение),
@@ -168,9 +170,10 @@ namespace LitNetForm.Forms
                                 sheetsCount,
                                 nameof(Statuses.Успешно)));
                         }
-                        await serviceLitNet.DisposeAsync();
 
+                        await serviceLitNet.DisposeAsync();
                     }
+
                     await serviceLitNet.DisposeAsync();
                 }
             }
@@ -215,22 +218,21 @@ namespace LitNetForm.Forms
 
                     if (await serviceLitMarket.Login(
                             account.Login,
-                            account.Password, 
+                            account.Password,
                             "https://litmarket.ru/", AppendLog))
                     {
-
                         _cts.Token.ThrowIfCancellationRequested();
 
                         AppendLog($"Выполнен вход в аккаунт {account.Login}");
 
                         foreach (string link in litmarketArray)
                         {
-                            var sheetsCount = await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
+                            int sheetsCount = await serviceLitMarket.Reader_books(link, AppendLog, profile, Settings);
                             _cts.Token.ThrowIfCancellationRequested();
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
-                            
-                            WriteDataToTheReport(new ReportData(
+
+                            WriteDataToTheReport(new ReportDataDto(
                                 account.Login,
                                 "111",
                                 nameof(Operations.Чтение),
@@ -238,12 +240,12 @@ namespace LitNetForm.Forms
                                 sheetsCount,
                                 nameof(Statuses.Успешно)));
                         }
-                        await serviceLitMarket.DisposeAsync();
 
+                        await serviceLitMarket.DisposeAsync();
                     }
+
                     await serviceLitMarket.DisposeAsync();
                     _cts.Token.ThrowIfCancellationRequested();
-
                 }
             }
             catch (OperationCanceledException)
@@ -288,16 +290,15 @@ namespace LitNetForm.Forms
             InstructionForm instructionForm = new InstructionForm();
             instructionForm.Show();
         }
+
         private void buttonAccountGenerator_Click(object sender, EventArgs e)
         {
-
         }
 
         #region Accounts
 
         private void buttonImportAccounts_Click(object sender, EventArgs e)
         {
-
             string[] accounts = TxtFileInList();
 
             AddAccounts(accounts);
@@ -314,7 +315,8 @@ namespace LitNetForm.Forms
 
         private void buttonDeleteAccount_Click(object sender, EventArgs e)
         {
-            if (dataGridViewAccounts.CurrentRow != null && dataGridViewAccounts.CurrentRow.DataBoundItem is Accounts account)
+            if (dataGridViewAccounts.CurrentRow != null &&
+                dataGridViewAccounts.CurrentRow.DataBoundItem is Accounts account)
             {
                 Accounts.Remove(account);
 
@@ -332,15 +334,14 @@ namespace LitNetForm.Forms
         #endregion
 
         #region Links
+
         private void buttonImportLinks_Click(object sender, EventArgs e)
         {
-
             string[] links = TxtFileInList();
 
             AddLinks(links);
 
             SaveData();
-
         }
 
         private void buttonAddLink_Click(object sender, EventArgs e)
@@ -513,10 +514,9 @@ namespace LitNetForm.Forms
                 if (!Settings.ReadProfileSettings.ContainsKey(readProfile))
                 {
                     // Ключа нет - добавляем новую пару
-                    Settings.ReadProfileSettings.Add(readProfile, SettingsManager.CreateDefaultReadProfileSettings(readProfile));
-
+                    Settings.ReadProfileSettings.Add(readProfile,
+                        SettingsManager.CreateDefaultReadProfileSettings(readProfile));
                 }
-
             }
 
             SaveParameters();
@@ -554,12 +554,11 @@ namespace LitNetForm.Forms
                 {
                     // Читаем все строки из файла в массив
                     return File.ReadAllLines(openFileDialog1.FileName);
-
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Ошибка при чтении файла:\n{ex.Message}",
-                                  "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     return Array.Empty<string>();
                 }
@@ -610,7 +609,8 @@ namespace LitNetForm.Forms
             foreach (string line in inputArray)
             {
                 if (string.IsNullOrWhiteSpace(line)
-                || (!line.StartsWith("https://litnet.com/ru/book/") & !line.StartsWith("https://litmarket.ru/books/")))
+                    || (!line.StartsWith("https://litnet.com/ru/book/") &
+                        !line.StartsWith("https://litmarket.ru/books/")))
                     continue;
 
                 Links.Add(new Links(line));
@@ -693,7 +693,7 @@ namespace LitNetForm.Forms
         }
 
         #endregion
-        
+
         #region Reports
 
         private enum Operations
@@ -707,15 +707,7 @@ namespace LitNetForm.Forms
             Неудачно
         }
 
-        private record ReportData(
-            string User,
-            string IpAddress,
-            string Operation,
-            string Book,
-            int SheetsCount,
-            string Status);
-
-        private void WriteDataToTheReport(ReportData reportData)
+        private void WriteDataToTheReport(ReportDataDto reportData)
         {
             dataGridViewReport.Rows.Add(
                 reportData.User,
@@ -726,12 +718,34 @@ namespace LitNetForm.Forms
                 reportData.Status);
         }
 
-        private void buttonSaveReport_Click(object sender, EventArgs e)
+        private async void buttonSaveReport_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            await SaveDataToTheReportAsync(_cts.Token);
+        }
+
+        private async Task SaveDataToTheReportAsync(CancellationToken cancellationToken)
+        {
+            if (dataGridViewReport.Rows.Count > 0)
+            {
+                List<ReportDataDto> reportDataList = [];
+                foreach (DataGridViewRow row in dataGridViewReport.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    
+                    reportDataList.Add(new ReportDataDto(
+                        User: row.Cells["User"].Value?.ToString() ?? string.Empty,
+                        IpAddress: row.Cells["UserIpAddress"].Value?.ToString() ?? string.Empty,
+                        Operation: row.Cells["Operation"].Value?.ToString() ?? string.Empty,
+                        Book: row.Cells["Book"].Value?.ToString() ?? string.Empty,
+                        SheetsCount: int.Parse(row.Cells["SheetsCount"].Value?.ToString() ?? "0"),
+                        Status: row.Cells["Status"].Value?.ToString() ?? string.Empty));
+                }
+
+                ExcelProvider excelProvider = new ExcelProvider(reportDataList);
+                await excelProvider.SaveFileAsync(cancellationToken);
+            }
         }
 
         #endregion
-        
     }
 }

@@ -81,7 +81,8 @@ namespace Lit_net_bot_test
         /// <returns></returns>
         public async Task<int> Base_Activuty_bot(string url, Action<string> log, Scroll_model.Profile profile, LitNetForm.Settings.Settings settings)
         {
-
+            int sheetsCounter = 0;
+            
             if (_page == null)
             {
                 throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
@@ -106,8 +107,6 @@ namespace Lit_net_bot_test
             await Scroll_model.BrowseBookPageAsync(_page, log, token);
             if (settings.ReadBook) 
             {
-                int sheetsCounter = 0; 
-                
                 var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
                 if (locator_learn.Result > 0)
                 {
@@ -141,7 +140,7 @@ namespace Lit_net_bot_test
                 }
             }
 
-            return 0;
+            return sheetsCounter;
         }
 
         public async Task<bool> Login(string login, string password, string Link_login)

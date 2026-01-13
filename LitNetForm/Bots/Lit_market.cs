@@ -177,10 +177,10 @@ namespace net_market_bot
             await _page.WaitForTimeoutAsync(2000);
             await Scroll_model.BrowseBookPageAsync(_page, log, token);
             
+            int sheetsCounter = 0; 
+            
             if (settings.ReadBook) 
             {
-                int sheetsCounter = 0; 
-                
                 await _page.ClickAsync("div.btn-reader");
 
                 await _page.WaitForTimeoutAsync(3000);
@@ -269,7 +269,7 @@ namespace net_market_bot
             }
             await _page.WaitForTimeoutAsync(3000);
 
-            return 0;
+            return sheetsCounter;
         }
 
         private static void Log(Action<string>? cb, string m) =>

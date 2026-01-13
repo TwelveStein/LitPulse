@@ -185,6 +185,7 @@
             buttonSaveReport.TabIndex = 7;
             buttonSaveReport.Text = "Скачать отчет";
             buttonSaveReport.UseVisualStyleBackColor = true;
+            buttonSaveReport.Click += buttonSaveReport_Click;
             // 
             // dataGridViewReport
             // 

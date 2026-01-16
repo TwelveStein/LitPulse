@@ -1,4 +1,4 @@
-﻿namespace LitNetForm.Forms
+﻿namespace LitPulse.Forms
 {
     partial class MainForm
     {
@@ -41,6 +41,7 @@
             Book = new System.Windows.Forms.DataGridViewTextBoxColumn();
             SheetsCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            SessionDateTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             label3 = new System.Windows.Forms.Label();
             tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             checkBoxRunningInMultithreadingMode = new System.Windows.Forms.CheckBox();
@@ -192,7 +193,8 @@
             dataGridViewReport.AllowUserToOrderColumns = true;
             dataGridViewReport.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { User, UserIpAddress, Operation, Book, SheetsCount, Status });
+            dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] 
+                { User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime });
             dataGridViewReport.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridViewReport.Location = new System.Drawing.Point(3, 116);
             dataGridViewReport.Name = "dataGridViewReport";
@@ -202,6 +204,7 @@
             // 
             // User
             // 
+            User.DataPropertyName = "User";
             User.HeaderText = "Пользователь";
             User.MinimumWidth = 6;
             User.Name = "User";
@@ -210,6 +213,7 @@
             // 
             // UserIpAddress
             // 
+            UserIpAddress.DataPropertyName = "IpAddress";
             UserIpAddress.HeaderText = "IP Адрес";
             UserIpAddress.MinimumWidth = 6;
             UserIpAddress.Name = "UserIpAddress";
@@ -218,6 +222,7 @@
             // 
             // Operation
             // 
+            Operation.DataPropertyName = "Operation";
             Operation.HeaderText = "Операция";
             Operation.MinimumWidth = 6;
             Operation.Name = "Operation";
@@ -226,6 +231,7 @@
             // 
             // Book
             // 
+            Book.DataPropertyName = "Book";
             Book.HeaderText = "Книга";
             Book.MinimumWidth = 6;
             Book.Name = "Book";
@@ -234,6 +240,7 @@
             // 
             // SheetsCount
             // 
+            SheetsCount.DataPropertyName = "SheetsCount";
             SheetsCount.HeaderText = "Кол-во страниц";
             SheetsCount.MinimumWidth = 6;
             SheetsCount.Name = "SheetsCount";
@@ -242,11 +249,21 @@
             // 
             // Status
             // 
+            Status.DataPropertyName = "Status";
             Status.HeaderText = "Статус";
             Status.MinimumWidth = 6;
             Status.Name = "Status";
             Status.ReadOnly = true;
             Status.Width = 125;
+            // 
+            // SessionDateTime
+            // 
+            SessionDateTime.DataPropertyName = "SessionDateTime";
+            SessionDateTime.HeaderText = "Время";
+            SessionDateTime.MinimumWidth = 6;
+            SessionDateTime.Name = "SessionDateTime";
+            SessionDateTime.ReadOnly = true;
+            SessionDateTime.Width = 125;
             // 
             // label3
             // 
@@ -994,6 +1011,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SheetsCount;
         private System.Windows.Forms.DataGridViewTextBoxColumn Operation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SessionDateTime;
         private TableLayoutPanel tableLayoutPanel5;
         private Button buttonStartSession;
         private Button buttonStop;

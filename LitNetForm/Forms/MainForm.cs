@@ -1,25 +1,13 @@
-﻿using Lit_net_bot_test;
+﻿using System.ComponentModel;
 using LitNetForm.Data;
 using LitNetForm.Settings;
-using LitPulse.Forms;
-using Microsoft.Playwright;
-using net_market_bot;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using LitPulse.Bots;
 using LitPulse.FileProviders;
 using LitPulse.Shared;
-using static Scroll_model;
+using Microsoft.Playwright;
+using net_market_bot;
 
-namespace LitNetForm.Forms
+namespace LitPulse.Forms
 {
     public partial class MainForm : Form
     {
@@ -39,11 +27,12 @@ namespace LitNetForm.Forms
 
             dataGridViewAccounts.DataSource = Accounts;
             dataGridViewLinks.DataSource = Links;
+            dataGridViewReport.DataSource = _reportDataBindingList;
         }
 
         #region Litnet_LitMarket_Parameters
 
-        private Settings.Settings Settings = new Settings.Settings();
+        private LitNetForm.Settings.Settings Settings = new LitNetForm.Settings.Settings();
 
         private static string Link_login =
             "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
@@ -58,6 +47,8 @@ namespace LitNetForm.Forms
         private BindingList<Links> Links = new BindingList<Links>();
 
         private BindingList<Accounts> Accounts = new BindingList<Accounts>();
+
+        private BindingList<ReportDataDto> _reportDataBindingList = new();
 
         #endregion
 
@@ -94,7 +85,7 @@ namespace LitNetForm.Forms
                     AppendLog($"Задержка перед запуском: {Delay / 1000}");
 
                     // Создаем поток с делегатом, который будет выполнять синхронную обертку
-                    Thread thread = new Thread(() => StartSettionInThread(account, profile, Delay));
+                    Thread thread = new Thread(() => StartSessionInThread(account, profile, Delay));
                     thread.Start();
                 }
             }
@@ -107,7 +98,7 @@ namespace LitNetForm.Forms
             }
         }
 
-        private async void StartSettionInThread(Accounts account, Scroll_model.Profile profile, int Delay)
+        private async void StartSessionInThread(Accounts account, Scroll_model.Profile profile, int Delay)
         {
             await Task.Delay(Delay);
 
@@ -143,6 +134,8 @@ namespace LitNetForm.Forms
                     AppendLog("Запуск эмуляции чтения https://litnet.com ...");
 
                     await serviceLitNet.InitializeAsync();
+                    WriteStartSessionToTheReport();
+
                     foreach (var link in litnetArray.Take(3))
                     {
                         await serviceLitNet.Primary_activity(link, AppendLog);
@@ -162,13 +155,15 @@ namespace LitNetForm.Forms
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
 
-                            WriteDataToTheReport(new ReportDataDto(
-                                account.Login,
-                                "111",
-                                nameof(Operations.Чтение),
-                                link,
-                                sheetsCount,
-                                nameof(Statuses.Успешно)));
+                            WriteDataToTheReport(new ReportDataDto
+                            {
+                                User = account.Login,
+                                IpAddress = "111",
+                                Operation = "Чтение",
+                                Book = link,
+                                SheetsCount = sheetsCount,
+                                Status = nameof(Statuses.Успешно)
+                            });
                         }
 
                         await serviceLitNet.DisposeAsync();
@@ -206,6 +201,7 @@ namespace LitNetForm.Forms
             {
                 _activeServices.Remove(serviceLitNet);
                 await serviceLitNet.DisposeAsync();
+                WriteEndSessionToTheReport();
             }
 
             try
@@ -215,6 +211,7 @@ namespace LitNetForm.Forms
                     AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
                     await serviceLitMarket.InitializeAsync();
+                    WriteStartSessionToTheReport();
 
                     if (await serviceLitMarket.Login(
                             account.Login,
@@ -232,13 +229,15 @@ namespace LitNetForm.Forms
 
                             AppendLog($"Выполнено чтение по ссылке {link}");
 
-                            WriteDataToTheReport(new ReportDataDto(
-                                account.Login,
-                                "111",
-                                nameof(Operations.Чтение),
-                                link,
-                                sheetsCount,
-                                nameof(Statuses.Успешно)));
+                            WriteDataToTheReport(new ReportDataDto
+                            {
+                                User = account.Login,
+                                IpAddress = "111",
+                                Operation = "Чтение",
+                                Book = link,
+                                SheetsCount = sheetsCount,
+                                Status = nameof(Statuses.Успешно)
+                            });
                         }
 
                         await serviceLitMarket.DisposeAsync();
@@ -277,6 +276,7 @@ namespace LitNetForm.Forms
             {
                 _activeServicesMarket.Remove(serviceLitMarket);
                 await serviceLitNet.DisposeAsync();
+                WriteEndSessionToTheReport();
             }
         }
 
@@ -696,26 +696,37 @@ namespace LitNetForm.Forms
 
         #region Reports
 
-        private enum Operations
-        {
-            Чтение
-        }
-
         private enum Statuses
         {
             Успешно,
             Неудачно
         }
 
+        private void WriteStartSessionToTheReport()
+        {
+            ReportDataDto reportDataDto = new ReportDataDto
+            {
+                Operation = "Начало сессии",
+                SessionDateTime = DateTime.Now
+            };
+
+            _reportDataBindingList.Add(reportDataDto);
+        }
+
+        private void WriteEndSessionToTheReport()
+        {
+            ReportDataDto reportDataDto = new ReportDataDto
+            {
+                Operation = "Конец сессии",
+                SessionDateTime = DateTime.Now
+            };
+
+            _reportDataBindingList.Add(reportDataDto);
+        }
+
         private void WriteDataToTheReport(ReportDataDto reportData)
         {
-            dataGridViewReport.Rows.Add(
-                reportData.User,
-                reportData.IpAddress,
-                reportData.Operation,
-                reportData.Book,
-                reportData.SheetsCount,
-                reportData.Status);
+            _reportDataBindingList.Add(reportData);
         }
 
         private async void buttonSaveReport_Click(object sender, EventArgs e)
@@ -731,14 +742,21 @@ namespace LitNetForm.Forms
                 foreach (DataGridViewRow row in dataGridViewReport.Rows)
                 {
                     if (row.IsNewRow) continue;
-                    
-                    reportDataList.Add(new ReportDataDto(
-                        User: row.Cells["User"].Value?.ToString() ?? string.Empty,
-                        IpAddress: row.Cells["UserIpAddress"].Value?.ToString() ?? string.Empty,
-                        Operation: row.Cells["Operation"].Value?.ToString() ?? string.Empty,
-                        Book: row.Cells["Book"].Value?.ToString() ?? string.Empty,
-                        SheetsCount: int.Parse(row.Cells["SheetsCount"].Value?.ToString() ?? "0"),
-                        Status: row.Cells["Status"].Value?.ToString() ?? string.Empty));
+
+                    reportDataList.Add(new ReportDataDto
+                    {
+                        User = row.Cells["User"].Value?.ToString() ?? string.Empty,
+                        IpAddress = row.Cells["UserIpAddress"].Value?.ToString() ?? string.Empty,
+                        Operation = row.Cells["Operation"].Value?.ToString() ?? string.Empty,
+                        Book = row.Cells["Book"].Value?.ToString() ?? string.Empty,
+                        SheetsCount = int.TryParse(row.Cells["SheetsCount"].Value?.ToString(), out var count)
+                            ? (count == 0 ? null : count)
+                            : null,
+                        Status = row.Cells["Status"].Value?.ToString() ?? string.Empty,
+                        SessionDateTime = DateTime.TryParse(row.Cells["SessionDateTime"].Value?.ToString(), out var date)
+                            ? date
+                            : null
+                    });
                 }
 
                 ReportExcelProvider reportExcelProvider = new ReportExcelProvider(reportDataList);

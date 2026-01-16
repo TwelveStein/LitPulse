@@ -11,7 +11,9 @@ public class ReportExcelProvider : IFileProvider
     private const int EXCEL_COLUMN_BOOK_WIDTH = 160;
 
     private readonly IReadOnlyList<ReportDataDto> _reportsData;
-    private readonly string[] _columnNames = ["User", "UserIpAddress", "Operation", "Book", "SheetsCount", "Status"];
+
+    private readonly string[] _columnNames =
+        ["User", "UserIpAddress", "Operation", "Book", "SheetsCount", "Status", "SessionDateTime"];
 
     public ReportExcelProvider(IEnumerable<ReportDataDto> reportsData)
     {
@@ -51,6 +53,7 @@ public class ReportExcelProvider : IFileProvider
         workSheet.Cell(1, Array.IndexOf(columnNames, "Book") + 1).Value = "Книга";
         workSheet.Cell(1, Array.IndexOf(columnNames, "SheetsCount") + 1).Value = "Кол-во страниц";
         workSheet.Cell(1, Array.IndexOf(columnNames, "Status") + 1).Value = "Статус";
+        workSheet.Cell(1, Array.IndexOf(columnNames, "SessionDateTime") + 1).Value = "Время";
 
         workSheet.Column(Array.IndexOf(columnNames, "User") + 1).Width = EXCEL_COLUMN_USER_WIDTH;
         workSheet.Column(Array.IndexOf(columnNames, "Book") + 1).Width = EXCEL_COLUMN_BOOK_WIDTH;

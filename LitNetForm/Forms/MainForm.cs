@@ -63,7 +63,10 @@ namespace LitPulse.Forms
         }
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
-        {
+        {   
+            if (_cts.IsCancellationRequested)
+                _cts = new CancellationTokenSource();
+            
             bool RunningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
 
             Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
@@ -107,6 +110,9 @@ namespace LitPulse.Forms
 
         private async Task StartSession(Accounts account, Scroll_model.Profile profile)
         {
+            if (_cts.IsCancellationRequested)
+                return;
+            
             var links = SplitLinksByDomain(Links);
 
             string[] litmarketArray = links.litmarketLinks;
@@ -118,7 +124,6 @@ namespace LitPulse.Forms
                 return;
             }
 
-            _cts = new CancellationTokenSource();
             // Litmarket
             var serviceLitMarket = new Lit_market();
             _activeServicesMarket.Add(serviceLitMarket);

@@ -1,16 +1,6 @@
-﻿using LitNetForm;
-using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Permissions;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using Microsoft.Playwright;
 
-
-namespace Lit_net_bot_test
+namespace LitPulse.Bots
 {
     public class PlaywrightService_for_litnet
     {

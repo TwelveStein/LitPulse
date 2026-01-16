@@ -1,14 +1,6 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using static Scroll_model;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using LitPulse.Bots;
+using static LitPulse.Bots.Scroll_model;
 
 namespace net_market_bot
 {
@@ -169,13 +161,13 @@ namespace net_market_bot
         /// Метод прохода по ссылкам 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> Reader_books(string link, Action<string> log, Scroll_model.Profile profile , LitNetForm.Settings.Settings settings) 
+        public async Task<int> Reader_books(string link, Action<string> log, Profile profile , LitNetForm.Settings.Settings settings) 
         {
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
             await _page.GotoAsync(link);
             await _page.WaitForTimeoutAsync(2000);
-            await Scroll_model.BrowseBookPageAsync(_page, log, token);
+            await BrowseBookPageAsync(_page, log, token);
             
             int sheetsCounter = 0; 
             

@@ -1,6 +1,7 @@
 using LitNetForm.Forms;
+using LitPulse.Forms;
 
-namespace LitNetForm
+namespace LitPulse
 {
     internal static class Program
     {

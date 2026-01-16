@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
+
+namespace LitPulse.Bots;
 
 /// <summary>
 /// Универсальный скролл-ридер для LitNet и LitMarket.
@@ -206,11 +205,11 @@ public static class Scroll_model
         while (pos < maxScroll && !ct.IsCancellationRequested)
         {
             if (pos > 300 && rnd.NextDouble() < (profile switch
-            {
-                Profile.DeepReader => 0.20,
-                Profile.TiredReader => 0.12,
-                _ => 0.03
-            }))
+                {
+                    Profile.DeepReader => 0.20,
+                    Profile.TiredReader => 0.12,
+                    _ => 0.03
+                }))
             {
                 int to = Math.Max(100, pos - rnd.Next(80, 200));
                 await SmoothScrollTo(page, to, 800, ct);

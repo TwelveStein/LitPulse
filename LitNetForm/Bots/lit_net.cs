@@ -147,11 +147,8 @@ namespace LitPulse.Bots
             await _page.Keyboard.PressAsync("Enter");
             await _page.WaitForTimeoutAsync(3000);
             if (_page.Url == Link_login)
-            {
-                // ЛОГИ ПО КАПЧЕ
-                await _page.WaitForTimeoutAsync(40000);
-                if (_page.Url == Link_login)
-                    return false;
+            { 
+                return false;
             }
 
             return true;
@@ -162,11 +159,10 @@ namespace LitPulse.Bots
         {
             if (_browser != null)
             {
-                await _browser.DisposeAsync();
                 await _browser.CloseAsync();
+                await _browser.DisposeAsync();
             }
             _playwright?.Dispose();
         }
-
     }
 }

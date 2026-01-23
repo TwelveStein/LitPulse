@@ -45,8 +45,8 @@ namespace net_market_bot
         {
             if (_browser != null)
             {
-                await _browser.DisposeAsync();
                 await _browser.CloseAsync();
+                await _browser.DisposeAsync();
             }
             _playwright?.Dispose();
         }
@@ -65,19 +65,25 @@ namespace net_market_bot
                 await _page.Locator("#email").FillAsync(login);
                 await _page.Locator("#password").FillAsync(password);
                 await _page.Keyboard.PressAsync("Enter");
+                
                 var isTextVisible = await _page.TextContentAsync("body").ContinueWith(t =>
                 t.Result?.Contains("Пользователь с таким имэйлом не зарегистрирован на портале") ?? false);
-                var isTextVisible_password = await _page.TextContentAsync("body").ContinueWith(t =>
-                t.Result?.Contains("Пароль неверный. Проверьте правильность ввода, убедитесь что \"caps lock\" не включен и язык ввода пароля верный. ") ?? false);
+                
+                /*var isTextVisiblePassword = await _page.TextContentAsync("body").ContinueWith(t =>
+                t.Result?.Contains("Пароль неверный. Проверьте правильность ввода, убедитесь что \"caps lock\" не включен и язык ввода пароля верный.") ?? false);*/
+                
+                var isTextVisiblePassword = await _page.TextContentAsync("body").ContinueWith(t =>
+                    t.Result?.Contains("Проверьте правильность ввода") ?? false);
+                
                 var timeout = await _page.TextContentAsync("body").ContinueWith(t =>
                 t.Result?.Contains("Превышен лимит запросов авторизации. следующая попытка разрешена через 15 минут.") ?? false);
-                if (isTextVisible && !isTextVisible_password)
+                
+                if (isTextVisible && !isTextVisiblePassword)
                 {
                     //неправльный логин или пароль лог
                     // лог провожу попытку регистрации 
                     var check_regist = await _page.TextContentAsync("body").ContinueWith(t =>
                     t.Result?.Contains("Пользователь с таким имэйлом уже существует. Попробуйте авторизоваться вместо повторной регистрации") ?? false);
-
 
                     if (check_regist)
                     {
@@ -85,7 +91,6 @@ namespace net_market_bot
                     }
                     else
                     {
-
                         await _page.WaitForTimeoutAsync(5000);
                         await _page.GetByRole(AriaRole.Button, new() { Name = "Регистрация" }).ClickAsync();
                         // 2. Найдите и установите флажок "Я согласен с..." (eula_agree)
@@ -112,7 +117,7 @@ namespace net_market_bot
                         return true;
                     }
                 }
-                else if (isTextVisible_password)
+                else if (isTextVisiblePassword)
                 {
                     Log(log, $"[WARN] У аккаунта {login} не верный пароль");
                     return false;
@@ -165,6 +170,7 @@ namespace net_market_bot
         {
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
+            
             await _page.GotoAsync(link);
             await _page.WaitForTimeoutAsync(2000);
             await BrowseBookPageAsync(_page, log, token);

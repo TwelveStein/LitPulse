@@ -127,10 +127,12 @@ namespace LitPulse.Forms
             // Litmarket
             var serviceLitMarket = new Lit_market();
             _activeServicesMarket.Add(serviceLitMarket);
+            int litMarketSessionCounter = 0;
 
             // Litnet
             var serviceLitNet = new PlaywrightService_for_litnet();
             _activeServices.Add(serviceLitNet);
+            int litNetSessionCounter = 0;
 
             try
             {
@@ -140,6 +142,7 @@ namespace LitPulse.Forms
 
                     await serviceLitNet.InitializeAsync();
                     WriteStartSessionToTheReport();
+                    litNetSessionCounter++;
 
                     foreach (var link in litnetArray.Take(3))
                     {
@@ -173,6 +176,11 @@ namespace LitPulse.Forms
 
                         await serviceLitNet.DisposeAsync();
                     }
+                    else
+                    {
+                        AppendLog($"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
+                        return;
+                    }
 
                     await serviceLitNet.DisposeAsync();
                 }
@@ -204,9 +212,11 @@ namespace LitPulse.Forms
             }
             finally
             {
-                _activeServices.Remove(serviceLitNet);
+                if (_activeServices.Remove(serviceLitNet)) ;
                 await serviceLitNet.DisposeAsync();
-                WriteEndSessionToTheReport();
+                
+                if (litNetSessionCounter > 0)
+                    WriteEndSessionToTheReport();
             }
 
             try
@@ -217,11 +227,9 @@ namespace LitPulse.Forms
 
                     await serviceLitMarket.InitializeAsync();
                     WriteStartSessionToTheReport();
+                    litMarketSessionCounter++;
 
-                    if (await serviceLitMarket.Login(
-                            account.Login,
-                            account.Password,
-                            "https://litmarket.ru/", AppendLog))
+                    if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/", AppendLog))
                     {
                         _cts.Token.ThrowIfCancellationRequested();
 
@@ -246,6 +254,11 @@ namespace LitPulse.Forms
                         }
 
                         await serviceLitMarket.DisposeAsync();
+                    }
+                    else
+                    {
+                        AppendLog($"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
+                        return;
                     }
 
                     await serviceLitMarket.DisposeAsync();
@@ -280,8 +293,10 @@ namespace LitPulse.Forms
             finally
             {
                 _activeServicesMarket.Remove(serviceLitMarket);
-                await serviceLitNet.DisposeAsync();
-                WriteEndSessionToTheReport();
+                await serviceLitMarket.DisposeAsync();
+                
+                if (litMarketSessionCounter > 0)
+                    WriteEndSessionToTheReport();
             }
         }
 
@@ -694,6 +709,7 @@ namespace LitPulse.Forms
             }).ToList();
 
             await Task.WhenAll(tasks);
+            await Task.WhenAll(tasksMarket);
             _activeServices.Clear();
         }
 

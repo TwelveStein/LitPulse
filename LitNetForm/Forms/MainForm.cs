@@ -212,7 +212,7 @@ namespace LitPulse.Forms
             }
             finally
             {
-                if (_activeServices.Remove(serviceLitNet)) ;
+                _activeServices.Remove(serviceLitNet);
                 await serviceLitNet.DisposeAsync();
                 
                 if (litNetSessionCounter > 0)

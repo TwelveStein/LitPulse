@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LitPulse.Bots;
+using LitPulse.Data.Database.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
@@ -8,7 +10,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using LitPulse.Bots;
 
 namespace LitNetForm.Settings
 {
@@ -46,6 +47,26 @@ namespace LitNetForm.Settings
 
         [JsonPropertyName("ReadProfileSettings")]
         public Dictionary<Scroll_model.Profile, ProfileSettings>? ReadProfileSettings { get; set; } = new Dictionary<Scroll_model.Profile, ProfileSettings>();
+
+        public Settings() { }
+
+        public Settings(AccountSettings accountSettings)
+        {
+            ReadBook = accountSettings.ReadBook;
+            AddToLibrary = accountSettings.AddToLibrary;
+            LikeTheBook = accountSettings.LikeTheBook;
+            SubscribeToTheAuthor = accountSettings.SubscribeToTheAuthor;
+            PostComment = accountSettings.PostComment;
+            MakeADonationToTheAuthor = accountSettings.MakeADonationToTheAuthor;
+            BuyABook = accountSettings.BuyABook;
+            ConstantDelay = accountSettings.ConstantDelay;
+            FloatingIncrementalDelay = accountSettings.FloatingIncrementalDelay;
+            ReadProfile = accountSettings.ReadProfile;
+
+            // Конвертируем коллекцию в словарь
+            //ReadProfileSettings = accountSettings.ProfileSettings?
+            //    .ToDictionary(ps => ps.ProfileType, ps => ps);
+        }
     }
 
     [Serializable]

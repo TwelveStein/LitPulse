@@ -6,6 +6,7 @@ using LitPulse.FileProviders;
 using LitPulse.Shared;
 using Microsoft.Playwright;
 using net_market_bot;
+using LitNetForm.Data;
 
 namespace LitPulse.Forms
 {
@@ -46,9 +47,13 @@ namespace LitPulse.Forms
 
         private BindingList<Links> Links = new BindingList<Links>();
 
+        // Старый список аккаунтов
         private BindingList<Accounts> Accounts = new BindingList<Accounts>();
 
         private BindingList<ReportDataDto> _reportDataBindingList = new();
+
+        // Новый список аккаунтов (доделать и в сеансах использовать его)
+        private List<Data.Database.Models.Account> accounts = new List<Data.Database.Models.Account>(); 
 
         #endregion
 
@@ -63,42 +68,60 @@ namespace LitPulse.Forms
         }
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
-        {   
-            if (_cts.IsCancellationRequested)
-                _cts = new CancellationTokenSource();
-            
-            bool RunningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
+        {
+            AccountSetupForm accountSetupForm = new AccountSetupForm();
 
-            Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
-
-            if (RunningInMultithreadingMode)
+            if (accountSetupForm.ShowDialog() == DialogResult.OK)
             {
-                int ConstantDelay = Settings.ConstantDelay;
-
-                int FloatingIncrementalDelay = Settings.FloatingIncrementalDelay;
-
-                Random random = new Random();
-
-                foreach (Accounts account in Accounts)
-                {
-                    int FloatingDelay = random.Next(FloatingIncrementalDelay);
-
-                    int Delay = (ConstantDelay + FloatingDelay) * 1000;
-
-                    AppendLog($"Задержка перед запуском: {Delay / 1000}");
-
-                    // Создаем поток с делегатом, который будет выполнять синхронную обертку
-                    Thread thread = new Thread(() => StartSessionInThread(account, profile, Delay));
-                    thread.Start();
-                }
+                accounts = accountSetupForm.GetData();   
             }
             else
             {
-                foreach (Accounts account in Accounts)
-                {
-                    await StartSession(account, profile);
-                }
+                return;
             }
+
+            // Получение настроек для выбранных аккаунтов
+            // ......
+
+            // Запуск сеансов
+            // ......
+
+
+            //if (_cts.IsCancellationRequested)
+            //    _cts = new CancellationTokenSource();
+
+            //bool RunningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
+
+            //Scroll_model.Profile profile = (Scroll_model.Profile)comboBoxReadProfiles.SelectedIndex;
+
+            //if (RunningInMultithreadingMode)
+            //{
+            //    int ConstantDelay = Settings.ConstantDelay;
+
+            //    int FloatingIncrementalDelay = Settings.FloatingIncrementalDelay;
+
+            //    Random random = new Random();
+
+            //    foreach (Accounts account in Accounts)
+            //    {
+            //        int FloatingDelay = random.Next(FloatingIncrementalDelay);
+
+            //        int Delay = (ConstantDelay + FloatingDelay) * 1000;
+
+            //        AppendLog($"Задержка перед запуском: {Delay / 1000}");
+
+            //        // Создаем поток с делегатом, который будет выполнять синхронную обертку
+            //        Thread thread = new Thread(() => StartSessionInThread(account, profile, Delay));
+            //        thread.Start();
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (Accounts account in Accounts)
+            //    {
+            //        await StartSession(account, profile);
+            //    }
+            //}
         }
 
         private async void StartSessionInThread(Accounts account, Scroll_model.Profile profile, int Delay)

@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="images\AccountGeneratorIcon.png" />
+		<None Remove="images\AddIcon.png" />
+		<None Remove="images\CleanAllButtonImage.png" />
+		<None Remove="images\ClearIcon.png" />
+		<None Remove="images\ClearIcon_White.png" />
+		<None Remove="images\DownLoadIcon.png" />
+		<None Remove="images\InstructionIcon.png" />
+		<None Remove="images\LitPulse.ico" />
+		<None Remove="images\RemoveIcon%28Full%29.png" />
+		<None Remove="images\RemoveIcon.png" />
+		<None Remove="images\SettingsIcon.png" />
+		<None Remove="images\StartIcon.png" />
+		<None Remove="images\StopIcon.png" />
+		<None Remove="images\uploadIcon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ClosedXML" Version="0.105.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.12" />
+		<PackageReference Include="Patchright" Version="1.57.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="images\AccountGeneratorIcon.png" />
+		<EmbeddedResource Include="images\AddIcon.png" />
+		<EmbeddedResource Include="images\CleanAllButtonImage.png" />
+		<EmbeddedResource Include="images\ClearIcon.png" />
+		<EmbeddedResource Include="images\ClearIcon_White.png" />
+		<EmbeddedResource Include="images\DownLoadIcon.png" />
+		<EmbeddedResource Include="images\InstructionIcon.png" />
+		<EmbeddedResource Include="images\Icons\LitPulse.ico" />
+		<EmbeddedResource Include="images\RemoveIcon(Full).png" />
+		<EmbeddedResource Include="images\RemoveIcon.png" />
+		<EmbeddedResource Include="images\SettingsIcon.png" />
+		<EmbeddedResource Include="images\StartIcon.png" />
+		<EmbeddedResource Include="images\StopIcon.png" />
+		<EmbeddedResource Include="images\uploadIcon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Forms\AddAccountForm.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="images\Instruction_imgs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

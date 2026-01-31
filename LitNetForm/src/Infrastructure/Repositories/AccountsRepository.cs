@@ -15,12 +15,9 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
         try
         {
             var result = await dbContext.Accounts
-                .FirstOrDefaultAsync(a => a.Id == accountId, cancellationToken);
+                .AnyAsync(a => a.Id == accountId, cancellationToken);
             
-            if (result is null)
-                return false;
-            
-            return true;
+            return result;
         }
         catch (Exception ex)
         {

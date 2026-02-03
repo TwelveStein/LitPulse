@@ -36,7 +36,7 @@ public class AccountActionHistoryConfiguration : IEntityTypeConfiguration<Accoun
             .IsRequired();
         
         // индекс
-        builder.HasIndex(a => a.AccountId).IsUnique();
+        builder.HasIndex(a => a.AccountId);
         
         // Связь один-ко-многим с Account
         builder.HasOne(a => a.Account)

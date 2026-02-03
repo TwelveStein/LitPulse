@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Contracts.Enums;
+﻿using Contracts.Enums;
 using Core.Entities.ValueObjects;
 
 namespace Core.Entities
 {
-    [Table("AccountSettings")]
     public class AccountSettings
     {
         public int AccountId { get; init; }

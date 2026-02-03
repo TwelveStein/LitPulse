@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
 using Contracts.DTOs;
 using Contracts.Enums;
+using Core.Abstracts;
 using Core.Entities;
+using Core.Handlers;
+using Core.Manager;
 using Core.Services;
 using Core.Settings;
 using LitPulse.FileProviders;
@@ -17,14 +20,23 @@ namespace LitPulse.Forms
         private readonly bool _settingsAreLoaded;
 
         private readonly FormFactory _formFactory;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly StartSingleThreadHandler _startSingleThreadHandler;
+        private readonly StartMultithreadHandler _startMultithreadHandler;
+        private readonly StartBatchMultithreadHandler _startBatchMultithreadHandler;
+        private readonly ServiceManager _serviceManager;
 
         public MainForm(
             FormFactory formFactory,
-            IServiceProvider serviceProvider)
+            StartSingleThreadHandler startSingleThreadHandler,
+            StartMultithreadHandler startMultithreadHandler,
+            StartBatchMultithreadHandler startBatchMultithreadHandler,
+            ServiceManager serviceManager)
         {
             _formFactory = formFactory;
-            _serviceProvider = serviceProvider;
+            _startSingleThreadHandler = startSingleThreadHandler;
+            _startMultithreadHandler = startMultithreadHandler;
+            _startBatchMultithreadHandler = startBatchMultithreadHandler;
+            _serviceManager = serviceManager;
 
             InitializeComponent();
             SetParameters();
@@ -40,7 +52,7 @@ namespace LitPulse.Forms
 
         #region Litnet_LitMarket_Parameters
 
-        private Settings Settings = new Settings();
+        private StartupSettings _startupSettings = new StartupSettings();
 
         private static string Link_login =
             "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
@@ -76,6 +88,11 @@ namespace LitPulse.Forms
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
         {
+            await StartSessionAsync(_cts.Token);
+        }
+
+        private async Task StartSessionAsync(CancellationToken cancellationToken)
+        {
             //Получаем активные аккаунты c настройками
             IReadOnlyList<Account> activeAccounts = await _formFactory.ShowAccountSetupForm();
             if (activeAccounts.Any() is false)
@@ -85,245 +102,48 @@ namespace LitPulse.Forms
             if (_cts.IsCancellationRequested)
                 _cts = new CancellationTokenSource();
 
-            bool RunningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
+            var links = SplitLinksByDomain(Links);
 
-            ReadProfile profile = (ReadProfile)comboBoxReadProfiles.SelectedIndex;
-
-            if (RunningInMultithreadingMode)
+            bool runningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
+            
+            if (runningInMultithreadingMode)
             {
-                int ConstantDelay = Settings.ConstantDelay;
+                int constantDelay = _startupSettings.ConstantDelay;
+                int floatingIncrementalDelay = _startupSettings.FloatingIncrementalDelay;
+                int accountsCount = (int)numericUpDownAccountCount.Value;
 
-                int FloatingIncrementalDelay = Settings.FloatingIncrementalDelay;
-
-                Random random = new Random();
-
-                List<Task> tasks = [];
-                foreach (Account account in activeAccounts)
+                if (checkBoxBatchLaunch.Checked)
                 {
-                    int FloatingDelay = random.Next(FloatingIncrementalDelay);
-
-                    int Delay = (ConstantDelay + FloatingDelay) * 1000;
-
-                    AppendLog($"Задержка перед запуском: {Delay / 1000}");
-
-                    // Создаем поток с делегатом, который будет выполнять синхронную обертку
-                    /*Thread thread = new Thread(() => StartSessionInThread(account, profile, Delay));
-                    thread.Start();*/
-                    tasks.Add(StartSessionInThread(account, profile, Delay));
+                    await _startBatchMultithreadHandler.HandleAsync(
+                        activeAccounts,
+                        accountsCount,
+                        links.litnetLinks,
+                        links.litmarketLinks,
+                        new DelayDto(constantDelay, floatingIncrementalDelay),
+                        AppendLog,
+                        _cts.Token);
                 }
-                await Task.WhenAll(tasks);
+                else
+                {
+                    await _startMultithreadHandler.HandleAsync(
+                        activeAccounts,
+                        accountsCount,
+                        links.litnetLinks,
+                        links.litmarketLinks,
+                        new DelayDto(constantDelay, floatingIncrementalDelay),
+                        AppendLog,
+                        _cts.Token);
+                }
             }
             else
             {
-                foreach (Account account in activeAccounts)
-                {
-                    await StartSession(account, profile);
-                }
-            }
-        }
-
-        private async Task StartSessionInThread(Account account, ReadProfile readProfile, int delay)
-        {
-            await Task.Delay(delay);
-            await StartSession(account, readProfile);
-        }
-
-        private async Task StartSession(Account account, ReadProfile readProfile)
-        {
-            if (_cts.IsCancellationRequested)
-                return;
-
-            var links = SplitLinksByDomain(Links);
-
-            string[] litmarketArray = links.litmarketLinks;
-            string[] litnetArray = links.litnetLinks;
-
-            if (litnetArray.Length == 0 & litmarketArray.Length == 0)
-            {
-                AppendLog("[X] URL не указан.");
-                return;
-            }
-
-            // Создаём сервисы
-            await using var scope = _serviceProvider.CreateAsyncScope();
-            var serviceLitMarket = scope.ServiceProvider.GetRequiredService<LitMarketService>();
-            var serviceLitNet = scope.ServiceProvider.GetRequiredService<LitNetService>();
-            
-            _activeServicesMarket.Add(serviceLitMarket);
-            _activeServices.Add(serviceLitNet);
-            
-            int litMarketSessionCounter = 0;
-            int litNetSessionCounter = 0;
-
-            try
-            {
-                if (litnetArray.Length != 0)
-                {
-                    AppendLog("Запуск эмуляции чтения https://litnet.com ...");
-
-                    await serviceLitNet.InitializeAsync();
-                    WriteStartSessionToTheReport();
-                    litNetSessionCounter++;
-
-                    foreach (var link in litnetArray.Take(3))
-                    {
-                        await serviceLitNet.Primary_activity(link, AppendLog);
-                        _cts.Token.ThrowIfCancellationRequested();
-                    }
-
-                    if (await serviceLitNet.Login(account.Login, account.Password, Link_login))
-                    {
-                        _cts.Token.ThrowIfCancellationRequested();
-
-                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
-
-                        foreach (var link in litnetArray)
-                        {
-                            int sheetsCount =
-                                await serviceLitNet.BaseActivityBot(link, AppendLog, readProfile, Settings);
-                            _cts.Token.ThrowIfCancellationRequested();
-
-                            AppendLog($"Выполнено чтение по ссылке {link}");
-
-                            WriteDataToTheReport(new ReportDataDto
-                            {
-                                User = account.Login,
-                                IpAddress = "111",
-                                Operation = "Чтение",
-                                Book = link,
-                                SheetsCount = sheetsCount,
-                                Status = nameof(Statuses.Успешно)
-                            });
-                        }
-
-                        await serviceLitNet.DisposeAsync();
-                    }
-                    else
-                    {
-                        AppendLog(
-                            $"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
-                        return;
-                    }
-
-                    await serviceLitNet.DisposeAsync();
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                AppendLog("Остановлено пользователем.");
-                return;
-            }
-            catch (PlaywrightException ex)
-            {
-                // Проверяем по сообщению
-                if (ex.Message.Contains("Target closed") ||
-                    ex.Message.Contains("closed") ||
-                    ex.Message.Contains("Session closed"))
-                {
-                    AppendLog($"Браузер был закрыт.");
-                    return;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[X] Ошибка: {ex.Message}");
-                return;
-            }
-            finally
-            {
-                _activeServices.Remove(serviceLitNet);
-                await serviceLitNet.DisposeAsync();
-
-                if (litNetSessionCounter > 0)
-                    WriteEndSessionToTheReport();
-            }
-
-            try
-            {
-                if (litmarketArray.Length != 0)
-                {
-                    AppendLog("Запуск эмуляции чтения https://litmarket.ru/ ...");
-
-                    await serviceLitMarket.InitializeAsync();
-                    WriteStartSessionToTheReport();
-                    litMarketSessionCounter++;
-
-                    if (await serviceLitMarket.Login(account.Login, account.Password, "https://litmarket.ru/",
-                            AppendLog))
-                    {
-                        _cts.Token.ThrowIfCancellationRequested();
-
-                        AppendLog($"Выполнен вход в аккаунт {account.Login}");
-
-                        foreach (string link in litmarketArray)
-                        {
-                            int sheetsCount =
-                                await serviceLitMarket.Reader_books(link, AppendLog, readProfile, Settings);
-                            _cts.Token.ThrowIfCancellationRequested();
-
-                            AppendLog($"Выполнено чтение по ссылке {link}");
-
-                            WriteDataToTheReport(new ReportDataDto
-                            {
-                                User = account.Login,
-                                IpAddress = "111",
-                                Operation = "Чтение",
-                                Book = link,
-                                SheetsCount = sheetsCount,
-                                Status = nameof(Statuses.Успешно)
-                            });
-                        }
-
-                        await serviceLitMarket.DisposeAsync();
-                    }
-                    else
-                    {
-                        AppendLog(
-                            $"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
-                        return;
-                    }
-
-                    await serviceLitMarket.DisposeAsync();
-                    _cts.Token.ThrowIfCancellationRequested();
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                AppendLog("Остановлено пользователем.");
-                return;
-            }
-            catch (PlaywrightException ex)
-            {
-                // Проверяем по сообщению
-                if (ex.Message.Contains("Target closed") ||
-                    ex.Message.Contains("closed") ||
-                    ex.Message.Contains("Session closed"))
-                {
-                    AppendLog($"Браузер был закрыт.");
-                    return;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                AppendLog($"[X] Ошибка: {ex.Message}");
-                return;
-            }
-            finally
-            {
-                _activeServicesMarket.Remove(serviceLitMarket);
-                await serviceLitMarket.DisposeAsync();
-
-                if (litMarketSessionCounter > 0)
-                    WriteEndSessionToTheReport();
-            }
+                await _startSingleThreadHandler.HandleAsync(
+                    activeAccounts,
+                    links.litnetLinks,
+                    links.litmarketLinks,
+                    AppendLog,
+                    _cts.Token);
+            }   
         }
 
         private async void buttonStop_Click(object sender, EventArgs e)
@@ -454,7 +274,7 @@ namespace LitPulse.Forms
         {
             richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
 
-            Settings.ReadProfile = (ReadProfile)comboBoxReadProfiles.SelectedIndex;
+            _startupSettings.ReadProfile = (ReadProfile)comboBoxReadProfiles.SelectedIndex;
 
             SaveParameters();
         }
@@ -506,25 +326,25 @@ namespace LitPulse.Forms
 
         private void LoadSettings()
         {
-            checkBoxReadBook.Checked = Settings.ReadBook;
+            checkBoxReadBook.Checked = _startupSettings.ReadBook;
 
-            checkBoxAddToLibrary.Checked = Settings.AddToLibrary;
+            checkBoxAddToLibrary.Checked = _startupSettings.AddToLibrary;
 
-            checkBoxLikeTheBook.Checked = Settings.LikeTheBook;
+            checkBoxLikeTheBook.Checked = _startupSettings.LikeTheBook;
 
-            checkBoxSubscribeToTheAuthor.Checked = Settings.SubscribeToTheAuthor;
+            checkBoxSubscribeToTheAuthor.Checked = _startupSettings.SubscribeToTheAuthor;
 
-            checkBoxPostComment.Checked = Settings.PostComment;
+            checkBoxPostComment.Checked = _startupSettings.PostComment;
 
-            checkBoxMakeADonationToTheAuthor.Checked = Settings.MakeADonationToTheAuthor;
+            checkBoxMakeADonationToTheAuthor.Checked = _startupSettings.MakeADonationToTheAuthor;
 
-            checkBoxBuyABook.Checked = Settings.BuyABook;
+            checkBoxBuyABook.Checked = _startupSettings.BuyABook;
 
-            numericUpDownConstantDelay.Value = Settings.ConstantDelay;
+            numericUpDownConstantDelay.Value = _startupSettings.ConstantDelay;
 
-            numericUpDownFloatingIncrementalDelay.Value = Settings.FloatingIncrementalDelay;
+            numericUpDownFloatingIncrementalDelay.Value = _startupSettings.FloatingIncrementalDelay;
 
-            comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
+            comboBoxReadProfiles.SelectedIndex = (int)_startupSettings.ReadProfile;
         }
 
         private void SaveSettings()
@@ -534,38 +354,43 @@ namespace LitPulse.Forms
                 return;
             }
 
-            Settings.ReadBook = checkBoxReadBook.Checked;
+            _startupSettings.ReadBook = checkBoxReadBook.Checked;
 
-            Settings.AddToLibrary = checkBoxAddToLibrary.Checked;
+            _startupSettings.AddToLibrary = checkBoxAddToLibrary.Checked;
 
-            Settings.LikeTheBook = checkBoxLikeTheBook.Checked;
+            _startupSettings.LikeTheBook = checkBoxLikeTheBook.Checked;
 
-            Settings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
+            _startupSettings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
 
-            Settings.PostComment = checkBoxPostComment.Checked;
+            _startupSettings.PostComment = checkBoxPostComment.Checked;
 
-            Settings.MakeADonationToTheAuthor = checkBoxMakeADonationToTheAuthor.Checked;
+            _startupSettings.MakeADonationToTheAuthor = checkBoxMakeADonationToTheAuthor.Checked;
 
-            Settings.BuyABook = checkBoxBuyABook.Checked;
+            _startupSettings.BuyABook = checkBoxBuyABook.Checked;
 
-            Settings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
+            _startupSettings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
 
-            Settings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
+            _startupSettings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
 
             // Сохранение настроек профилей
             for (int i = 0; i < comboBoxReadProfiles.Items.Count; i++)
             {
                 ReadProfile readReadProfile = (ReadProfile)i;
 
-                if (!Settings.ReadProfileSettings.ContainsKey(readReadProfile))
+                if (!_startupSettings.ReadProfileSettings.ContainsKey(readReadProfile))
                 {
                     // Ключа нет - добавляем новую пару
-                    Settings.ReadProfileSettings.Add(readReadProfile,
+                    _startupSettings.ReadProfileSettings.Add(readReadProfile,
                         SettingsManager.CreateDefaultReadProfileSettings(readReadProfile));
                 }
             }
 
             SaveParameters();
+        }
+        
+        private void checkBoxRunningInMultithreadingMode_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxBatchLaunch.Enabled = checkBoxRunningInMultithreadingMode.Checked;
         }
 
         #endregion
@@ -574,9 +399,9 @@ namespace LitPulse.Forms
 
         private void SetParameters()
         {
-            Settings = SettingsManager.Load();
+            _startupSettings = SettingsManager.Load();
 
-            comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
+            comboBoxReadProfiles.SelectedIndex = (int)_startupSettings.ReadProfile;
         }
 
         private void LoadData()
@@ -695,7 +520,7 @@ namespace LitPulse.Forms
 
         public void SaveParameters()
         {
-            SettingsManager.Save(Settings);
+            SettingsManager.Save(_startupSettings);
         }
 
         public void SaveData()
@@ -704,74 +529,18 @@ namespace LitPulse.Forms
             LinksManager.Save(Links);
         }
 
-        public async Task StopAllServicesAsync()
+        private async Task StopAllServicesAsync()
         {
             // Отменяем выполнение
-            _cts?.Cancel();
-
-            // Останавливаем все сервисы
-            var tasks = _activeServices.Select(async service =>
-            {
-                try
-                {
-                    await service.DisposeAsync();
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"Ошибка при остановке сервиса: {ex.Message}");
-                }
-            }).ToList();
-
-            var tasksMarket = _activeServicesMarket.Select(async service =>
-            {
-                try
-                {
-                    await service.DisposeAsync();
-                }
-                catch (Exception ex)
-                {
-                    AppendLog($"Ошибка при остановке сервиса: {ex.Message}");
-                }
-            }).ToList();
-
-            await Task.WhenAll(tasks);
-            await Task.WhenAll(tasksMarket);
-            _activeServices.Clear();
+            await _cts?.CancelAsync();
+            await _serviceManager.CompleteServices();
         }
 
         #endregion
 
         #region Reports
 
-        private enum Statuses
-        {
-            Успешно,
-            Неудачно
-        }
-
-        private void WriteStartSessionToTheReport()
-        {
-            ReportDataDto reportDataDto = new ReportDataDto
-            {
-                Operation = "Начало сессии",
-                SessionDateTime = DateTime.Now
-            };
-
-            _reportDataBindingList.Add(reportDataDto);
-        }
-
-        private void WriteEndSessionToTheReport()
-        {
-            ReportDataDto reportDataDto = new ReportDataDto
-            {
-                Operation = "Конец сессии",
-                SessionDateTime = DateTime.Now
-            };
-
-            _reportDataBindingList.Add(reportDataDto);
-        }
-
-        private void WriteDataToTheReport(ReportDataDto reportData)
+        public void WriteDataToTheReport(ReportDataDto reportData)
         {
             _reportDataBindingList.Add(reportData);
         }

@@ -1,16 +1,26 @@
 ﻿using Contracts.Enums;
+using Core.Abstracts;
+using Core.Manager;
 using Microsoft.Playwright;
 
 namespace Core.Services
 {
-    public sealed class LitNetService
+    public sealed class LitNetService : IBookService
     {
+        private readonly ServiceManager _serviceManager;
+        
         private IPlaywright _playwright;
         private IBrowser _browser;
+        private IBrowserContext _context;
         private IPage _page;
         private CancellationTokenSource? _cts;
 
         // Метод инициализации
+        public LitNetService(ServiceManager serviceManager)
+        {
+            _serviceManager = serviceManager;
+        }
+
         public async Task InitializeAsync()
         {
             _playwright = await Playwright.CreateAsync();
@@ -22,16 +32,22 @@ namespace Core.Services
                 Args = new string[]
                  {
                      "--start-maximized"
-
                  }
             });
 
-            var context = await _browser.NewContextAsync(new()
+            _context = await _browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport
             });
+            
+            /*var context = await _browser.NewContextAsync(new()
+            {
+                ViewportSize = ViewportSize.NoViewport
+            });*/
 
-            _page = await context.NewPageAsync();
+            _page = await _context.NewPageAsync();
+            
+            _serviceManager.RegisterService(this);
         }
 
         /// <summary>
@@ -41,14 +57,16 @@ namespace Core.Services
         /// <param name="url">Ссылка на старницы</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public async Task Primary_activity(string url, Action<string> log)
+        public async Task PrimaryActivity(string url, Action<string> log)
         {
             try
             {
                 if (_page == null)
                 {
-                    throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
+                    throw new InvalidOperationException(
+                        "Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
                 }
+
                 _cts = new CancellationTokenSource();
                 var token = _cts.Token;
 
@@ -57,7 +75,12 @@ namespace Core.Services
                 await _page.Mouse.ClickAsync(100, 100);
                 await ScrollModel.BrowseBookPageAsync(_page, log, token);
             }
-            catch (Exception ex){}
+            catch (PlaywrightException ex)
+            {
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         /// <summary>
@@ -66,7 +89,7 @@ namespace Core.Services
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public async Task<int> BaseActivityBot(string url, Action<string> log, ReadProfile readProfile, Settings.Settings settings)
+        public async Task<int> BaseActivityBot(string url, Action<string> log, ReadProfile readProfile, Settings.StartupSettings startupSettings)
         {
             int sheetsCounter = 0;
             
@@ -76,11 +99,11 @@ namespace Core.Services
             }
             await _page.GotoAsync(url);
             var elements = await _page.QuerySelectorAllAsync("text=Добавить в библиотеку");
-            if (elements.Count > 0 && settings.AddToLibrary)
+            if (elements.Count > 0 && startupSettings.AddToLibrary)
             {
                 await _page.GetByText("Добавить в библиотеку").ClickAsync();
             }
-            if (settings.LikeTheBook) 
+            if (startupSettings.LikeTheBook) 
             {
                 try
                 {
@@ -92,7 +115,7 @@ namespace Core.Services
             _cts = new CancellationTokenSource();
             var token = _cts.Token;
             await ScrollModel.BrowseBookPageAsync(_page, log, token);
-            if (settings.ReadBook) 
+            if (startupSettings.ReadBook) 
             {
                 var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
                 if (locator_learn.Result > 0)
@@ -152,12 +175,14 @@ namespace Core.Services
         }
 
         // Метод для очистки ресурсов (не забудьте вызывать его при завершении)
-        public async Task DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
             if (_browser != null)
             {
+                await _page.CloseAsync();
+                await _context.CloseAsync();
                 await _browser.CloseAsync();
-                await _browser.DisposeAsync();
+                //await _browser.DisposeAsync();
             }
             _playwright?.Dispose();
         }

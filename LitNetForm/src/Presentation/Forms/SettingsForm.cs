@@ -6,7 +6,7 @@ namespace LitNetForm.Forms
     public partial class SettingsForm : Form
     {
 
-        public Settings Settings = new Settings();
+        public StartupSettings StartupSettings = new StartupSettings();
 
         public SettingsForm()
         {
@@ -15,11 +15,11 @@ namespace LitNetForm.Forms
             LoadSettings();
         }
 
-        public SettingsForm(Settings settings)
+        public SettingsForm(StartupSettings startupSettings)
         {
             InitializeComponent();
 
-            Settings = settings;
+            StartupSettings = startupSettings;
 
             LoadSettings();
         }
@@ -48,9 +48,9 @@ namespace LitNetForm.Forms
         {
             richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
 
-            if (Settings.ReadProfileSettings.ContainsKey((ReadProfile)comboBoxReadProfiles.SelectedIndex))
+            if (StartupSettings.ReadProfileSettings.ContainsKey((ReadProfile)comboBoxReadProfiles.SelectedIndex))
             {
-                ProfileSettings profileSettings = Settings.ReadProfileSettings[(ReadProfile)comboBoxReadProfiles.SelectedIndex];
+                ProfileSettings profileSettings = StartupSettings.ReadProfileSettings[(ReadProfile)comboBoxReadProfiles.SelectedIndex];
 
                 numericUpDownChanceOfRegression.Value = profileSettings.ChanceOfRegression;
                 numericUpDownMinMaxPauseAfterScrolling.Value = profileSettings.MinMaxPauseAfterScrolling;
@@ -67,56 +67,56 @@ namespace LitNetForm.Forms
 
         private void LoadSettings()
         {
-            checkBoxReadBook.Checked = Settings.ReadBook;
+            checkBoxReadBook.Checked = StartupSettings.ReadBook;
 
-            checkBoxAddToLibrary.Checked = Settings.AddToLibrary;
+            checkBoxAddToLibrary.Checked = StartupSettings.AddToLibrary;
 
-            checkBoxLikeTheBook.Checked = Settings.LikeTheBook;
+            checkBoxLikeTheBook.Checked = StartupSettings.LikeTheBook;
 
-            checkBoxSubscribeToTheAuthor.Checked = Settings.SubscribeToTheAuthor;
+            checkBoxSubscribeToTheAuthor.Checked = StartupSettings.SubscribeToTheAuthor;
 
-            checkBoxPostComment.Checked = Settings.PostComment;
+            checkBoxPostComment.Checked = StartupSettings.PostComment;
 
-            checkBoxMakeADonationToTheAuthor.Checked = Settings.MakeADonationToTheAuthor;
+            checkBoxMakeADonationToTheAuthor.Checked = StartupSettings.MakeADonationToTheAuthor;
 
-            checkBoxBuyABook.Checked = Settings.BuyABook;
+            checkBoxBuyABook.Checked = StartupSettings.BuyABook;
 
-            numericUpDownConstantDelay.Value = Settings.ConstantDelay;
+            numericUpDownConstantDelay.Value = StartupSettings.ConstantDelay;
 
-            numericUpDownFloatingIncrementalDelay.Value = Settings.FloatingIncrementalDelay;
+            numericUpDownFloatingIncrementalDelay.Value = StartupSettings.FloatingIncrementalDelay;
 
-            comboBoxReadProfiles.SelectedIndex = (int)Settings.ReadProfile;
+            comboBoxReadProfiles.SelectedIndex = (int)StartupSettings.ReadProfile;
         }
 
         private void SaveSettings()
         {
-            Settings.ReadBook = checkBoxReadBook.Checked;
+            StartupSettings.ReadBook = checkBoxReadBook.Checked;
 
-            Settings.AddToLibrary = checkBoxAddToLibrary.Checked;
+            StartupSettings.AddToLibrary = checkBoxAddToLibrary.Checked;
 
-            Settings.LikeTheBook = checkBoxLikeTheBook.Checked;
+            StartupSettings.LikeTheBook = checkBoxLikeTheBook.Checked;
 
-            Settings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
+            StartupSettings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
 
-            Settings.PostComment = checkBoxPostComment.Checked;
+            StartupSettings.PostComment = checkBoxPostComment.Checked;
 
-            Settings.MakeADonationToTheAuthor = checkBoxMakeADonationToTheAuthor.Checked;
+            StartupSettings.MakeADonationToTheAuthor = checkBoxMakeADonationToTheAuthor.Checked;
 
-            Settings.BuyABook = checkBoxBuyABook.Checked;
+            StartupSettings.BuyABook = checkBoxBuyABook.Checked;
 
-            Settings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
+            StartupSettings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
 
-            Settings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
+            StartupSettings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
 
             // Сохранение настроек профилей
             for (int i = 0; i < comboBoxReadProfiles.Items.Count; i++)
             {
                 ReadProfile readReadProfile = (ReadProfile)i;
 
-                if (!Settings.ReadProfileSettings.ContainsKey(readReadProfile))
+                if (!StartupSettings.ReadProfileSettings.ContainsKey(readReadProfile))
                 {
                     // Ключа нет - добавляем новую пару
-                    Settings.ReadProfileSettings.Add(readReadProfile, SettingsManager.CreateDefaultReadProfileSettings(readReadProfile));
+                    StartupSettings.ReadProfileSettings.Add(readReadProfile, SettingsManager.CreateDefaultReadProfileSettings(readReadProfile));
 
                 }
 
@@ -125,7 +125,7 @@ namespace LitNetForm.Forms
 
         private void ChangeProfileSettings()
         {
-            ProfileSettings profileSettings = Settings.ReadProfileSettings[(ReadProfile)comboBoxReadProfiles.SelectedIndex];
+            ProfileSettings profileSettings = StartupSettings.ReadProfileSettings[(ReadProfile)comboBoxReadProfiles.SelectedIndex];
 
             profileSettings.ChanceOfRegression = Convert.ToUInt32(numericUpDownChanceOfRegression.Value);
             profileSettings.MinMaxPauseAfterScrolling = Convert.ToUInt32(numericUpDownMinMaxPauseAfterScrolling.Value);

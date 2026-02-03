@@ -2,10 +2,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Contracts.Enums;
+using Core.Entities;
 
 namespace Core.Settings
 {
-    public class Settings
+    public class StartupSettings
     {
         [JsonPropertyName("ReadBook")]
         public bool ReadBook { get; set; }
@@ -40,9 +41,9 @@ namespace Core.Settings
         [JsonPropertyName("ReadProfileSettings")]
         public Dictionary<ReadProfile, ProfileSettings>? ReadProfileSettings { get; set; } = new Dictionary<ReadProfile, ProfileSettings>();
 
-        public Settings() { }
+        public StartupSettings() { }
 
-        /*public Settings(AccountSettings accountSettings)
+        public StartupSettings(AccountSettings accountSettings)
         {
             //добавить очередность выполнения настройки
             
@@ -60,7 +61,7 @@ namespace Core.Settings
             // Конвертируем коллекцию в словарь
             //ReadProfileSettings = accountSettings.ProfileSettings?
             //    .ToDictionary(ps => ps.ProfileType, ps => ps);
-        }*/
+        }
     }
 
     [Serializable]
@@ -119,7 +120,7 @@ namespace Core.Settings
             };
         }
 
-        public static void Save(Settings settings)
+        public static void Save(StartupSettings startupSettings)
         {
             try
             {
@@ -131,7 +132,7 @@ namespace Core.Settings
                 }
 
                 var options = GetJsonOptions();
-                string json = JsonSerializer.Serialize(settings, options);
+                string json = JsonSerializer.Serialize(startupSettings, options);
                 File.WriteAllText(SettingsPath, json);
             }
             catch (Exception ex)
@@ -140,7 +141,7 @@ namespace Core.Settings
             }
         }
 
-        public static Settings Load()
+        public static StartupSettings Load()
         {
             try
             {
@@ -153,7 +154,7 @@ namespace Core.Settings
 
                 var options = GetJsonOptions();
 
-                var settings = JsonSerializer.Deserialize<Settings>(json, options);
+                var settings = JsonSerializer.Deserialize<StartupSettings>(json, options);
 
                 // Проверяем, что десериализация прошла успешно
                 if (settings == null)
@@ -179,14 +180,14 @@ namespace Core.Settings
             }
         }
 
-        private static Settings CreateDefaultSettings()
+        private static StartupSettings CreateDefaultSettings()
         {
             Dictionary<ReadProfile, ProfileSettings> ReadProfileSettings = new Dictionary<ReadProfile, ProfileSettings>();
             ReadProfileSettings.Add(ReadProfile.SpeedReader, CreateDefaultReadProfileSettings(ReadProfile.SpeedReader));
             ReadProfileSettings.Add(ReadProfile.TiredReader, CreateDefaultReadProfileSettings(ReadProfile.TiredReader));
             ReadProfileSettings.Add(ReadProfile.DeepReader, CreateDefaultReadProfileSettings(ReadProfile.DeepReader));
 
-            return new Settings
+            return new StartupSettings
             {
                 ReadBook = true,
                 AddToLibrary = false,

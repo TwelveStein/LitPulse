@@ -47,6 +47,7 @@
             checkBoxRunningInMultithreadingMode = new System.Windows.Forms.CheckBox();
             buttonStop = new System.Windows.Forms.Button();
             buttonStartSession = new System.Windows.Forms.Button();
+            checkBoxBatchLaunch = new System.Windows.Forms.CheckBox();
             tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             dataGridViewLinks = new System.Windows.Forms.DataGridView();
             Link = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -83,6 +84,8 @@
             label8 = new System.Windows.Forms.Label();
             numericUpDownConstantDelay = new System.Windows.Forms.NumericUpDown();
             numericUpDownFloatingIncrementalDelay = new System.Windows.Forms.NumericUpDown();
+            label9 = new System.Windows.Forms.Label();
+            numericUpDownAccountCount = new System.Windows.Forms.NumericUpDown();
             groupBox1 = new System.Windows.Forms.GroupBox();
             richTextBoxProfile = new System.Windows.Forms.RichTextBox();
             label4 = new System.Windows.Forms.Label();
@@ -117,6 +120,7 @@
             tableLayoutPanel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownConstantDelay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownAccountCount).BeginInit();
             groupBox1.SuspendLayout();
             tableLayoutPanel8.SuspendLayout();
             tableLayoutPanel12.SuspendLayout();
@@ -193,8 +197,7 @@
             dataGridViewReport.AllowUserToOrderColumns = true;
             dataGridViewReport.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] 
-                { User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime });
+            dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime });
             dataGridViewReport.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridViewReport.Location = new System.Drawing.Point(3, 116);
             dataGridViewReport.Name = "dataGridViewReport";
@@ -284,11 +287,13 @@
             tableLayoutPanel5.Controls.Add(checkBoxRunningInMultithreadingMode, 0, 1);
             tableLayoutPanel5.Controls.Add(buttonStop, 1, 0);
             tableLayoutPanel5.Controls.Add(buttonStartSession, 0, 0);
+            tableLayoutPanel5.Controls.Add(checkBoxBatchLaunch, 1, 1);
             tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 2;
             tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53F));
+            tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             tableLayoutPanel5.Size = new System.Drawing.Size(576, 87);
             tableLayoutPanel5.TabIndex = 8;
@@ -303,6 +308,7 @@
             checkBoxRunningInMultithreadingMode.Text = "Запускать в режиме многопоточности";
             toolTip1.SetToolTip(checkBoxRunningInMultithreadingMode, ("При включенном параметре программа начинает работать в режиме многопоточности, \r\n" + "где каждый аккаунт - это отдельное окно браузера. (!!!Требует больших ресурсов к" + "омпьютера!!!)"));
             checkBoxRunningInMultithreadingMode.UseVisualStyleBackColor = true;
+            checkBoxRunningInMultithreadingMode.CheckedChanged += checkBoxRunningInMultithreadingMode_CheckedChanged;
             // 
             // buttonStop
             // 
@@ -335,6 +341,16 @@
             buttonStartSession.Text = "ЗАПУСК СЕАНСА";
             buttonStartSession.UseVisualStyleBackColor = false;
             buttonStartSession.Click += buttonStartSession_Click;
+            // 
+            // checkBoxBatchLaunch
+            // 
+            checkBoxBatchLaunch.Enabled = false;
+            checkBoxBatchLaunch.Location = new System.Drawing.Point(338, 56);
+            checkBoxBatchLaunch.Name = "checkBoxBatchLaunch";
+            checkBoxBatchLaunch.Size = new System.Drawing.Size(208, 24);
+            checkBoxBatchLaunch.TabIndex = 9;
+            checkBoxBatchLaunch.Text = "Порционный режим";
+            checkBoxBatchLaunch.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel6
             // 
@@ -720,7 +736,7 @@
             groupBox2.Controls.Add(tableLayoutPanel11);
             groupBox2.Location = new System.Drawing.Point(164, 28);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new System.Drawing.Size(377, 93);
+            groupBox2.Size = new System.Drawing.Size(377, 106);
             groupBox2.TabIndex = 7;
             groupBox2.TabStop = false;
             groupBox2.Text = "Таймаут запуска сеансов";
@@ -734,14 +750,16 @@
             tableLayoutPanel11.Controls.Add(label8, 0, 1);
             tableLayoutPanel11.Controls.Add(numericUpDownConstantDelay, 1, 0);
             tableLayoutPanel11.Controls.Add(numericUpDownFloatingIncrementalDelay, 1, 1);
+            tableLayoutPanel11.Controls.Add(label9, 0, 2);
+            tableLayoutPanel11.Controls.Add(numericUpDownAccountCount, 1, 2);
             tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel11.Location = new System.Drawing.Point(3, 19);
             tableLayoutPanel11.Name = "tableLayoutPanel11";
-            tableLayoutPanel11.RowCount = 2;
+            tableLayoutPanel11.RowCount = 3;
             tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel11.Size = new System.Drawing.Size(371, 71);
+            tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+            tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            tableLayoutPanel11.Size = new System.Drawing.Size(371, 84);
             tableLayoutPanel11.TabIndex = 0;
             // 
             // label7
@@ -783,6 +801,24 @@
             numericUpDownFloatingIncrementalDelay.TabIndex = 3;
             numericUpDownFloatingIncrementalDelay.Value = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDownFloatingIncrementalDelay.ValueChanged += numericUpDownFloatingIncrementalDelay_ValueChanged;
+            // 
+            // label9
+            // 
+            label9.Location = new System.Drawing.Point(3, 57);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(231, 23);
+            label9.TabIndex = 4;
+            label9.Text = "Кол-во аккаунтов:";
+            // 
+            // numericUpDownAccountCount
+            // 
+            numericUpDownAccountCount.Location = new System.Drawing.Point(304, 60);
+            numericUpDownAccountCount.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
+            numericUpDownAccountCount.Minimum = new decimal(new int[] { 2, 0, 0, 0 });
+            numericUpDownAccountCount.Name = "numericUpDownAccountCount";
+            numericUpDownAccountCount.Size = new System.Drawing.Size(64, 23);
+            numericUpDownAccountCount.TabIndex = 5;
+            numericUpDownAccountCount.Value = new decimal(new int[] { 2, 0, 0, 0 });
             // 
             // groupBox1
             // 
@@ -983,6 +1019,7 @@
             tableLayoutPanel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDownConstantDelay).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownAccountCount).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             tableLayoutPanel8.ResumeLayout(false);
@@ -990,6 +1027,11 @@
             tableLayoutPanel12.ResumeLayout(false);
             ResumeLayout(false);
         }
+
+        private System.Windows.Forms.CheckBox checkBoxBatchLaunch;
+
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numericUpDownAccountCount;
 
         #endregion
 
@@ -1012,7 +1054,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Operation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn SessionDateTime;
-        private TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private Button buttonStartSession;
         private Button buttonStop;
         private TableLayoutPanel tableLayoutPanel7;
@@ -1054,12 +1096,12 @@
         private CheckBox checkBoxPostComment;
         private CheckBox checkBoxMakeADonationToTheAuthor;
         private CheckBox checkBoxBuyABook;
-        private GroupBox groupBox2;
-        private TableLayoutPanel tableLayoutPanel11;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
         private Label label7;
         private Label label8;
         private NumericUpDown numericUpDownConstantDelay;
-        private NumericUpDown numericUpDownFloatingIncrementalDelay;
-        private CheckBox checkBoxRunningInMultithreadingMode;
+        private System.Windows.Forms.NumericUpDown numericUpDownFloatingIncrementalDelay;
+        private System.Windows.Forms.CheckBox checkBoxRunningInMultithreadingMode;
     }
 }

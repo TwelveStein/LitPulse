@@ -55,7 +55,7 @@ public sealed class StartLitNetHandler
 
                 foreach (var link in litNetLinks.Take(3))
                 {
-                    await _litNetService.PrimaryActivity(link, logger);
+                    await _litNetService.PrimaryActivity(link, logger, cancellationToken);
                 }
 
                 if (await _litNetService.Login(account.Login, account.Password, LIT_NET_LINK_LOGIN))
@@ -68,7 +68,8 @@ public sealed class StartLitNetHandler
                             link, 
                             logger, 
                             account.AccountSettings.ReadProfile, 
-                            new StartupSettings(account.AccountSettings));
+                            new StartupSettings(account.AccountSettings),
+                            cancellationToken);
 
                         logger($"Выполнено чтение по ссылке {link}");
 
@@ -82,16 +83,11 @@ public sealed class StartLitNetHandler
                             Status = nameof(OperationStatuses.Успешно)
                         });
                     }
-
-                    await _litNetService.DisposeAsync();
                 }
                 else
                 {
                     logger($"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
-                    return;
                 }
-
-                await _litNetService.DisposeAsync();
             }
         }
         catch (OperationCanceledException)
@@ -118,8 +114,6 @@ public sealed class StartLitNetHandler
         }
         finally
         {
-            await _litNetService.DisposeAsync();
-
             if (litNetSessionCounter > 0)
                 _reportDataProgress.Report(new ReportDataDto
                 {

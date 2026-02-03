@@ -1,6 +1,7 @@
 ﻿using Contracts.Enums;
 using Core.Abstracts;
 using Core.Manager;
+using Core.Settings;
 using Microsoft.Playwright;
 
 namespace Core.Services
@@ -13,7 +14,6 @@ namespace Core.Services
         private IBrowser _browser;
         private IBrowserContext _context;
         private IPage _page;
-        private CancellationTokenSource? _cts;
 
         // Метод инициализации
         public LitNetService(ServiceManager serviceManager)
@@ -57,8 +57,9 @@ namespace Core.Services
         /// <param name="url">Ссылка на старницы</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public async Task PrimaryActivity(string url, Action<string> log)
+        public async Task PrimaryActivity(string url, Action<string> log, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             try
             {
                 if (_page == null)
@@ -67,13 +68,10 @@ namespace Core.Services
                         "Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
                 }
 
-                _cts = new CancellationTokenSource();
-                var token = _cts.Token;
-
                 await _page.GotoAsync(url);
                 await _page.GetByText("Добавить в библиотеку").ClickAsync();
                 await _page.Mouse.ClickAsync(100, 100);
-                await ScrollModel.BrowseBookPageAsync(_page, log, token);
+                await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             }
             catch (PlaywrightException ex)
             {
@@ -89,8 +87,15 @@ namespace Core.Services
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public async Task<int> BaseActivityBot(string url, Action<string> log, ReadProfile readProfile, Settings.StartupSettings startupSettings)
+        public async Task<int> BaseActivityBot(
+            string url,
+            Action<string> log,
+            ReadProfile readProfile, 
+            StartupSettings startupSettings,
+            CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             int sheetsCounter = 0;
             
             if (_page == null)
@@ -112,9 +117,9 @@ namespace Core.Services
                 catch { }
                 await _page.WaitForTimeoutAsync(2000);
             }
-            _cts = new CancellationTokenSource();
-            var token = _cts.Token;
-            await ScrollModel.BrowseBookPageAsync(_page, log, token);
+            
+            //var token = _cts.Token;
+            await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             if (startupSettings.ReadBook) 
             {
                 var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
@@ -138,7 +143,7 @@ namespace Core.Services
                     if ((nextButton1 != null || nextButton2 != null) && await _page.Locator("#link-right").CountAsync() > 0)
                     {
 
-                        await ScrollModel.ReadPageAsync(_page, readProfile, log, token);
+                        await ScrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
 
                         await _page.ClickAsync("#link-right");
                         
@@ -153,20 +158,20 @@ namespace Core.Services
             return sheetsCounter;
         }
 
-        public async Task<bool> Login(string login, string password, string Link_login)
+        public async Task<bool> Login(string login, string password, string linkLogin)
         {
             if (_page == null)
             {
                 throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
             }
 
-            await _page.GotoAsync(Link_login);
+            await _page.GotoAsync(linkLogin);
             await _page.Mouse.ClickAsync(100, 100);
             await _page.GetByLabel("Телефон или Email").FillAsync(login);
             await _page.GetByLabel("Пароль").FillAsync(password);
             await _page.Keyboard.PressAsync("Enter");
             await _page.WaitForTimeoutAsync(3000);
-            if (_page.Url == Link_login)
+            if (_page.Url == linkLogin)
             { 
                 return false;
             }
@@ -182,7 +187,6 @@ namespace Core.Services
                 await _page.CloseAsync();
                 await _context.CloseAsync();
                 await _browser.CloseAsync();
-                //await _browser.DisposeAsync();
             }
             _playwright?.Dispose();
         }

@@ -40,7 +40,7 @@ public sealed class StartLitMarketHandler
         {
             if (litMarketLinks.Length != 0)
             {
-                Log(logger, "Запуск эмуляции чтения https://litmarket.ru/ ...");
+                logger("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
                 await _litMarketService.InitializeAsync();
 
@@ -58,7 +58,7 @@ public sealed class StartLitMarketHandler
                         LIT_MARKET_LINK_LOGIN,
                         logger))
                 {
-                    Log(logger, $"Выполнен вход в аккаунт {account.Login}");
+                    logger($"Выполнен вход в аккаунт {account.Login}");
 
                     foreach (string link in litMarketLinks)
                     {
@@ -66,9 +66,10 @@ public sealed class StartLitMarketHandler
                             link,
                             logger,
                             account.AccountSettings.ReadProfile,
-                            new StartupSettings(account.AccountSettings));
+                            new StartupSettings(account.AccountSettings),
+                            cancellationToken);
 
-                        Log(logger, $"Выполнено чтение по ссылке {link}");
+                        logger($"Выполнено чтение по ссылке {link}");
 
                         _reportDataProgress.Report(new ReportDataDto
                         {
@@ -81,20 +82,19 @@ public sealed class StartLitMarketHandler
                         });
                     }
 
-                    await _litMarketService.DisposeAsync();
+                    //await _litMarketService.DisposeAsync();
                 }
                 else
                 {
-                    Log(logger,
-                        $"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
+                    logger($"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
                 }
 
-                await _litMarketService.DisposeAsync();
+                //await _litMarketService.DisposeAsync();
             }
         }
         catch (OperationCanceledException)
         {
-            Log(logger, "Остановлено пользователем.");
+            logger("Остановлено пользователем.");
         }
         catch (PlaywrightException ex)
         {
@@ -103,7 +103,7 @@ public sealed class StartLitMarketHandler
                 ex.Message.Contains("closed") ||
                 ex.Message.Contains("Session closed"))
             {
-                Log(logger, $"Браузер был закрыт.");
+                logger("Браузер был закрыт.");
             }
             else
             {
@@ -112,11 +112,11 @@ public sealed class StartLitMarketHandler
         }
         catch (Exception ex)
         {
-            Log(logger, $"[X] Ошибка: {ex.Message}");
+            logger($"[X] Ошибка: {ex.Message}");
         }
         finally
         {
-            await _litMarketService.DisposeAsync();
+            //await _litMarketService.DisposeAsync();
             if (litMarketSessionCounter > 0)
                 _reportDataProgress.Report(new ReportDataDto
                 {
@@ -125,7 +125,4 @@ public sealed class StartLitMarketHandler
                 });
         }
     }
-
-    private static void Log(Action<string>? cb, string m) =>
-        cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
 }

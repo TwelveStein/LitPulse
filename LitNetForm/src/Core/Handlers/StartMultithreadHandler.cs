@@ -38,27 +38,37 @@ public sealed class StartMultithreadHandler : IDisposable
         int floatingDelay = random.Next(delayDto.FloatingIncrementalDelay);
         int delay = (delayDto.ConstantDelay + floatingDelay) * 1000;
 
-        var litNetTasks = activeAccounts
-            .Where(account => account.LitNet)
-            .Select(account => RunWithScopeAsync<StartLitNetHandler>(handler => handler.HandleAsync(
-                    account,
-                    litNetLinks,
+        List<Task> litNetTasks = [];
+        if (litNetLinks.Length > 0)
+        {
+            litNetTasks = activeAccounts
+                .Where(account => account.LitNet)
+                .Select(account => RunWithScopeAsync<StartLitNetHandler>(handler => handler.HandleAsync(
+                        account,
+                        litNetLinks,
+                        logger,
+                        cancellationToken),
                     logger,
-                    cancellationToken),
-                logger,
-                delay,
-                cancellationToken));
+                    delay,
+                    cancellationToken))
+                .ToList();
+        }
 
-        var litMarketTasks = activeAccounts
-            .Where(account => account.LitMarket)
-            .Select(account => RunWithScopeAsync<StartLitNetHandler>(handler => handler.HandleAsync(
-                    account,
-                    litMarketLinks,
+        List<Task> litMarketTasks = [];
+        if (litMarketLinks.Length > 0)
+        {
+            litMarketTasks = activeAccounts
+                .Where(account => account.LitMarket)
+                .Select(account => RunWithScopeAsync<StartLitMarketHandler>(handler => handler.HandleAsync(
+                        account,
+                        litMarketLinks,
+                        logger,
+                        cancellationToken),
                     logger,
-                    cancellationToken),
-                logger,
-                delay,
-                cancellationToken));
+                    delay,
+                    cancellationToken))
+                .ToList();
+        }
 
         await Task.WhenAll(litNetTasks);
         await Task.WhenAll(litMarketTasks);

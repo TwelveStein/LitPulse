@@ -12,33 +12,33 @@ public sealed class ScrollModel
     public static async Task ReadPageAsync(
         IPage page,
         ReadProfile readProfile,
-        Action<string>? log = null,
-        CancellationToken ct = default)
+        Action<string>? log,
+        CancellationToken ct)
     {
         await ReadPageCoreAsync(page, readProfile, log, ct);
     }
 
     public static async Task ReadPageAsync(
         IPage page,
-        CancellationToken ct = default)
+        CancellationToken ct)
     {
         await ReadPageCoreAsync(page, ReadProfile.TiredReader, null, ct);
     }
 
     public static async Task BrowseBookPageAsync(
         IPage page,
-        Action<string>? log = null,
-        CancellationToken ct = default)
+        Action<string>? log,
+        CancellationToken cancellationToken)
     {
         if (page == null) throw new ArgumentNullException(nameof(page));
 
         var rnd = new Random();
-        await Task.Delay(1000 + rnd.Next(800), ct);
+        await Task.Delay(1000 + rnd.Next(800), cancellationToken);
         Log(log, "[INFO] Начало ознакомления со страницей книги");
 
         // === 1. ГОЛОВА ===
         Log(log, "→ Этап 1: Голова — изучение шапки");
-        await Task.Delay(4000 + rnd.Next(2000), ct);
+        await Task.Delay(4000 + rnd.Next(2000), cancellationToken);
 
         // === 2. ТЕЛО: карусель «С этой книгой читают» ===
         Log(log, "→ Этап 2: Тело — листание карусели (3–5 раз)");
@@ -46,13 +46,13 @@ public sealed class ScrollModel
         int clicks = 0;
         int maxClicks = rnd.Next(1, 5);
         string carusSel = "#comments, .comments, .comment-list, .jsComment, .widget-block";
-        while (clicks < maxClicks && !ct.IsCancellationRequested)
+        while (clicks < maxClicks && !cancellationToken.IsCancellationRequested)
         {
             try
             {
                 // Ищем кнопку стрелки → (LitMarket: внутри .lmButton_arrowRight)
-                await Task.Delay(800 + rnd.Next(700), ct);
-                await ScrollTo(page, carusSel, 900, ct);
+                await Task.Delay(800 + rnd.Next(700), cancellationToken);
+                await ScrollTo(page, carusSel, 900, cancellationToken);
                 await page.WaitForTimeoutAsync(1000);
 
                 var elem = await page.QuerySelectorAsync(".lmfont-arrow-right, .bx-next");
@@ -68,7 +68,7 @@ public sealed class ScrollModel
                     Log(log, "  → Кнопка не в DOM — завершаем");
                     break;
                 }
-
+      
                 // Имитация движения мыши + задержка + клик (как человек)
                 await page.Mouse.MoveAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
                 await page.Mouse.ClickAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
@@ -88,8 +88,8 @@ public sealed class ScrollModel
         string commentsSel = ".made-in-russia, .main_footer-inform-title";
         try
         {
-            await ScrollTo(page, commentsSel, 15000, ct);
-            await Task.Delay(1500 + rnd.Next(1000), ct);
+            await ScrollTo(page, commentsSel, 15000, cancellationToken);
+            await Task.Delay(1500 + rnd.Next(1000), cancellationToken);
         }
         catch (PlaywrightException ex)
         {
@@ -101,8 +101,8 @@ public sealed class ScrollModel
         Log(log, "→ Этап 4: Возврат в начало");
         try
         {
-            await SmoothScrollTo(page, 0, 2000, ct);
-            await Task.Delay(1000, ct);
+            await SmoothScrollTo(page, 0, 2000, cancellationToken);
+            await Task.Delay(1000, cancellationToken);
         }
         catch (PlaywrightException ex)
         {
@@ -304,7 +304,10 @@ public sealed class ScrollModel
                 }}");
             if (top > 0) await SmoothScrollTo(page, top, dur, ct);
         }
-        catch { }
+        catch (PlaywrightException ex)
+        {
+            
+        }
     }
 
     private static void Log(Action<string>? cb, string m) =>

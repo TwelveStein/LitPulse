@@ -24,6 +24,8 @@ namespace LitPulse.Forms
         private readonly StartMultithreadHandler _startMultithreadHandler;
         private readonly StartBatchMultithreadHandler _startBatchMultithreadHandler;
         private readonly ServiceManager _serviceManager;
+        
+        private CancellationTokenSource _cts;
 
         public MainForm(
             FormFactory formFactory,
@@ -37,6 +39,7 @@ namespace LitPulse.Forms
             _startMultithreadHandler = startMultithreadHandler;
             _startBatchMultithreadHandler = startBatchMultithreadHandler;
             _serviceManager = serviceManager;
+            _cts = new CancellationTokenSource();
 
             InitializeComponent();
             SetParameters();
@@ -75,10 +78,8 @@ namespace LitPulse.Forms
         //private List<Account> accounts = new List<Account>();
 
         #endregion
-
-        private readonly List<LitNetService> _activeServices = [];
-        private readonly List<LitMarketService> _activeServicesMarket = [];
-        private CancellationTokenSource _cts = new();
+        
+        
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -88,10 +89,10 @@ namespace LitPulse.Forms
 
         private async void buttonStartSession_Click(object sender, EventArgs e)
         {
-            await StartSessionAsync(_cts.Token);
+            await StartSessionAsync();
         }
 
-        private async Task StartSessionAsync(CancellationToken cancellationToken)
+        private async Task StartSessionAsync()
         {
             //Получаем активные аккаунты c настройками
             IReadOnlyList<Account> activeAccounts = await _formFactory.ShowAccountSetupForm();
@@ -532,7 +533,9 @@ namespace LitPulse.Forms
         private async Task StopAllServicesAsync()
         {
             // Отменяем выполнение
-            await _cts?.CancelAsync();
+            await _cts.CancelAsync();
+            
+            // Останавливаем сервисы
             await _serviceManager.CompleteServices();
         }
 
@@ -547,10 +550,10 @@ namespace LitPulse.Forms
 
         private async void buttonSaveReport_Click(object sender, EventArgs e)
         {
-            await SaveDataToTheReportAsync(_cts.Token);
+            await SaveDataToTheReportAsync();
         }
 
-        private async Task SaveDataToTheReportAsync(CancellationToken cancellationToken)
+        private async Task SaveDataToTheReportAsync()
         {
             if (dataGridViewReport.Rows.Count > 0)
             {
@@ -577,7 +580,7 @@ namespace LitPulse.Forms
                 }
 
                 ReportExcelProvider reportExcelProvider = new ReportExcelProvider(reportDataList);
-                await reportExcelProvider.SaveFileAsync(cancellationToken);
+                await reportExcelProvider.SaveFileAsync(_cts.Token);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Contracts.Enums;
 using Core.Abstracts;
 using Core.Manager;
+using Core.Settings;
 using Microsoft.Playwright;
 
 namespace Core.Services
@@ -13,7 +14,6 @@ namespace Core.Services
         private IBrowser _browser;
         private IBrowserContext _context;
         private IPage _page;
-        private CancellationTokenSource? _cts;
 
         public LitMarketService(ServiceManager serviceManager)
         {
@@ -35,7 +35,6 @@ namespace Core.Services
                 Args = new string[]
                 {
                     "--start-maximized"
-                
                 }
             });
             
@@ -179,14 +178,19 @@ namespace Core.Services
         /// Метод прохода по ссылкам 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> ReaderBooks(string link, Action<string> log, ReadProfile readProfile , Settings.StartupSettings startupSettings) 
+        public async Task<int> ReaderBooks(
+            string link, 
+            Action<string> log, 
+            ReadProfile readProfile , 
+            StartupSettings startupSettings,
+            CancellationToken cancellationToken) 
         {
-            _cts = new CancellationTokenSource();
-            var token = _cts.Token;
+            /*_cts = new CancellationTokenSource();
+            var token = _cts.Token;*/
             
             await _page.GotoAsync(link);
             await _page.WaitForTimeoutAsync(2000);
-            await ScrollModel.BrowseBookPageAsync(_page, log, token);
+            await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             
             int sheetsCounter = 0; 
             
@@ -202,7 +206,7 @@ namespace Core.Services
                     while (true)
                     {
                         var url_page = _page.Url;
-                        await ScrollModel.ReadPageAsync(_page, readProfile, log, token);
+                        await ScrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
                         sheetsCounter++;
 
                         var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");

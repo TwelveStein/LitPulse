@@ -48,7 +48,7 @@ public sealed class StartBatchMultithreadHandler
         //   [G]
         // ]
         var batches = activeAccounts
-            .Select((link, index) => new { link, index })
+            .Select((account, index) => new { link = account, index })
             .GroupBy(x => x.index / batchSize)
             .Select(g => g.Select(x => x.link))
             .ToList();
@@ -56,66 +56,77 @@ public sealed class StartBatchMultithreadHandler
         // Фильтруем и обрабатываем аккаунты LitNet
         foreach (var batch in batches)
         {
-            Log(logger, $"Задержка перед запуском: {delay / 1000} секунд.");
-            await Task.Delay(delay, cancellationToken);
+            if (litNetLinks.Length == 0)
+                break;
 
-            var litNetTasks = batch
-                .Where(account => account.LitNet)
-                .Select(async account =>
-                {
-                    // Обязательно для каждого потока получаем отдельный сервис
-                    StartLitNetHandler handler = await _serviceFactory.GetServiceAsync<StartLitNetHandler>();
+            try
+            {
+                logger($"Задержка перед запуском: {delay / 1000} секунд.");
+                await Task.Delay(delay, cancellationToken);
 
-                    try
+                var litNetTasks = batch
+                    .Where(account => account.LitNet)
+                    .Select(async account =>
                     {
+                        // Обязательно для каждого потока получаем отдельный сервис
+                        StartLitNetHandler handler = await _serviceFactory.GetServiceAsync<StartLitNetHandler>();
+
                         await handler.HandleAsync(
                             account,
                             litNetLinks,
                             logger,
                             cancellationToken);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Log(logger, "Порционная операция отменена.");
-                    }
-                })
-                .ToList();
+                    })
+                    .ToList();
 
-            await Task.WhenAll(litNetTasks);
+                await Task.WhenAll(litNetTasks);
+            }
+            catch (OperationCanceledException)
+            {
+                logger("Порционная операция отменена.");
+            }
+            catch (Exception ex)
+            {
+                logger("Порционная операция отменена.");
+            }
         }
 
         // Фильтруем и обрабатываем аккаунты LitMarket
         foreach (var batch in batches)
         {
-            Log(logger, $"Задержка перед запуском: {delay / 1000} секунд.");
-            await Task.Delay(delay, cancellationToken);
+            if (litMarketLinks.Length == 0)
+                break;
 
-            var litMarketTasks = batch
-                .Where(account => account.LitMarket)
-                .Select(async account =>
-                {
-                    // Обязательно для каждого потока получаем отдельный сервис
-                    StartLitMarketHandler handler = await _serviceFactory.GetServiceAsync<StartLitMarketHandler>();
+            try
+            {
+                logger($"Задержка перед запуском: {delay / 1000} секунд.");
+                await Task.Delay(delay, cancellationToken);
 
-                    try
+                var litMarketTasks = batch
+                    .Where(account => account.LitMarket)
+                    .Select(async account =>
                     {
+                        // Обязательно для каждого потока получаем отдельный сервис
+                        StartLitMarketHandler handler = await _serviceFactory.GetServiceAsync<StartLitMarketHandler>();
+
                         await handler.HandleAsync(
                             account,
                             litMarketLinks,
                             logger,
                             cancellationToken);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Log(logger, "Порционная операция отменена.");
-                    }
-                })
-                .ToList();
+                    })
+                    .ToList();
 
-            await Task.WhenAll(litMarketTasks);
+                await Task.WhenAll(litMarketTasks);
+            }
+            catch (OperationCanceledException)
+            {
+                logger("Порционная операция отменена.");
+            }
+            catch (Exception ex)
+            {
+                logger("Порционная операция отменена.");
+            }
         }
     }
-
-    private static void Log(Action<string>? cb, string m) =>
-        cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
 }

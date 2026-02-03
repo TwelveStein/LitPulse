@@ -38,75 +38,73 @@ public sealed class StartMultithreadHandler : IDisposable
         int floatingDelay = random.Next(delayDto.FloatingIncrementalDelay);
         int delay = (delayDto.ConstantDelay + floatingDelay) * 1000;
 
-        List<Task> litNetTasks = [];
-        if (litNetLinks.Length > 0)
-        {
-            litNetTasks = activeAccounts
-                .Where(account => account.LitNet)
-                .Select(account => RunWithScopeAsync<StartLitNetHandler>(handler => handler.HandleAsync(
-                        account,
-                        litNetLinks,
-                        logger,
-                        cancellationToken),
-                    logger,
-                    delay,
-                    cancellationToken))
-                .ToList();
-        }
-
-        List<Task> litMarketTasks = [];
-        if (litMarketLinks.Length > 0)
-        {
-            litMarketTasks = activeAccounts
-                .Where(account => account.LitMarket)
-                .Select(account => RunWithScopeAsync<StartLitMarketHandler>(handler => handler.HandleAsync(
-                        account,
-                        litMarketLinks,
-                        logger,
-                        cancellationToken),
-                    logger,
-                    delay,
-                    cancellationToken))
-                .ToList();
-        }
-
-        await Task.WhenAll(litNetTasks);
-        await Task.WhenAll(litMarketTasks);
-    }
-
-    private async Task RunWithScopeAsync<THandler>(
-        Func<THandler, Task> action,
-        Action<string> logger,
-        int delay,
-        CancellationToken cancellationToken)
-        where THandler : notnull
-    {
         try
         {
-            await _semaphoreSlim.WaitAsync(cancellationToken);
-
-            try
+            List<Task> litNetTasks = [];
+            if (litNetLinks.Length > 0)
             {
-                // Обязательно для каждого потока получаем отдельный сервис
-                var handler = await _serviceFactory.GetServiceAsync<THandler>();
+                litNetTasks = activeAccounts
+                    .Where(account => account.LitNet)
+                    .Select(account => _serviceFactory.ExecuteInService<StartLitNetHandler>(async handler =>
+                    {
+                        await _semaphoreSlim.WaitAsync(cancellationToken);
 
-                Log(logger, $"Задержка перед запуском: {delay / 1000} секунд.");
-                await Task.Delay(delay, cancellationToken);
+                        logger($"Задержка перед запуском: {delay / 1000} секунд.");
+                        await Task.Delay(delay, cancellationToken);
 
-                await action(handler);
+                        try
+                        {
+                            await handler.HandleAsync(
+                                account,
+                                litNetLinks,
+                                logger,
+                                cancellationToken);
+                        }
+                        finally
+                        {
+                            _semaphoreSlim.Release();
+                        }
+                    }))
+                    .ToList();
             }
-            finally
+
+            List<Task> litMarketTasks = [];
+            if (litMarketLinks.Length > 0)
             {
-                _semaphoreSlim.Release();
+                litMarketTasks = activeAccounts
+                    .Where(account => account.LitMarket)
+                    .Select(account => _serviceFactory.ExecuteInService<StartLitMarketHandler>(async handler =>
+                    {
+                        await _semaphoreSlim.WaitAsync(cancellationToken);
+
+                        try
+                        {
+                            await handler.HandleAsync(
+                                account,
+                                litMarketLinks,
+                                logger,
+                                cancellationToken);
+                        }
+                        finally
+                        {
+                            _semaphoreSlim.Release();
+                        }
+                    }))
+                    .ToList();
             }
+
+            await Task.WhenAll(litNetTasks);
+            await Task.WhenAll(litMarketTasks);
+        }
+        catch (OperationCanceledException)
+        {
+            logger("Операция остановлена.");
         }
         catch (Exception ex)
         {
+            // ignored
         }
     }
-
-    private static void Log(Action<string>? cb, string m) =>
-        cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
 
     public void Dispose()
     {

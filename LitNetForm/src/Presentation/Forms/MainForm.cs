@@ -1,17 +1,12 @@
 ﻿using System.ComponentModel;
 using Contracts.DTOs;
 using Contracts.Enums;
-using Core.Abstracts;
 using Core.Entities;
 using Core.Handlers;
-using Core.Manager;
-using Core.Services;
 using Core.Settings;
 using LitPulse.FileProviders;
-using Microsoft.Playwright;
 using LitPulse.Data;
 using LitPulse.Factory;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LitPulse.Forms
 {
@@ -23,7 +18,6 @@ namespace LitPulse.Forms
         private readonly StartSingleThreadHandler _startSingleThreadHandler;
         private readonly StartMultithreadHandler _startMultithreadHandler;
         private readonly StartBatchMultithreadHandler _startBatchMultithreadHandler;
-        private readonly ServiceManager _serviceManager;
         
         private CancellationTokenSource _cts;
 
@@ -31,14 +25,12 @@ namespace LitPulse.Forms
             FormFactory formFactory,
             StartSingleThreadHandler startSingleThreadHandler,
             StartMultithreadHandler startMultithreadHandler,
-            StartBatchMultithreadHandler startBatchMultithreadHandler,
-            ServiceManager serviceManager)
+            StartBatchMultithreadHandler startBatchMultithreadHandler)
         {
             _formFactory = formFactory;
             _startSingleThreadHandler = startSingleThreadHandler;
             _startMultithreadHandler = startMultithreadHandler;
             _startBatchMultithreadHandler = startBatchMultithreadHandler;
-            _serviceManager = serviceManager;
             _cts = new CancellationTokenSource();
 
             InitializeComponent();
@@ -532,11 +524,8 @@ namespace LitPulse.Forms
 
         private async Task StopAllServicesAsync()
         {
-            // Отменяем выполнение
+            // Отменяем выполнение при помощи токена отмены
             await _cts.CancelAsync();
-            
-            // Останавливаем сервисы
-            await _serviceManager.CompleteServices();
         }
 
         #endregion

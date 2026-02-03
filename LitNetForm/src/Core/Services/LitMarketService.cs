@@ -1,6 +1,5 @@
 ﻿using Contracts.Enums;
 using Core.Abstracts;
-using Core.Manager;
 using Core.Settings;
 using Microsoft.Playwright;
 
@@ -8,18 +7,11 @@ namespace Core.Services
 {
     public sealed class LitMarketService : IBookService
     {
-        private readonly ServiceManager _serviceManager;
-        
         private IPlaywright _playwright;
         private IBrowser _browser;
         private IBrowserContext _context;
         private IPage _page;
-
-        public LitMarketService(ServiceManager serviceManager)
-        {
-            _serviceManager = serviceManager;
-        }
-
+        
         /// <summary>
         /// Метод инициализации playwright
         /// </summary>
@@ -44,8 +36,6 @@ namespace Core.Services
             });
             
             _page = await _context.NewPageAsync();
-            
-            _serviceManager.RegisterService(this);
         }
         
         /// <summary>

@@ -68,14 +68,12 @@ public sealed class StartBatchMultithreadHandler
                     .Where(account => account.LitNet)
                     .Select(async account =>
                     {
-                        // Обязательно для каждого потока получаем отдельный сервис
-                        StartLitNetHandler handler = await _serviceFactory.GetServiceAsync<StartLitNetHandler>();
-
-                        await handler.HandleAsync(
-                            account,
-                            litNetLinks,
-                            logger,
-                            cancellationToken);
+                        await _serviceFactory.ExecuteInService<StartLitNetHandler>(async handler =>
+                            await handler.HandleAsync(
+                                account,
+                                litNetLinks,
+                                logger,
+                                cancellationToken));
                     })
                     .ToList();
 
@@ -87,7 +85,7 @@ public sealed class StartBatchMultithreadHandler
             }
             catch (Exception ex)
             {
-                logger("Порционная операция отменена.");
+                // ignored
             }
         }
 
@@ -106,14 +104,12 @@ public sealed class StartBatchMultithreadHandler
                     .Where(account => account.LitMarket)
                     .Select(async account =>
                     {
-                        // Обязательно для каждого потока получаем отдельный сервис
-                        StartLitMarketHandler handler = await _serviceFactory.GetServiceAsync<StartLitMarketHandler>();
-
-                        await handler.HandleAsync(
-                            account,
-                            litMarketLinks,
-                            logger,
-                            cancellationToken);
+                        await _serviceFactory.ExecuteInService<StartLitMarketHandler>(async handler =>
+                            await handler.HandleAsync(
+                                account,
+                                litMarketLinks,
+                                logger,
+                                cancellationToken));
                     })
                     .ToList();
 
@@ -125,7 +121,7 @@ public sealed class StartBatchMultithreadHandler
             }
             catch (Exception ex)
             {
-                logger("Порционная операция отменена.");
+                // ignored
             }
         }
     }

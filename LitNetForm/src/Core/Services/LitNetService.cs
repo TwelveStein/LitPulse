@@ -1,6 +1,5 @@
 ﻿using Contracts.Enums;
 using Core.Abstracts;
-using Core.Manager;
 using Core.Settings;
 using Microsoft.Playwright;
 
@@ -8,19 +7,12 @@ namespace Core.Services
 {
     public sealed class LitNetService : IBookService
     {
-        private readonly ServiceManager _serviceManager;
-        
         private IPlaywright _playwright;
         private IBrowser _browser;
         private IBrowserContext _context;
         private IPage _page;
 
         // Метод инициализации
-        public LitNetService(ServiceManager serviceManager)
-        {
-            _serviceManager = serviceManager;
-        }
-
         public async Task InitializeAsync()
         {
             _playwright = await Playwright.CreateAsync();
@@ -39,15 +31,8 @@ namespace Core.Services
             {
                 ViewportSize = ViewportSize.NoViewport
             });
-            
-            /*var context = await _browser.NewContextAsync(new()
-            {
-                ViewportSize = ViewportSize.NoViewport
-            });*/
 
             _page = await _context.NewPageAsync();
-            
-            _serviceManager.RegisterService(this);
         }
 
         /// <summary>

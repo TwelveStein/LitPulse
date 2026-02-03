@@ -29,23 +29,22 @@ public class StartSingleThreadHandler
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
-            
+
             if (account.LitNet is false)
                 continue;
 
-            StartLitNetHandler handler = await _serviceFactory.GetServiceAsync<StartLitNetHandler>();
-
             try
             {
-                await handler.HandleAsync(
+                await _serviceFactory.ExecuteInService<StartLitNetHandler>(
+                    async handler => await handler.HandleAsync(
                     account,
                     litNetLinks,
                     logger,
-                    cancellationToken);
+                    cancellationToken));
             }
             catch (Exception ex)
             {
-                Log(logger, "Сервис остановлен.");
+                logger("Сервис остановлен.");
             }
         }
 
@@ -53,27 +52,23 @@ public class StartSingleThreadHandler
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
-            
+
             if (account.LitMarket is false)
                 continue;
 
             try
             {
-                StartLitMarketHandler handler = await _serviceFactory.GetServiceAsync<StartLitMarketHandler>();
-
-                await handler.HandleAsync(
-                    account,
-                    litMarketLinks,
-                    logger,
-                    cancellationToken);
+                await _serviceFactory.ExecuteInService<StartLitMarketHandler>(
+                    async handler => await handler.HandleAsync(
+                        account,
+                        litMarketLinks,
+                        logger,
+                        cancellationToken));
             }
             catch (Exception ex)
             {
-                Log(logger, "Сервис остановлен.");
+                logger("Сервис остановлен.");
             }
         }
     }
-    
-    private static void Log(Action<string>? cb, string m) =>
-        cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
 }

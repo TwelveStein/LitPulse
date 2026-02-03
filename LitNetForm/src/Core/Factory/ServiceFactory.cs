@@ -3,7 +3,7 @@
 namespace Core.Factory;
 
 /// <summary>
-/// Фабрика сервисов, предоставляет необходимый сервис из IServiceProvider
+/// Фабрика сервисов
 /// </summary>
 public sealed class ServiceFactory
 {
@@ -15,12 +15,14 @@ public sealed class ServiceFactory
     }
 
     /// <summary>
-    /// Возвращает необходимый сервис из DI
+    /// Получает необходимый сервис из DI и выполняет его. Для каждого потока важно получать свой сервис.
     /// </summary>
-    public async Task<TService> GetServiceAsync<TService>() where TService : notnull 
+    public async Task ExecuteInService<TService>(
+        Func<TService, Task> action) where TService : notnull
     {
         await using var scope = _serviceProvider.CreateAsyncScope();
         var service = scope.ServiceProvider.GetRequiredService<TService>();
-        return service;
+
+        await action(service);
     }
 }

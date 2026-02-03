@@ -120,6 +120,8 @@ public sealed class StartLitNetHandler
                     Operation = "Конец сессии",
                     SessionDateTime = DateTime.Now
                 });
+
+            await _litNetService.DisposeAsync();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Core.Factory;
 using Core.Handlers;
-using Core.Manager;
 using Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,8 +23,6 @@ public static class DependencyInjection
         services.AddScoped<ScrollModel>();
         
         services.AddScoped<ServiceFactory>();
-
-        services.AddSingleton<ServiceManager>();
         
         return services;
     }

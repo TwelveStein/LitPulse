@@ -18,8 +18,7 @@ namespace LitPulse.Forms
 
         private IReadOnlyList<Account> _accounts = [];
 
-        public AccountSetupForm(
-            AccountsService accountsService)
+        public AccountSetupForm(AccountsService accountsService)
         {
             InitializeComponent();
 
@@ -184,10 +183,8 @@ namespace LitPulse.Forms
 
         private void dataGridViewActiveAccounts_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridViewActiveAccounts.CurrentRow?.DataBoundItem is not AccountDto accountDto)
-                return;
-
-            UpdateStatementSettings(accountDto);
+            // Обновление состояния настроек для аккаунта
+            UpdateStatementSettings();
         }
 
         #endregion
@@ -208,6 +205,8 @@ namespace LitPulse.Forms
 
         private async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
+            UpdateStatementSettings();
+            
             List<Account> accountsForUpdate = _accounts
                 .Where(a => a.IsModified)
                 .ToList();
@@ -272,8 +271,11 @@ namespace LitPulse.Forms
                 accountDto.LitMarket);
         }
 
-        private void UpdateStatementSettings(AccountDto accountDto)
+        private void UpdateStatementSettings()
         {
+            if (dataGridViewActiveAccounts.CurrentRow?.DataBoundItem is not AccountDto accountDto)
+                return;
+
             Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
             if (account is null || account.AccountSettings is null)
                 return;

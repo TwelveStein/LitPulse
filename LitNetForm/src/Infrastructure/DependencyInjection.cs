@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddTransient<DatabaseInitializer>();
         
         services.AddScoped<AppDbContext>();
+        
         services.AddScoped<IAccountsRepository, AccountsRepository>();
         services.AddScoped<IAccountHistoryRepository, AccountHistoryRepository>();
         

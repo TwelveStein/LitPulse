@@ -76,7 +76,7 @@ public sealed class ScrollModel
                 clicks++;
                 Log(log, $"  → Листнул карусель ({clicks}/{maxClicks})");
             }
-            catch (Exception ex)
+            catch (PlaywrightException ex)
             {
                 Log(log, $"    → Карусель закончена: {ex.Message}");
                 break;
@@ -86,14 +86,28 @@ public sealed class ScrollModel
         // === 3. ПОДВАЛ: комментарии ===
         Log(log, "→ Этап 3: Подвал — вдумчивое чтение комментариев");
         string commentsSel = ".made-in-russia, .main_footer-inform-title";
-        await ScrollTo(page, commentsSel, 15000, ct);
-        await Task.Delay(1500 + rnd.Next(1000), ct);
+        try
+        {
+            await ScrollTo(page, commentsSel, 15000, ct);
+            await Task.Delay(1500 + rnd.Next(1000), ct);
+        }
+        catch (PlaywrightException ex)
+        {
+            Log(log, "Страница браузера закрыта!");
+        }
 
 
         // === 4. ВОЗВРАТ В ГОЛОВУ ===
         Log(log, "→ Этап 4: Возврат в начало");
-        await SmoothScrollTo(page, 0, 2000, ct);
-        await Task.Delay(1000, ct);
+        try
+        {
+            await SmoothScrollTo(page, 0, 2000, ct);
+            await Task.Delay(1000, ct);
+        }
+        catch (PlaywrightException ex)
+        {
+            Log(log, "Страница браузера закрыта!");
+        }
 
         Log(log, "[OK] Ознакомление завершено (2–3 мин)");
     }

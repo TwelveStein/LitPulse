@@ -24,8 +24,4 @@
       <PackageReference Include="Patchright" Version="1.57.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Manager\" />
-    </ItemGroup>
-
 </Project>

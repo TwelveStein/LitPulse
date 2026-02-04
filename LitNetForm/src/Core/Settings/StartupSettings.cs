@@ -39,7 +39,7 @@ namespace Core.Settings
         public ReadProfile ReadProfile { get; set; }
 
         [JsonPropertyName("ReadProfileSettings")]
-        public Dictionary<ReadProfile, ProfileSettings>? ReadProfileSettings { get; set; } = new Dictionary<ReadProfile, ProfileSettings>();
+        public Dictionary<ReadProfile, ProfileSettings>? ReadProfileSettings { get; set; } = new();
 
         public StartupSettings() { }
 
@@ -59,8 +59,8 @@ namespace Core.Settings
             ReadProfile = accountSettings.ReadProfile;
 
             // Конвертируем коллекцию в словарь
-            //ReadProfileSettings = accountSettings.ProfileSettings?
-            //    .ToDictionary(ps => ps.ProfileType, ps => ps);
+            /*ReadProfileSettings = accountSettings.ProfileSettings?
+                .ToDictionary(ps => ps.ProfileType, ps => ps);*/
         }
     }
 
@@ -182,10 +182,12 @@ namespace Core.Settings
 
         private static StartupSettings CreateDefaultSettings()
         {
-            Dictionary<ReadProfile, ProfileSettings> ReadProfileSettings = new Dictionary<ReadProfile, ProfileSettings>();
-            ReadProfileSettings.Add(ReadProfile.SpeedReader, CreateDefaultReadProfileSettings(ReadProfile.SpeedReader));
-            ReadProfileSettings.Add(ReadProfile.TiredReader, CreateDefaultReadProfileSettings(ReadProfile.TiredReader));
-            ReadProfileSettings.Add(ReadProfile.DeepReader, CreateDefaultReadProfileSettings(ReadProfile.DeepReader));
+            Dictionary<ReadProfile, ProfileSettings> readProfileSettings = new Dictionary<ReadProfile, ProfileSettings>
+            {
+                { ReadProfile.SpeedReader, CreateDefaultReadProfileSettings(ReadProfile.SpeedReader) },
+                { ReadProfile.TiredReader, CreateDefaultReadProfileSettings(ReadProfile.TiredReader) },
+                { ReadProfile.DeepReader, CreateDefaultReadProfileSettings(ReadProfile.DeepReader) }
+            };
 
             return new StartupSettings
             {
@@ -199,64 +201,57 @@ namespace Core.Settings
                 ConstantDelay = 1,
                 FloatingIncrementalDelay = 1,
                 ReadProfile = ReadProfile.SpeedReader,
-                ReadProfileSettings = ReadProfileSettings
+                ReadProfileSettings = readProfileSettings
             };
         }
 
-        public static ProfileSettings CreateDefaultReadProfileSettings(ReadProfile ReadProfile)
+        public static ProfileSettings CreateDefaultReadProfileSettings(ReadProfile readProfile)
         {
-            ProfileSettings ReadProfileSettings = new ProfileSettings();
+            ProfileSettings readProfileSettings;
 
-            switch (ReadProfile)
+            switch (readProfile)
             {
                 case ReadProfile.SpeedReader:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 3,
                         MinMaxScrollStep = 350,
                         MinMaxScrollDuration = 600,
                         MinMaxPauseAfterScrolling = 400
                     };
-
                     break;
+                
                 case ReadProfile.DeepReader:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 20,
                         MinMaxScrollStep = 200,
                         MinMaxScrollDuration = 1600,
                         MinMaxPauseAfterScrolling = 1800
                     };
-
                     break;
 
                 case ReadProfile.TiredReader:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 12,
                         MinMaxScrollStep = 280,
                         MinMaxScrollDuration = 1000,
                         MinMaxPauseAfterScrolling = 900
                     };
-
                     break;
+                
                 default:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 0,
                         MinMaxScrollStep = 0,
                         MinMaxScrollDuration = 0,
                         MinMaxPauseAfterScrolling = 0
                     };
-
                     break;
             }
-
-            return ReadProfileSettings;
+            return readProfileSettings;
         }
     }
 }

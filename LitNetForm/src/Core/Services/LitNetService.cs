@@ -45,6 +45,7 @@ namespace Core.Services
         public async Task PrimaryActivity(string url, Action<string> log, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            
             try
             {
                 if (_page == null)
@@ -63,6 +64,7 @@ namespace Core.Services
             }
             catch (Exception ex)
             {
+                // ignored
             }
         }
 
@@ -99,7 +101,11 @@ namespace Core.Services
                 {
                     await _page.ClickAsync("a.rate-btn.rate-btn-like" , new() { Timeout = 4000 });
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
+
                 await _page.WaitForTimeoutAsync(2000);
             }
             
@@ -107,8 +113,8 @@ namespace Core.Services
             await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             if (startupSettings.ReadBook) 
             {
-                var locator_learn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
-                if (locator_learn.Result > 0)
+                var locatorLearn = _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).CountAsync();
+                if (locatorLearn.Result > 0)
                 {
                     await _page.GetByRole(AriaRole.Link, new() { Name = "Читать", Exact = true }).ClickAsync();
                 }
@@ -116,12 +122,9 @@ namespace Core.Services
                 {
                     await _page.GetByRole(AriaRole.Link, new() { Name = "Продолжить чтение", Exact = true }).ClickAsync();
                 }
-                
-                string url_page_book;
+
                 while (true)
                 {
-                    url_page_book = _page.Url;
-
                     var nextButton1 = await _page.QuerySelectorAsync("a.pull-right:has-text('Вперед')");
                     var nextButton2 = await _page.QuerySelectorAsync("a.pull-right:has-text('След. часть')");
 
@@ -139,7 +142,6 @@ namespace Core.Services
                     return sheetsCounter;
                 }
             }
-
             return sheetsCounter;
         }
 

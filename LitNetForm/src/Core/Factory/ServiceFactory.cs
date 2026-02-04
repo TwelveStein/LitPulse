@@ -15,7 +15,8 @@ public sealed class ServiceFactory
     }
 
     /// <summary>
-    /// Получает необходимый сервис из DI и выполняет его. Для каждого потока важно получать свой сервис.
+    /// Получает необходимый сервис из DI и выполняет его.
+    /// Для каждого потока важно получать свой (отдельный) сервис и выполнять его в рамках созданного scope.
     /// </summary>
     public async Task ExecuteInService<TService>(
         Func<TService, Task> action) where TService : notnull

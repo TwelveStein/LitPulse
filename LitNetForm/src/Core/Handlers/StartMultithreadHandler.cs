@@ -11,7 +11,7 @@ public sealed class StartMultithreadHandler : IDisposable
 {
     private readonly ServiceFactory _serviceFactory;
 
-    // Используем примитив синхронизации для ограничения доступа указанному кол-ву потоков
+    // Используем примитив синхронизации для ограничения количества потоков
     private SemaphoreSlim _semaphoreSlim = null!;
 
     public StartMultithreadHandler(ServiceFactory serviceFactory)
@@ -108,6 +108,7 @@ public sealed class StartMultithreadHandler : IDisposable
 
     public void Dispose()
     {
-        _semaphoreSlim.Dispose();
+        if (_semaphoreSlim is not null)
+            _semaphoreSlim.Dispose();
     }
 }

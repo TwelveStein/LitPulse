@@ -1,16 +1,17 @@
 ﻿using Contracts.Enums;
+using Core.Abstracts;
+using Core.Settings;
 using Microsoft.Playwright;
-using static Core.Services.ScrollModel;
 
 namespace Core.Services
 {
-    public sealed class LitMarketService
+    public sealed class LitMarketService : IBookService
     {
         private IPlaywright _playwright;
         private IBrowser _browser;
+        private IBrowserContext _context;
         private IPage _page;
-        private CancellationTokenSource? _cts;
-
+        
         /// <summary>
         /// Метод инициализации playwright
         /// </summary>
@@ -18,8 +19,6 @@ namespace Core.Services
         public async Task InitializeAsync()
         {
             _playwright = await Playwright.CreateAsync();
-
-
             _browser = await _playwright.Chromium.LaunchAsync(new()
             {
                 Channel = "chrome",
@@ -28,30 +27,33 @@ namespace Core.Services
                 Args = new string[]
                 {
                     "--start-maximized"
-                
                 }
             });
-            var context = await _browser.NewContextAsync(new()
+            
+            _context = await _browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport
             });
-            _page = await context.NewPageAsync();
+            
+            _page = await _context.NewPageAsync();
         }
+        
         /// <summary>
         ///  Метод деинициализации программы
         /// </summary>
         /// <returns></returns>
-        public async Task DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
             if (_browser != null)
             {
+                await _page.CloseAsync();
+                await _context.CloseAsync();
                 await _browser.CloseAsync();
-                await _browser.DisposeAsync();
             }
             _playwright?.Dispose();
         }
 
-        public async Task<bool> Login(string login, string password, string Link_login, Action<string> log)
+        public async Task<bool> Login(string login, string password, string linkLogin, Action<string> log)
         {
             try
             {
@@ -60,7 +62,7 @@ namespace Core.Services
                     throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
                 }
 
-                await _page.GotoAsync(Link_login);
+                await _page.GotoAsync(linkLogin);
                 await _page.ClickAsync(".login-btn");
                 await _page.Locator("#email").FillAsync(login);
                 await _page.Locator("#password").FillAsync(password);
@@ -166,18 +168,23 @@ namespace Core.Services
         /// Метод прохода по ссылкам 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> Reader_books(string link, Action<string> log, ReadProfile readProfile , Settings.Settings settings) 
+        public async Task<int> ReaderBooks(
+            string link, 
+            Action<string> log, 
+            ReadProfile readProfile , 
+            StartupSettings startupSettings,
+            CancellationToken cancellationToken) 
         {
-            _cts = new CancellationTokenSource();
-            var token = _cts.Token;
+            /*_cts = new CancellationTokenSource();
+            var token = _cts.Token;*/
             
             await _page.GotoAsync(link);
             await _page.WaitForTimeoutAsync(2000);
-            await BrowseBookPageAsync(_page, log, token);
+            await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             
             int sheetsCounter = 0; 
             
-            if (settings.ReadBook) 
+            if (startupSettings.ReadBook) 
             {
                 await _page.ClickAsync("div.btn-reader");
 
@@ -189,7 +196,7 @@ namespace Core.Services
                     while (true)
                     {
                         var url_page = _page.Url;
-                        await ScrollModel.ReadPageAsync(_page, readProfile, log, token);
+                        await ScrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
                         sheetsCounter++;
 
                         var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
@@ -224,13 +231,13 @@ namespace Core.Services
 
             }
             await _page.GotoAsync(link);
-            if (settings.AddToLibrary) 
+            if (startupSettings.AddToLibrary) 
             {
                 await IsButtonClickable("a:has-text('В библиотеку')");
                 await IsButtonClickable("button:has-text('Избранное')");
             
             }
-            if (settings.LikeTheBook) 
+            if (startupSettings.LikeTheBook) 
             {
 
                 var Like_button = await _page.QuerySelectorAsync("span.rating-like-label");
@@ -260,7 +267,7 @@ namespace Core.Services
                 
                 }
             }
-            if (settings.SubscribeToTheAuthor) 
+            if (startupSettings.SubscribeToTheAuthor) 
             {
                 await IsButtonClickable(".card-share__subscribe-button");
 

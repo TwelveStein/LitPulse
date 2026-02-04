@@ -2,10 +2,11 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Contracts.Enums;
+using Core.Entities;
 
 namespace Core.Settings
 {
-    public class Settings
+    public class StartupSettings
     {
         [JsonPropertyName("ReadBook")]
         public bool ReadBook { get; set; }
@@ -38,11 +39,11 @@ namespace Core.Settings
         public ReadProfile ReadProfile { get; set; }
 
         [JsonPropertyName("ReadProfileSettings")]
-        public Dictionary<ReadProfile, ProfileSettings>? ReadProfileSettings { get; set; } = new Dictionary<ReadProfile, ProfileSettings>();
+        public Dictionary<ReadProfile, ProfileSettings>? ReadProfileSettings { get; set; } = new();
 
-        public Settings() { }
+        public StartupSettings() { }
 
-        /*public Settings(AccountSettings accountSettings)
+        public StartupSettings(AccountSettings accountSettings)
         {
             //добавить очередность выполнения настройки
             
@@ -58,9 +59,9 @@ namespace Core.Settings
             ReadProfile = accountSettings.ReadProfile;
 
             // Конвертируем коллекцию в словарь
-            //ReadProfileSettings = accountSettings.ProfileSettings?
-            //    .ToDictionary(ps => ps.ProfileType, ps => ps);
-        }*/
+            /*ReadProfileSettings = accountSettings.ProfileSettings?
+                .ToDictionary(ps => ps.ProfileType, ps => ps);*/
+        }
     }
 
     [Serializable]
@@ -119,7 +120,7 @@ namespace Core.Settings
             };
         }
 
-        public static void Save(Settings settings)
+        public static void Save(StartupSettings startupSettings)
         {
             try
             {
@@ -131,7 +132,7 @@ namespace Core.Settings
                 }
 
                 var options = GetJsonOptions();
-                string json = JsonSerializer.Serialize(settings, options);
+                string json = JsonSerializer.Serialize(startupSettings, options);
                 File.WriteAllText(SettingsPath, json);
             }
             catch (Exception ex)
@@ -140,7 +141,7 @@ namespace Core.Settings
             }
         }
 
-        public static Settings Load()
+        public static StartupSettings Load()
         {
             try
             {
@@ -153,7 +154,7 @@ namespace Core.Settings
 
                 var options = GetJsonOptions();
 
-                var settings = JsonSerializer.Deserialize<Settings>(json, options);
+                var settings = JsonSerializer.Deserialize<StartupSettings>(json, options);
 
                 // Проверяем, что десериализация прошла успешно
                 if (settings == null)
@@ -179,14 +180,16 @@ namespace Core.Settings
             }
         }
 
-        private static Settings CreateDefaultSettings()
+        private static StartupSettings CreateDefaultSettings()
         {
-            Dictionary<ReadProfile, ProfileSettings> ReadProfileSettings = new Dictionary<ReadProfile, ProfileSettings>();
-            ReadProfileSettings.Add(ReadProfile.SpeedReader, CreateDefaultReadProfileSettings(ReadProfile.SpeedReader));
-            ReadProfileSettings.Add(ReadProfile.TiredReader, CreateDefaultReadProfileSettings(ReadProfile.TiredReader));
-            ReadProfileSettings.Add(ReadProfile.DeepReader, CreateDefaultReadProfileSettings(ReadProfile.DeepReader));
+            Dictionary<ReadProfile, ProfileSettings> readProfileSettings = new Dictionary<ReadProfile, ProfileSettings>
+            {
+                { ReadProfile.SpeedReader, CreateDefaultReadProfileSettings(ReadProfile.SpeedReader) },
+                { ReadProfile.TiredReader, CreateDefaultReadProfileSettings(ReadProfile.TiredReader) },
+                { ReadProfile.DeepReader, CreateDefaultReadProfileSettings(ReadProfile.DeepReader) }
+            };
 
-            return new Settings
+            return new StartupSettings
             {
                 ReadBook = true,
                 AddToLibrary = false,
@@ -198,64 +201,57 @@ namespace Core.Settings
                 ConstantDelay = 1,
                 FloatingIncrementalDelay = 1,
                 ReadProfile = ReadProfile.SpeedReader,
-                ReadProfileSettings = ReadProfileSettings
+                ReadProfileSettings = readProfileSettings
             };
         }
 
-        public static ProfileSettings CreateDefaultReadProfileSettings(ReadProfile ReadProfile)
+        public static ProfileSettings CreateDefaultReadProfileSettings(ReadProfile readProfile)
         {
-            ProfileSettings ReadProfileSettings = new ProfileSettings();
+            ProfileSettings readProfileSettings;
 
-            switch (ReadProfile)
+            switch (readProfile)
             {
                 case ReadProfile.SpeedReader:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 3,
                         MinMaxScrollStep = 350,
                         MinMaxScrollDuration = 600,
                         MinMaxPauseAfterScrolling = 400
                     };
-
                     break;
+                
                 case ReadProfile.DeepReader:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 20,
                         MinMaxScrollStep = 200,
                         MinMaxScrollDuration = 1600,
                         MinMaxPauseAfterScrolling = 1800
                     };
-
                     break;
 
                 case ReadProfile.TiredReader:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 12,
                         MinMaxScrollStep = 280,
                         MinMaxScrollDuration = 1000,
                         MinMaxPauseAfterScrolling = 900
                     };
-
                     break;
+                
                 default:
-
-                    ReadProfileSettings = new ProfileSettings
+                    readProfileSettings = new ProfileSettings
                     {
                         ChanceOfRegression = 0,
                         MinMaxScrollStep = 0,
                         MinMaxScrollDuration = 0,
                         MinMaxPauseAfterScrolling = 0
                     };
-
                     break;
             }
-
-            return ReadProfileSettings;
+            return readProfileSettings;
         }
     }
 }

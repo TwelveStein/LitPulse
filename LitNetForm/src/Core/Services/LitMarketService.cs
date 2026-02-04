@@ -7,11 +7,11 @@ namespace Core.Services
 {
     public sealed class LitMarketService : IBookService
     {
-        private IPlaywright _playwright;
-        private IBrowser _browser;
-        private IBrowserContext _context;
-        private IPage _page;
-        
+        private IPlaywright _playwright = null!;
+        private IBrowser _browser = null!;
+        private IBrowserContext _context = null!;
+        private IPage _page = null!;
+
         /// <summary>
         /// Метод инициализации playwright
         /// </summary>
@@ -24,33 +24,18 @@ namespace Core.Services
                 Channel = "chrome",
                 Headless = false,
                 SlowMo = 1000,
-                Args = new string[]
+                Args = new[]
                 {
                     "--start-maximized"
                 }
             });
-            
+
             _context = await _browser.NewContextAsync(new()
             {
                 ViewportSize = ViewportSize.NoViewport
             });
-            
+
             _page = await _context.NewPageAsync();
-        }
-        
-        /// <summary>
-        ///  Метод деинициализации программы
-        /// </summary>
-        /// <returns></returns>
-        public async ValueTask DisposeAsync()
-        {
-            if (_browser != null)
-            {
-                await _page.CloseAsync();
-                await _context.CloseAsync();
-                await _browser.CloseAsync();
-            }
-            _playwright?.Dispose();
         }
 
         public async Task<bool> Login(string login, string password, string linkLogin, Action<string> log)
@@ -59,7 +44,8 @@ namespace Core.Services
             {
                 if (_page == null)
                 {
-                    throw new InvalidOperationException("Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
+                    throw new InvalidOperationException(
+                        "Playwright не инициализирован. Вызовите InitializeAsync() сначала.");
                 }
 
                 await _page.GotoAsync(linkLogin);
@@ -67,27 +53,30 @@ namespace Core.Services
                 await _page.Locator("#email").FillAsync(login);
                 await _page.Locator("#password").FillAsync(password);
                 await _page.Keyboard.PressAsync("Enter");
-                
+
                 var isTextVisible = await _page.TextContentAsync("body").ContinueWith(t =>
-                t.Result?.Contains("Пользователь с таким имэйлом не зарегистрирован на портале") ?? false);
-                
+                    t.Result?.Contains("Пользователь с таким имэйлом не зарегистрирован на портале") ?? false);
+
                 /*var isTextVisiblePassword = await _page.TextContentAsync("body").ContinueWith(t =>
                 t.Result?.Contains("Пароль неверный. Проверьте правильность ввода, убедитесь что \"caps lock\" не включен и язык ввода пароля верный.") ?? false);*/
-                
+
                 var isTextVisiblePassword = await _page.TextContentAsync("body").ContinueWith(t =>
                     t.Result?.Contains("Проверьте правильность ввода") ?? false);
-                
+
                 var timeout = await _page.TextContentAsync("body").ContinueWith(t =>
-                t.Result?.Contains("Превышен лимит запросов авторизации. следующая попытка разрешена через 15 минут.") ?? false);
-                
+                    t.Result?.Contains(
+                        "Превышен лимит запросов авторизации. следующая попытка разрешена через 15 минут.") ?? false);
+
                 if (isTextVisible && !isTextVisiblePassword)
                 {
                     //неправльный логин или пароль лог
                     // лог провожу попытку регистрации 
-                    var check_regist = await _page.TextContentAsync("body").ContinueWith(t =>
-                    t.Result?.Contains("Пользователь с таким имэйлом уже существует. Попробуйте авторизоваться вместо повторной регистрации") ?? false);
+                    var checkRegistration = await _page.TextContentAsync("body").ContinueWith(t =>
+                        t.Result?.Contains(
+                            "Пользователь с таким имэйлом уже существует. Попробуйте авторизоваться вместо повторной регистрации") ??
+                        false);
 
-                    if (check_regist)
+                    if (checkRegistration)
                     {
                         Log(log, "[X] Регистрация не удалась");
                     }
@@ -124,7 +113,7 @@ namespace Core.Services
                     Log(log, $"[WARN] У аккаунта {login} не верный пароль");
                     return false;
                 }
-                else if (timeout) 
+                else if (timeout)
                 {
                     Log(log, $"[WARN] Сайтом установлен 15ти минутный таймаут на вход");
                     return false;
@@ -133,13 +122,11 @@ namespace Core.Services
                 Log(log, $"[INFO] Вход в аккаунт {login} выполнен успешно");
 
                 return true;
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
-
         }
 
         /// <summary>
@@ -169,33 +156,34 @@ namespace Core.Services
         /// </summary>
         /// <returns></returns>
         public async Task<int> ReaderBooks(
-            string link, 
-            Action<string> log, 
-            ReadProfile readProfile , 
+            string link,
+            Action<string> log,
+            ReadProfile readProfile,
             StartupSettings startupSettings,
-            CancellationToken cancellationToken) 
+            CancellationToken cancellationToken)
         {
             /*_cts = new CancellationTokenSource();
             var token = _cts.Token;*/
-            
+
             await _page.GotoAsync(link);
             await _page.WaitForTimeoutAsync(2000);
             await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
-            
-            int sheetsCounter = 0; 
-            
-            if (startupSettings.ReadBook) 
+
+            int sheetsCounter = 0;
+
+            if (startupSettings.ReadBook)
             {
                 await _page.ClickAsync("div.btn-reader");
-
+                
                 await _page.WaitForTimeoutAsync(3000);
-                var button_continue = "div:has-text('Далее&nbsp;→')";
+                
+                var buttonContinue = "div:has-text('Далее&nbsp;→')";
 
-                try {
-
+                try
+                {
                     while (true)
                     {
-                        var url_page = _page.Url;
+                        var urlPage = _page.Url;
                         await ScrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
                         sheetsCounter++;
 
@@ -203,81 +191,89 @@ namespace Core.Services
 
                         if (nextButton != null && await nextButton.IsVisibleAsync())
                         {
-
                             // Нажатие на кнопку
                             await nextButton.ClickAsync();
 
                             await _page.WaitForTimeoutAsync(4500); // Пауза для полной загрузки
-                            if (_page.Url == url_page) 
+                            if (_page.Url == urlPage)
                             {
                                 break;
                             }
-                                // Ожидание загрузки
-                                await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
+                            // Ожидание загрузки
+                            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
                         }
                         else
                         {
                             break;
                         }
-
                         // Прокрутка к кнопке для гарантии видимости
-
-                    } 
-                    
+                    }
                     return sheetsCounter;
                 }
-                catch { }
-
+                catch
+                {
+                    // ignored
+                }
             }
+
             await _page.GotoAsync(link);
-            if (startupSettings.AddToLibrary) 
+            if (startupSettings.AddToLibrary)
             {
                 await IsButtonClickable("a:has-text('В библиотеку')");
                 await IsButtonClickable("button:has-text('Избранное')");
-            
             }
-            if (startupSettings.LikeTheBook) 
+
+            if (startupSettings.LikeTheBook)
             {
-
-                var Like_button = await _page.QuerySelectorAsync("span.rating-like-label");
-
-                if (Like_button != null) 
+                var likeButton = await _page.QuerySelectorAsync("span.rating-like-label");
+                if (likeButton != null)
                 {
-                        try 
+                    try
+                    {
+                        await _page.GetByRole(AriaRole.Button, new()
                         {
-                            await _page.GetByRole(AriaRole.Button, new() 
-                            {
-                                Name = "Нравится", 
-                           
-                            }).ClickAsync();
-                    
-                        }
-                        catch { }
+                            Name = "Нравится",
+                        }).ClickAsync();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
 
                     await _page.WaitForTimeoutAsync(3000);
-                    var like_book = await _page.QuerySelectorAsync(".lmSimpleModal__close");
-                    if (like_book != null) 
-                    {
 
-                        var box = await like_book.BoundingBoxAsync();
-                        await _page.Mouse.ClickAsync(box.X + 2,box.Y + 2 );
-                
+                    var likeBook = await _page.QuerySelectorAsync(".lmSimpleModal__close");
+                    if (likeBook != null)
+                    {
+                        var box = await likeBook.BoundingBoxAsync();
+                        await _page.Mouse.ClickAsync(box.X + 2, box.Y + 2);
                     }
-                
                 }
             }
-            if (startupSettings.SubscribeToTheAuthor) 
+
+            if (startupSettings.SubscribeToTheAuthor)
             {
                 await IsButtonClickable(".card-share__subscribe-button");
-
             }
+
             await _page.WaitForTimeoutAsync(3000);
 
             return sheetsCounter;
         }
+        
+        public async ValueTask DisposeAsync()
+        {
+            if (_browser != null)
+            {
+                await _page.CloseAsync();
+                await _context.CloseAsync();
+                await _browser.CloseAsync();
+            }
+            _playwright?.Dispose();
+        }
 
         private static void Log(Action<string>? cb, string m) =>
-        cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
+            cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
     }
 }

@@ -80,7 +80,6 @@ namespace Core.Services
         public async Task<int> BaseActivityBot(
             string url,
             Action<string> log,
-            ReadProfile readProfile,
             StartupSettings startupSettings,
             CancellationToken cancellationToken)
         {
@@ -144,7 +143,7 @@ namespace Core.Services
                     if ((nextButton1 != null || nextButton2 != null) &&
                         await _page.Locator("#link-right").CountAsync() > 0)
                     {
-                        await ScrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
+                        await ScrollModel.ReadPageAsync(_page, startupSettings.ReadProfile, log, cancellationToken);
 
                         await _page.ClickAsync("#link-right");
 

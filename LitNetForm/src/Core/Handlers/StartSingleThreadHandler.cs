@@ -35,16 +35,19 @@ public class StartSingleThreadHandler
 
             try
             {
-                await _serviceFactory.ExecuteInService<StartLitNetHandler>(
-                    async handler => await handler.HandleAsync(
+                await _serviceFactory.ExecuteInService<StartLitNetHandler>(async handler => await handler.HandleAsync(
                     account,
                     litNetLinks,
                     logger,
                     cancellationToken));
             }
-            catch (Exception ex)
+            catch (OperationCanceledException)
             {
                 logger("Сервис остановлен.");
+            }
+            catch (Exception ex)
+            {
+                // ignored
             }
         }
 
@@ -65,9 +68,13 @@ public class StartSingleThreadHandler
                         logger,
                         cancellationToken));
             }
-            catch (Exception ex)
+            catch (OperationCanceledException)
             {
                 logger("Сервис остановлен.");
+            }
+            catch (Exception ex)
+            {
+                // ignored
             }
         }
     }

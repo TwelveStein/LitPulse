@@ -65,7 +65,6 @@ public sealed class StartLitMarketHandler
                         int sheetsCount = await _litMarketService.ReaderBooks(
                             link,
                             logger,
-                            account.AccountSettings.ReadProfile,
                             new StartupSettings(account.AccountSettings),
                             cancellationToken);
 

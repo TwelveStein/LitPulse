@@ -158,7 +158,6 @@ namespace Core.Services
         public async Task<int> ReaderBooks(
             string link,
             Action<string> log,
-            ReadProfile readProfile,
             StartupSettings startupSettings,
             CancellationToken cancellationToken)
         {
@@ -184,7 +183,7 @@ namespace Core.Services
                     while (true)
                     {
                         var urlPage = _page.Url;
-                        await ScrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
+                        await ScrollModel.ReadPageAsync(_page, startupSettings.ReadProfile, log, cancellationToken);
                         sheetsCounter++;
 
                         var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");

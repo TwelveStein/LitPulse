@@ -67,7 +67,6 @@ public sealed class StartLitNetHandler
                         int sheetsCount = await _litNetService.BaseActivityBot(
                             link, 
                             logger, 
-                            account.AccountSettings.ReadProfile, 
                             new StartupSettings(account.AccountSettings),
                             cancellationToken);
 

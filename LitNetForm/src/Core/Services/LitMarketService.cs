@@ -1,5 +1,7 @@
-﻿using Contracts.Enums;
+﻿using Contracts.DTOs;
+using Contracts.Enums;
 using Core.Abstracts;
+using Core.Entities.ValueObjects;
 using Core.Settings;
 using Microsoft.Playwright;
 
@@ -7,10 +9,19 @@ namespace Core.Services
 {
     public sealed class LitMarketService : IBookService
     {
+        private readonly ScrollModel _scrollModel;
+        private readonly AccountHistoryService _accountHistoryService;
+
         private IPlaywright _playwright = null!;
         private IBrowser _browser = null!;
         private IBrowserContext _context = null!;
         private IPage _page = null!;
+
+        public LitMarketService(ScrollModel scrollModel, AccountHistoryService accountHistoryService)
+        {
+            _scrollModel = scrollModel;
+            _accountHistoryService = accountHistoryService;
+        }
 
         /// <summary>
         /// Метод инициализации playwright
@@ -155,35 +166,151 @@ namespace Core.Services
         /// Метод прохода по ссылкам 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> ReaderBooks(
+        public async Task ReaderBooks(
+            int accountId,
             string link,
             Action<string> log,
             StartupSettings startupSettings,
             CancellationToken cancellationToken)
         {
-            /*_cts = new CancellationTokenSource();
-            var token = _cts.Token;*/
-
             await _page.GotoAsync(link);
-            await _page.WaitForTimeoutAsync(2000);
-            await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
 
+            var actions = new List<(SettingState settings, Func<Task> action)>
+            {
+                (startupSettings.LikeTheBook, async () =>
+                    await LikeTheBookAsync(accountId, link, cancellationToken)),
+
+                (startupSettings.AddToLibrary, async () =>
+                    await AddToLibraryAsync(accountId, link, cancellationToken)),
+
+                (startupSettings.ReadBook, async () =>
+                    await ReadBookAsync(accountId, link, startupSettings.ReadProfile, log, cancellationToken)),
+
+                (startupSettings.SubscribeToTheAuthor, async () =>
+                    await SubscribeToTheAuthorAsync(accountId, link, cancellationToken))
+            };
+
+            foreach (var item in actions
+                         .Where(x => x.settings.Enabled)
+                         .OrderBy(x => x.settings.Order))
+            {
+                await _page.WaitForTimeoutAsync(2000);
+                await item.action();
+            }
+
+            await _page.WaitForTimeoutAsync(3000);
+        }
+
+        private async Task SubscribeToTheAuthorAsync(int accountId, string link, CancellationToken cancellationToken)
+        {
+            var subscribeResult = await IsButtonClickable(".card-share__subscribe-button");
+            if (subscribeResult)
+            {
+                AccountActionDto actionDto = new AccountActionDto(
+                    accountId,
+                    AccountActionType.SubscribeToTheAuthor,
+                    link,
+                    string.Empty);
+
+                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+            }
+        }
+
+        private async Task LikeTheBookAsync(int accountId, string link, CancellationToken cancellationToken)
+        {
+            var likeButton = await _page.QuerySelectorAsync("span.rating-like-label");
+            if (likeButton != null)
+            {
+                try
+                {
+                    await _page.GetByRole(AriaRole.Button, new()
+                        {
+                            Name = "Нравится",
+                        })
+                        .ClickAsync();
+
+                    // Записываем событие в БД
+                    AccountActionDto actionDto = new AccountActionDto(
+                        accountId,
+                        AccountActionType.LikeBook,
+                        link,
+                        string.Empty);
+
+                    await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                await _page.WaitForTimeoutAsync(3000);
+
+                var likeBook = await _page.QuerySelectorAsync(".lmSimpleModal__close");
+                if (likeBook != null)
+                {
+                    var box = await likeBook.BoundingBoxAsync();
+                    await _page.Mouse.ClickAsync(box.X + 2, box.Y + 2);
+                }
+            }
+        }
+
+        private async Task AddToLibraryAsync(int accountId, string link, CancellationToken cancellationToken)
+        {
+            await _page.GotoAsync(link);
+
+            bool inLibraryResult = await IsButtonClickable("a:has-text('В библиотеку')");
+            if (inLibraryResult)
+            {
+                // Сохраняем событие в БД
+                AccountActionDto actionDto = new AccountActionDto(
+                    accountId,
+                    AccountActionType.AddToLibrary,
+                    link,
+                    string.Empty);
+
+                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+            }
+
+            bool toFavorites = await IsButtonClickable("button:has-text('Избранное')");
+            if (toFavorites)
+            {
+                // Сохраняем событие в БД
+                AccountActionDto actionDto = new AccountActionDto(
+                    accountId,
+                    AccountActionType.AddToFavorites,
+                    link,
+                    string.Empty);
+
+                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+            }
+        }
+
+        private async Task ReadBookAsync(
+            int accountId,
+            string link,
+            ReadProfile readProfile,
+            Action<string> log,
+            CancellationToken cancellationToken)
+        {
+            // Количество прочитанных страниц
             int sheetsCounter = 0;
 
-            if (startupSettings.ReadBook)
-            {
-                await _page.ClickAsync("div.btn-reader");
-                
-                await _page.WaitForTimeoutAsync(3000);
-                
-                var buttonContinue = "div:has-text('Далее&nbsp;→')";
+            await _scrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
 
+            await _page.ClickAsync("div.btn-reader");
+
+            await _page.WaitForTimeoutAsync(3000);
+
+            //var buttonContinue = "div:has-text('Далее&nbsp;→')";
+
+            try
+            {
                 try
                 {
                     while (true)
                     {
                         var urlPage = _page.Url;
-                        await ScrollModel.ReadPageAsync(_page, startupSettings.ReadProfile, log, cancellationToken);
+                        await _scrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
                         sheetsCounter++;
 
                         var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
@@ -206,61 +333,25 @@ namespace Core.Services
                         {
                             break;
                         }
-                        // Прокрутка к кнопке для гарантии видимости
                     }
-                    return sheetsCounter;
                 }
-                catch
+                finally
                 {
-                    // ignored
+                    AccountActionDto actionDto = new AccountActionDto(
+                        accountId,
+                        AccountActionType.ReadBook,
+                        link,
+                        sheetsCounter.ToString());
+                    
+                    await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
                 }
             }
-
-            await _page.GotoAsync(link);
-            if (startupSettings.AddToLibrary)
+            catch
             {
-                await IsButtonClickable("a:has-text('В библиотеку')");
-                await IsButtonClickable("button:has-text('Избранное')");
+                // ignored
             }
-
-            if (startupSettings.LikeTheBook)
-            {
-                var likeButton = await _page.QuerySelectorAsync("span.rating-like-label");
-                if (likeButton != null)
-                {
-                    try
-                    {
-                        await _page.GetByRole(AriaRole.Button, new()
-                        {
-                            Name = "Нравится",
-                        }).ClickAsync();
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
-                    await _page.WaitForTimeoutAsync(3000);
-
-                    var likeBook = await _page.QuerySelectorAsync(".lmSimpleModal__close");
-                    if (likeBook != null)
-                    {
-                        var box = await likeBook.BoundingBoxAsync();
-                        await _page.Mouse.ClickAsync(box.X + 2, box.Y + 2);
-                    }
-                }
-            }
-
-            if (startupSettings.SubscribeToTheAuthor)
-            {
-                await IsButtonClickable(".card-share__subscribe-button");
-            }
-
-            await _page.WaitForTimeoutAsync(3000);
-
-            return sheetsCounter;
         }
-        
+
         public async ValueTask DisposeAsync()
         {
             if (_browser != null)
@@ -269,6 +360,7 @@ namespace Core.Services
                 await _context.CloseAsync();
                 await _browser.CloseAsync();
             }
+
             _playwright?.Dispose();
         }
 

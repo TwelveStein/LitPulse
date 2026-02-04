@@ -15,7 +15,7 @@ public class AccountHistoryRepository(AppDbContext dbContext) : IAccountHistoryR
         }
         catch (Exception)
         {
-            
+            // ignored
         }
     }
 }

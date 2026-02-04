@@ -1,5 +1,7 @@
-﻿using Contracts.Enums;
+﻿using Contracts.DTOs;
+using Contracts.Enums;
 using Core.Abstracts;
+using Core.Entities.ValueObjects;
 using Core.Settings;
 using Microsoft.Playwright;
 
@@ -7,10 +9,19 @@ namespace Core.Services
 {
     public sealed class LitNetService : IBookService
     {
+        private readonly AccountHistoryService _accountHistoryService;
+        private readonly ScrollModel _scrollModel;
+        
         private IPlaywright _playwright = null!;
         private IBrowser _browser = null!;
         private IBrowserContext _context = null!;
         private IPage _page = null!;
+
+        public LitNetService(ScrollModel scrollModel, AccountHistoryService accountHistoryService)
+        {
+            _scrollModel = scrollModel;
+            _accountHistoryService = accountHistoryService;
+        }
 
         // Метод инициализации
         public async Task InitializeAsync()
@@ -43,8 +54,8 @@ namespace Core.Services
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public async Task PrimaryActivity(
-            string url, 
-            Action<string> log, 
+            string url,
+            Action<string> log,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -60,7 +71,7 @@ namespace Core.Services
                 await _page.GotoAsync(url);
                 await _page.GetByText("Добавить в библиотеку").ClickAsync();
                 await _page.Mouse.ClickAsync(100, 100);
-                await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
+                await _scrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             }
             catch (PlaywrightException ex)
             {
@@ -77,16 +88,15 @@ namespace Core.Services
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public async Task<int> BaseActivityBot(
+        public async Task BaseActivityBotAsync(
+            int accountId,
             string url,
             Action<string> log,
             StartupSettings startupSettings,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            int sheetsCounter = 0;
-
+            
             if (_page == null)
             {
                 throw new InvalidOperationException(
@@ -94,47 +104,113 @@ namespace Core.Services
             }
 
             await _page.GotoAsync(url);
-            var elements = await _page.QuerySelectorAllAsync("text=Добавить в библиотеку");
-            if (elements.Count > 0 && startupSettings.AddToLibrary)
-            {
-                await _page.GetByText("Добавить в библиотеку").ClickAsync();
-            }
 
-            if (startupSettings.LikeTheBook)
+            var actions = new List<(SettingState settings, Func<Task> action)>
             {
-                try
-                {
-                    await _page.ClickAsync("a.rate-btn.rate-btn-like", new() { Timeout = 4000 });
-                }
-                catch
-                {
-                    // ignored
-                }
-
-                await _page.WaitForTimeoutAsync(2000);
-            }
-
-            //var token = _cts.Token;
-            await ScrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
-            if (startupSettings.ReadBook)
-            {
-                var locatorLearn = _page
-                    .GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Читать", Exact = true })
-                    .CountAsync();
+                (startupSettings.LikeTheBook, async () => 
+                    await LikeTheBookAsync(accountId, url, cancellationToken)),
                 
-                if (locatorLearn.Result > 0)
-                {
-                    await _page
-                        .GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Читать", Exact = true })
-                        .ClickAsync();
-                }
-                else
-                {
-                    await _page.
-                        GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Продолжить чтение", Exact = true })
-                        .ClickAsync();
-                }
+                (startupSettings.AddToLibrary, async () => 
+                    await AddToLibraryAsync(accountId, url, cancellationToken)),
+                
+                (startupSettings.ReadBook, async () => 
+                    await ReadBookAsync(accountId, url, startupSettings.ReadProfile, log, cancellationToken))
+            };
+            
+            foreach (var item in actions
+                         .Where(x => x.settings.Enabled)
+                         .OrderBy(x => x.settings.Order))
+            {
+                await item.action();
+            }
+        }
 
+        private async Task AddToLibraryAsync(
+            int accountId,
+            string url,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var elements = await _page.QuerySelectorAllAsync("text=Добавить в библиотеку");
+                if (elements.Count > 0)
+                {
+                    await _page.GetByText("Добавить в библиотеку").ClickAsync();
+
+                    // Записываем событие в БД
+                    AccountActionDto actionDto = new AccountActionDto(
+                        accountId,
+                        AccountActionType.AddToLibrary,
+                        url,
+                        string.Empty);
+                    
+                    await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
+        }
+
+        private async Task LikeTheBookAsync(
+            int accountId,
+            string url,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _page.ClickAsync(
+                    "a.rate-btn.rate-btn-like",
+                    new PageClickOptions { Timeout = 4000 });
+
+                AccountActionDto actionDto = new AccountActionDto(
+                    accountId,
+                    AccountActionType.LikeBook,
+                    url,
+                    string.Empty);
+
+                // Записываем событие в БД
+                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+            }
+            catch
+            {
+                // ignored
+            }
+            await _page.WaitForTimeoutAsync(2000);
+        }
+
+        private async Task ReadBookAsync(
+            int accountId,
+            string url,
+            ReadProfile readProfile,
+            Action<string> log,
+            CancellationToken cancellationToken)
+        {
+            // Количество прочитанных страниц
+            int sheetsCounter = 0;
+            
+            await _scrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
+            
+            var locatorLearn = _page
+                .GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Читать", Exact = true })
+                .CountAsync();
+
+            if (locatorLearn.Result > 0)
+            {
+                await _page
+                    .GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Читать", Exact = true })
+                    .ClickAsync();
+            }
+            else
+            {
+                await _page
+                    .GetByRole(AriaRole.Link, new PageGetByRoleOptions { Name = "Продолжить чтение", Exact = true })
+                    .ClickAsync();
+            }
+
+            try
+            {
                 while (true)
                 {
                     var nextButton1 = await _page.QuerySelectorAsync("a.pull-right:has-text('Вперед')");
@@ -143,7 +219,7 @@ namespace Core.Services
                     if ((nextButton1 != null || nextButton2 != null) &&
                         await _page.Locator("#link-right").CountAsync() > 0)
                     {
-                        await ScrollModel.ReadPageAsync(_page, startupSettings.ReadProfile, log, cancellationToken);
+                        await _scrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
 
                         await _page.ClickAsync("#link-right");
 
@@ -153,10 +229,19 @@ namespace Core.Services
                     {
                         break;
                     }
-                    return sheetsCounter;
                 }
             }
-            return sheetsCounter;
+            finally
+            {
+                // Записываем событие в БД
+                AccountActionDto actionDto = new AccountActionDto(
+                    accountId,
+                    AccountActionType.ReadBook,
+                    url,
+                    sheetsCounter.ToString());
+
+                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+            }
         }
 
         public async Task<bool> Login(string login, string password, string linkLogin)
@@ -177,6 +262,7 @@ namespace Core.Services
             {
                 return false;
             }
+
             return true;
         }
 

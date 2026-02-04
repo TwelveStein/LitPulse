@@ -1,4 +1,4 @@
-﻿namespace LitNetForm.Forms
+﻿namespace LitPulse.Forms
 {
     partial class SettingsForm
     {

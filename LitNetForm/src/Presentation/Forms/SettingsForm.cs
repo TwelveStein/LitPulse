@@ -1,12 +1,13 @@
 ﻿using Contracts.Enums;
+using Core.Entities.ValueObjects;
 using Core.Settings;
 
-namespace LitNetForm.Forms
+namespace LitPulse.Forms
 {
     public partial class SettingsForm : Form
     {
 
-        public StartupSettings StartupSettings = new StartupSettings();
+        public StartupSettings StartupSettings = new();
 
         public SettingsForm()
         {
@@ -67,13 +68,13 @@ namespace LitNetForm.Forms
 
         private void LoadSettings()
         {
-            checkBoxReadBook.Checked = StartupSettings.ReadBook;
+            checkBoxReadBook.Checked = StartupSettings.ReadBook.Enabled;
 
-            checkBoxAddToLibrary.Checked = StartupSettings.AddToLibrary;
+            checkBoxAddToLibrary.Checked = StartupSettings.AddToLibrary.Enabled;
 
-            checkBoxLikeTheBook.Checked = StartupSettings.LikeTheBook;
+            checkBoxLikeTheBook.Checked = StartupSettings.LikeTheBook.Enabled;
 
-            checkBoxSubscribeToTheAuthor.Checked = StartupSettings.SubscribeToTheAuthor;
+            checkBoxSubscribeToTheAuthor.Checked = StartupSettings.SubscribeToTheAuthor.Enabled;
 
             checkBoxPostComment.Checked = StartupSettings.PostComment;
 
@@ -90,13 +91,13 @@ namespace LitNetForm.Forms
 
         private void SaveSettings()
         {
-            StartupSettings.ReadBook = checkBoxReadBook.Checked;
+            StartupSettings.ReadBook = new SettingState(checkBoxReadBook.Checked, 1);
 
-            StartupSettings.AddToLibrary = checkBoxAddToLibrary.Checked;
+            StartupSettings.AddToLibrary = new SettingState(checkBoxAddToLibrary.Checked, 2);
 
-            StartupSettings.LikeTheBook = checkBoxLikeTheBook.Checked;
+            StartupSettings.LikeTheBook = new SettingState(checkBoxLikeTheBook.Checked, 3);
 
-            StartupSettings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
+            StartupSettings.SubscribeToTheAuthor = new SettingState(checkBoxSubscribeToTheAuthor.Checked, 4);
 
             StartupSettings.PostComment = checkBoxPostComment.Checked;
 

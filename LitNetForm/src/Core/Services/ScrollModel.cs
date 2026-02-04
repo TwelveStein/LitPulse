@@ -9,7 +9,7 @@ namespace Core.Services;
 /// </summary>
 public sealed class ScrollModel
 {
-    public static async Task ReadPageAsync(
+    public async Task ReadPageAsync(
         IPage page,
         ReadProfile readProfile,
         Action<string>? log,
@@ -17,15 +17,8 @@ public sealed class ScrollModel
     {
         await ReadPageCoreAsync(page, readProfile, log, ct);
     }
-
-    public static async Task ReadPageAsync(
-        IPage page,
-        CancellationToken ct)
-    {
-        await ReadPageCoreAsync(page, ReadProfile.TiredReader, null, ct);
-    }
-
-    public static async Task BrowseBookPageAsync(
+    
+    public async Task BrowseBookPageAsync(
         IPage page,
         Action<string>? log,
         CancellationToken cancellationToken)
@@ -116,7 +109,7 @@ public sealed class ScrollModel
     // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
     // ────────────────────────────────────────────────────────
 
-    private static async Task ReadPageCoreAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
+    private async Task ReadPageCoreAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
     {
         string url = await page.EvaluateAsync<string>("() => location.href");
         bool isLitNet = url.Contains("litnet.com");
@@ -140,7 +133,7 @@ public sealed class ScrollModel
         }
     }
 
-    private static async Task ReadLitNetAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
+    private async Task ReadLitNetAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
     {
         int lastScrollHeight = await page.EvaluateAsync<int>("() => document.body.scrollHeight");
         int currentPage = 1;
@@ -168,7 +161,7 @@ public sealed class ScrollModel
         }
     }
 
-    private static async Task ReadLitMarketAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
+    private async Task ReadLitMarketAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
     {
         await page.WaitForSelectorAsync(".frame-content", new PageWaitForSelectorOptions { Timeout = 8000 });
         await page.WaitForFunctionAsync(@"() => document.querySelector('.frame-content p')",
@@ -202,7 +195,7 @@ public sealed class ScrollModel
         }
     }
 
-    private static async Task ScrollTargetAsync(
+    private async Task ScrollTargetAsync(
         IPage page, ReadProfile readProfile, int maxScroll, string mode,
         Action<string>? log, CancellationToken ct)
     {
@@ -253,7 +246,7 @@ public sealed class ScrollModel
         }
     }
 
-    private static async Task ScrollToParagraph(IPage page, int index, int ms, CancellationToken ct)
+    private async Task ScrollToParagraph(IPage page, int index, int ms, CancellationToken ct)
     {
         await page.EvaluateAsync(@"
             ([i, ms]) => new Promise(r => {
@@ -270,7 +263,7 @@ public sealed class ScrollModel
         await Task.Delay(50, ct);
     }
 
-    private static async Task SmoothScrollTo(IPage page, int targetY, int ms, CancellationToken ct)
+    private async Task SmoothScrollTo(IPage page, int targetY, int ms, CancellationToken cancellationToken)
     {
         await page.EvaluateAsync(@"
             ([y, ms]) => new Promise(r => {
@@ -284,16 +277,16 @@ public sealed class ScrollModel
                     t < 1 ? requestAnimationFrame(a) : r();
                 })(performance.now());
             })", new object[] { targetY, ms });
-        await Task.Delay(50, ct);
+        await Task.Delay(50, cancellationToken);
     }
 
-    private static async Task<bool> IsElementVisible(IPage page, string sel)
+    private async Task<bool> IsElementVisible(IPage page, string sel)
     {
         try { return await page.EvaluateAsync<bool>($"() => !!document.querySelector('{sel}')"); }
         catch { return false; }
     }
 
-    private static async Task ScrollTo(IPage page, string sel, int dur, CancellationToken ct)
+    private async Task ScrollTo(IPage page, string sel, int dur, CancellationToken cancellationToken)
     {
         try
         {
@@ -302,7 +295,7 @@ public sealed class ScrollModel
                     const el = document.querySelector('{sel}');
                     return el ? el.getBoundingClientRect().top + window.scrollY - 80 : window.scrollY;
                 }}");
-            if (top > 0) await SmoothScrollTo(page, top, dur, ct);
+            if (top > 0) await SmoothScrollTo(page, top, dur, cancellationToken);
         }
         catch (PlaywrightException ex)
         {
@@ -310,6 +303,6 @@ public sealed class ScrollModel
         }
     }
 
-    private static void Log(Action<string>? cb, string m) =>
+    private void Log(Action<string>? cb, string m) =>
         cb?.Invoke($"[{DateTime.Now:HH:mm:ss.fff}] {m}");
 }

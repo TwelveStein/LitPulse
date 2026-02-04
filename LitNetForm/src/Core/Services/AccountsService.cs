@@ -103,41 +103,13 @@ public sealed class AccountsService(IAccountsRepository repository)
         // Задаём основные настройки аккаунту (настройки по умолчанию)
         AccountSettings accountSettings = new AccountSettings
         {
-            ReadBook = new SettingState
-            {
-                Enabled = true,
-                Order = 1
-            },
-            AddToLibrary = new SettingState
-            {
-                Enabled = true,
-                Order = 2
-            },
-            LikeTheBook = new SettingState
-            {
-                Enabled = true,
-                Order = 3
-            },
-            SubscribeToTheAuthor = new SettingState
-            {
-                Enabled = true,
-                Order = 4
-            },
-            PostComment = new SettingState
-            {
-                Enabled = false,
-                Order = 5
-            },
-            MakeADonationToTheAuthor = new SettingState
-            {
-                Enabled = false,
-                Order = 6
-            },
-            BuyABook = new SettingState
-            {
-                Enabled = false,
-                Order = 7
-            },
+            ReadBook = new SettingState(true, 1),
+            AddToLibrary = new SettingState(true, 2),
+            LikeTheBook = new SettingState(true, 3),
+            SubscribeToTheAuthor = new SettingState(true, 4),
+            PostComment = new SettingState(true, 5),
+            MakeADonationToTheAuthor = new SettingState(true, 6),
+            BuyABook = new SettingState(true, 7),
             ConstantDelay = 1000,
             FloatingIncrementalDelay = 500,
             ReadProfile = ReadProfile.DeepReader

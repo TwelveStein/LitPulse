@@ -3,22 +3,23 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Contracts.Enums;
 using Core.Entities;
+using Core.Entities.ValueObjects;
 
 namespace Core.Settings
 {
     public class StartupSettings
     {
-        [JsonPropertyName("ReadBook")]
-        public bool ReadBook { get; set; }
+        [JsonPropertyName("ReadBook")] 
+        public SettingState ReadBook { get; set; }
 
         [JsonPropertyName("AddToLibrary")]
-        public bool AddToLibrary { get; set; }
+        public SettingState AddToLibrary { get; set; }
 
         [JsonPropertyName("LikeTheBook")]
-        public bool LikeTheBook { get; set; }
+        public SettingState LikeTheBook { get; set; }
 
         [JsonPropertyName("SubscribeToTheAuthor")]
-        public bool SubscribeToTheAuthor { get; set; }
+        public SettingState SubscribeToTheAuthor { get; set; }
 
         [JsonPropertyName("PostComment")]
         public bool PostComment { get; set; }
@@ -47,10 +48,10 @@ namespace Core.Settings
         {
             //добавить очередность выполнения настройки
             
-            ReadBook = accountSettings.ReadBook.Enabled;
-            AddToLibrary = accountSettings.AddToLibrary.Enabled;
-            LikeTheBook = accountSettings.LikeTheBook.Enabled;
-            SubscribeToTheAuthor = accountSettings.SubscribeToTheAuthor.Enabled;
+            ReadBook = accountSettings.ReadBook;
+            AddToLibrary = accountSettings.AddToLibrary;
+            LikeTheBook = accountSettings.LikeTheBook;
+            SubscribeToTheAuthor = accountSettings.SubscribeToTheAuthor;
             PostComment = accountSettings.PostComment.Enabled;
             MakeADonationToTheAuthor = accountSettings.MakeADonationToTheAuthor.Enabled;
             BuyABook = accountSettings.BuyABook.Enabled;
@@ -191,10 +192,10 @@ namespace Core.Settings
 
             return new StartupSettings
             {
-                ReadBook = true,
-                AddToLibrary = false,
-                LikeTheBook = true,
-                SubscribeToTheAuthor = false,
+                ReadBook = new SettingState(true, 1),
+                AddToLibrary = new SettingState(true, 2),
+                LikeTheBook = new SettingState(true, 3),
+                SubscribeToTheAuthor = new SettingState(true, 4),
                 PostComment = false,
                 MakeADonationToTheAuthor = false,
                 BuyABook = false,

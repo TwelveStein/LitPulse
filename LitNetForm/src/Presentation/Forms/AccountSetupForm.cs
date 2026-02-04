@@ -280,47 +280,32 @@ namespace LitPulse.Forms
             if (account is null || account.AccountSettings is null)
                 return;
 
-            SettingState readBook = new SettingState
-            {
-                Enabled = checkBoxReadBook.Checked,
-                Order = (int)numericOrderReadBook.Value
-            };
+            SettingState readBook = new SettingState(
+                checkBoxReadBook.Checked, 
+                (int)numericOrderReadBook.Value);
 
-            SettingState addToLibrary = new SettingState
-            {
-                Enabled = checkBoxAddToLibrary.Checked,
-                Order = (int)numericOrderAddToLibrary.Value
-            };
+            SettingState addToLibrary = new SettingState(
+                checkBoxAddToLibrary.Checked, 
+                (int)numericOrderAddToLibrary.Value);
 
-            SettingState likeTheBook = new SettingState
-            {
-                Enabled = checkBoxLikeTheBook.Checked,
-                Order = (int)numericOrderLikeBook.Value
-            };
+            SettingState likeTheBook = new SettingState(
+                checkBoxLikeTheBook.Checked, 
+                (int)numericOrderLikeBook.Value);
 
-            SettingState subscribeToTheAuthor = new SettingState
-            {
-                Enabled = checkBoxSubscribeToTheAuthor.Checked,
-                Order = (int)numericOrderSubscribeToTheAuthor.Value
-            };
+            SettingState subscribeToTheAuthor = new SettingState(
+                checkBoxSubscribeToTheAuthor.Checked,
+                (int)numericOrderSubscribeToTheAuthor.Value);
 
-            SettingState postComment = new SettingState
-            {
-                Enabled = checkBoxPostComment.Checked,
-                Order = (int)numericOrderPostComment.Value
-            };
+            SettingState postComment = new SettingState(
+                checkBoxPostComment.Checked,
+                (int)numericOrderPostComment.Value);
 
-            SettingState makeADonation = new SettingState
-            {
-                Enabled = checkBoxMakeADonationToTheAuthor.Checked,
-                Order = (int)numericOrderDonateAuthor.Value
-            };
+            SettingState makeADonation = new SettingState(checkBoxMakeADonationToTheAuthor.Checked,
+                (int)numericOrderDonateAuthor.Value);
 
-            SettingState buyABook = new SettingState
-            {
-                Enabled = checkBoxBuyABook.Checked,
-                Order = (int)numericOrderBuyABook.Value
-            };
+            SettingState buyABook = new SettingState(
+                checkBoxBuyABook.Checked,
+                (int)numericOrderBuyABook.Value);
 
             account.AccountSettings.UpdateSettings(
                 readBook,

@@ -1,6 +1,4 @@
-﻿using Contracts.DTOs;
-using Contracts.Enums;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Services;
 using Core.Settings;
 using Microsoft.Playwright;
@@ -16,14 +14,10 @@ public sealed class StartLitNetHandler
         "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
     
     private readonly LitNetService _litNetService;
-    private readonly IProgress<ReportDataDto> _reportDataProgress;
     
-    public StartLitNetHandler(
-        LitNetService litNetService, 
-        IProgress<ReportDataDto> reportDataProgress)
+    public StartLitNetHandler(LitNetService litNetService)
     {
         _litNetService = litNetService;
-        _reportDataProgress = reportDataProgress;
     }
     
     /// <summary>
@@ -35,8 +29,6 @@ public sealed class StartLitNetHandler
         Action<string> logger,
         CancellationToken cancellationToken)
     {
-        int litNetSessionCounter = 0;
-
         try
         {
             if (litNetLinks.Length != 0)
@@ -44,14 +36,6 @@ public sealed class StartLitNetHandler
                 logger("Запуск эмуляции чтения https://litnet.com ...");
 
                 await _litNetService.InitializeAsync();
-                
-                _reportDataProgress.Report(new ReportDataDto
-                {
-                    Operation = "Начало сессии",
-                    SessionDateTime = DateTime.Now
-                });
-                
-                litNetSessionCounter++;
 
                 foreach (var link in litNetLinks.Take(3))
                 {
@@ -64,24 +48,14 @@ public sealed class StartLitNetHandler
 
                     foreach (var link in litNetLinks)
                     {
-                        int sheetsCount = await _litNetService.BaseActivityBot(
+                        await _litNetService.BaseActivityBotAsync(
+                            account.Id,
                             link, 
                             logger, 
-                            account.AccountSettings.ReadProfile, 
                             new StartupSettings(account.AccountSettings),
                             cancellationToken);
 
                         logger($"Выполнено чтение по ссылке {link}");
-
-                        _reportDataProgress.Report(new ReportDataDto
-                        {
-                            User = account.Login,
-                            IpAddress = "111",
-                            Operation = "Чтение",
-                            Book = link,
-                            SheetsCount = sheetsCount,
-                            Status = nameof(OperationStatuses.Успешно)
-                        });
                     }
                 }
                 else
@@ -114,13 +88,6 @@ public sealed class StartLitNetHandler
         }
         finally
         {
-            if (litNetSessionCounter > 0)
-                _reportDataProgress.Report(new ReportDataDto
-                {
-                    Operation = "Конец сессии",
-                    SessionDateTime = DateTime.Now
-                });
-
             await _litNetService.DisposeAsync();
         }
     }

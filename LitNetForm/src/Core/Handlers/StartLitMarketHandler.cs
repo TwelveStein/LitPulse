@@ -1,5 +1,4 @@
 ﻿using Contracts.DTOs;
-using Contracts.Enums;
 using Core.Entities;
 using Core.Services;
 using Core.Settings;
@@ -15,14 +14,10 @@ public sealed class StartLitMarketHandler
     private const string LIT_MARKET_LINK_LOGIN = "https://litmarket.ru/";
 
     private readonly LitMarketService _litMarketService;
-    private readonly IProgress<ReportDataDto> _reportDataProgress;
 
-    public StartLitMarketHandler(
-        LitMarketService litMarketService,
-        IProgress<ReportDataDto> reportDataProgress)
+    public StartLitMarketHandler(LitMarketService litMarketService)
     {
         _litMarketService = litMarketService;
-        _reportDataProgress = reportDataProgress;
     }
 
     /// <summary>
@@ -34,8 +29,6 @@ public sealed class StartLitMarketHandler
         Action<string> logger,
         CancellationToken cancellationToken)
     {
-        int litMarketSessionCounter = 0;
-
         try
         {
             if (litMarketLinks.Length != 0)
@@ -43,14 +36,6 @@ public sealed class StartLitMarketHandler
                 logger("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
                 await _litMarketService.InitializeAsync();
-
-                _reportDataProgress.Report(new ReportDataDto
-                {
-                    Operation = "Начало сессии",
-                    SessionDateTime = DateTime.Now
-                });
-
-                litMarketSessionCounter++;
 
                 if (await _litMarketService.Login(
                         account.Login,
@@ -62,34 +47,20 @@ public sealed class StartLitMarketHandler
 
                     foreach (string link in litMarketLinks)
                     {
-                        int sheetsCount = await _litMarketService.ReaderBooks(
+                        await _litMarketService.ReaderBooks(
+                            account.Id,
                             link,
                             logger,
-                            account.AccountSettings.ReadProfile,
                             new StartupSettings(account.AccountSettings),
                             cancellationToken);
 
                         logger($"Выполнено чтение по ссылке {link}");
-
-                        _reportDataProgress.Report(new ReportDataDto
-                        {
-                            User = account.Login,
-                            IpAddress = "111",
-                            Operation = "Чтение",
-                            Book = link,
-                            SheetsCount = sheetsCount,
-                            Status = nameof(OperationStatuses.Успешно)
-                        });
                     }
-
-                    //await _litMarketService.DisposeAsync();
                 }
                 else
                 {
                     logger($"Неудачная попытка входа в аккаунт. Пользователь: {account.Login}, пароль: {account.Password}");
                 }
-
-                //await _litMarketService.DisposeAsync();
             }
         }
         catch (OperationCanceledException)
@@ -116,13 +87,7 @@ public sealed class StartLitMarketHandler
         }
         finally
         {
-            //await _litMarketService.DisposeAsync();
-            if (litMarketSessionCounter > 0)
-                _reportDataProgress.Report(new ReportDataDto
-                {
-                    Operation = "Конец сессии",
-                    SessionDateTime = DateTime.Now
-                });
+            await _litMarketService.DisposeAsync();
         }
     }
 }

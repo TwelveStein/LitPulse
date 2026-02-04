@@ -6,5 +6,5 @@ public enum AccountActionType
     LikeBook = 2,
     AddToLibrary = 3,
     SubscribeToTheAuthor = 4,
-    DonateToTheAuthor = 5
+    AddToFavorites = 5
 }

@@ -19,7 +19,7 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
             
             return result;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
@@ -35,8 +35,9 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
             await dbContext.Accounts.AddAsync(account, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
+            // ignored
         }
     }
 
@@ -50,8 +51,9 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
             await dbContext.Accounts.AddRangeAsync(accounts, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
+            // ignored
         }
     }
 
@@ -68,7 +70,7 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
 
             return accounts;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return await Task.FromResult(new List<Account>());
         }
@@ -85,9 +87,9 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
             dbContext.Accounts.UpdateRange(accounts);
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Ошибка при сохранении всех изменённых настроек! Message: {ex.Message}");
+            // ignored
         }
     }
 
@@ -107,7 +109,7 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
 
             return accounts;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return await Task.FromResult(new List<string>());
         }
@@ -127,9 +129,9 @@ public sealed class AccountsRepository(AppDbContext dbContext) : IAccountsReposi
             dbContext.Accounts.Remove(account);
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            
+            // ignored
         }
     }
 }

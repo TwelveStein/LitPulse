@@ -173,6 +173,8 @@ namespace Core.Services
             StartupSettings startupSettings,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             await _page.GotoAsync(link);
 
             var actions = new List<(SettingState settings, Func<Task> action)>
@@ -203,6 +205,8 @@ namespace Core.Services
 
         private async Task SubscribeToTheAuthorAsync(int accountId, string link, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var subscribeResult = await IsButtonClickable(".card-share__subscribe-button");
             if (subscribeResult)
             {
@@ -218,6 +222,8 @@ namespace Core.Services
 
         private async Task LikeTheBookAsync(int accountId, string link, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var likeButton = await _page.QuerySelectorAsync("span.rating-like-label");
             if (likeButton != null)
             {
@@ -256,6 +262,8 @@ namespace Core.Services
 
         private async Task AddToLibraryAsync(int accountId, string link, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             await _page.GotoAsync(link);
 
             bool inLibraryResult = await IsButtonClickable("a:has-text('В библиотеку')");
@@ -292,6 +300,8 @@ namespace Core.Services
             Action<string> log,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Количество прочитанных страниц
             int sheetsCounter = 0;
 
@@ -337,13 +347,18 @@ namespace Core.Services
                 }
                 finally
                 {
-                    AccountActionDto actionDto = new AccountActionDto(
-                        accountId,
-                        AccountActionType.ReadBook,
-                        link,
-                        sheetsCounter.ToString());
-                    
-                    await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                    if (sheetsCounter > 0)
+                    {
+                        AccountActionDto actionDto = new AccountActionDto(
+                            accountId,
+                            AccountActionType.ReadBook,
+                            link,
+                            sheetsCounter.ToString());
+
+                        // Используем CancellationToken.None, так как основной токен может быть отменён
+                        // Запись о прочитанных страницах, должна попасть в БД
+                        await _accountHistoryService.AddActionAsync(actionDto, CancellationToken.None);
+                    }
                 }
             }
             catch

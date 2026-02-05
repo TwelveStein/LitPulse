@@ -23,6 +23,8 @@ public sealed class ScrollModel
         Action<string>? log,
         CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         if (page == null) throw new ArgumentNullException(nameof(page));
 
         var rnd = new Random();
@@ -109,8 +111,14 @@ public sealed class ScrollModel
     // ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
     // ────────────────────────────────────────────────────────
 
-    private async Task ReadPageCoreAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
+    private async Task ReadPageCoreAsync(
+        IPage page, 
+        ReadProfile readProfile, 
+        Action<string>? log, 
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         string url = await page.EvaluateAsync<string>("() => location.href");
         bool isLitNet = url.Contains("litnet.com");
         bool isLitMarket = url.Contains("litmarket.ru");
@@ -118,30 +126,36 @@ public sealed class ScrollModel
         if (isLitNet)
         {
             Log(log, "[INFO] LitNet: чтение главы");
-            await ReadLitNetAsync(page, readProfile, log, ct);
+            await ReadLitNetAsync(page, readProfile, log, cancellationToken);
         }
         else if (isLitMarket)
         {
             Log(log, "[INFO] LitMarket: чтение главы");
-            await ReadLitMarketAsync(page, readProfile, log, ct);
+            await ReadLitMarketAsync(page, readProfile, log, cancellationToken);
         }
         else
         {
             Log(log, "[WARN] Неизвестная платформа — fallback");
             int maxScroll = await page.EvaluateAsync<int>("() => document.body.scrollHeight - window.innerHeight");
-            await ScrollTargetAsync(page, readProfile, maxScroll, "window", log, ct);
+            await ScrollTargetAsync(page, readProfile, maxScroll, "window", log, cancellationToken);
         }
     }
 
-    private async Task ReadLitNetAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
+    private async Task ReadLitNetAsync(
+        IPage page, 
+        ReadProfile readProfile, 
+        Action<string>? log, 
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         int lastScrollHeight = await page.EvaluateAsync<int>("() => document.body.scrollHeight");
         int currentPage = 1;
 
-        while (!ct.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             int maxScroll = await page.EvaluateAsync<int>("() => document.body.scrollHeight - window.innerHeight");
-            await ScrollTargetAsync(page, readProfile, maxScroll, "window", log, ct);
+            await ScrollTargetAsync(page, readProfile, maxScroll, "window", log, cancellationToken);
 
             currentPage++;
             await page.EvaluateAsync($"() => {{ if (typeof Reader !== 'undefined' && Reader.goTo) Reader.goTo({currentPage}); }}");
@@ -157,12 +171,18 @@ public sealed class ScrollModel
             int newScrollHeight = await page.EvaluateAsync<int>("() => document.body.scrollHeight");
             if (newScrollHeight - lastScrollHeight < 100) break;
             lastScrollHeight = newScrollHeight;
-            await Task.Delay(500, ct);
+            await Task.Delay(500, cancellationToken);
         }
     }
 
-    private async Task ReadLitMarketAsync(IPage page, ReadProfile readProfile, Action<string>? log, CancellationToken ct)
+    private async Task ReadLitMarketAsync(
+        IPage page,
+        ReadProfile readProfile, 
+        Action<string>? log, 
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         await page.WaitForSelectorAsync(".frame-content", new PageWaitForSelectorOptions { Timeout = 8000 });
         await page.WaitForFunctionAsync(@"() => document.querySelector('.frame-content p')",
             new PageWaitForFunctionOptions { Timeout = 5000 });
@@ -173,22 +193,22 @@ public sealed class ScrollModel
 
         var rnd = new Random();
         double fatigue = 1.0;
-        for (int i = 0; i < paras.Length && !ct.IsCancellationRequested; i++)
+        for (int i = 0; i < paras.Length && !cancellationToken.IsCancellationRequested; i++)
         {
             if (i > 0 && rnd.NextDouble() < 0.12)
             {
                 int to = Math.Max(0, i - 1);
-                await ScrollToParagraph(page, to, 100, ct);
-                await Task.Delay(100 + rnd.Next(100), ct);
+                await ScrollToParagraph(page, to, 100, cancellationToken);
+                await Task.Delay(100 + rnd.Next(100), cancellationToken);
                 i = Math.Max(0, i - 2);
                 continue;
             }
 
             int dur = 200 + rnd.Next(50) * (int)(readProfile == ReadProfile.TiredReader ? fatigue : 1.0);
-            await ScrollToParagraph(page, i, dur, ct);
+            await ScrollToParagraph(page, i, dur, cancellationToken);
 
             int pause = 200 + rnd.Next(150) * (int)(readProfile == ReadProfile.TiredReader ? fatigue : 1.0);
-            await Task.Delay(pause, ct);
+            await Task.Delay(pause, cancellationToken);
 
             if (readProfile == ReadProfile.TiredReader)
                 fatigue = 1.0 + Math.Log(1 + i * 0.12);
@@ -196,14 +216,20 @@ public sealed class ScrollModel
     }
 
     private async Task ScrollTargetAsync(
-        IPage page, ReadProfile readProfile, int maxScroll, string mode,
-        Action<string>? log, CancellationToken ct)
+        IPage page, 
+        ReadProfile readProfile, 
+        int maxScroll, 
+        string mode,
+        Action<string>? log, 
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         if (maxScroll <= 0) maxScroll = 500;
         var rnd = new Random();
         int pos = 0;
 
-        while (pos < maxScroll && !ct.IsCancellationRequested)
+        while (pos < maxScroll && !cancellationToken.IsCancellationRequested)
         {
             if (pos > 300 && rnd.NextDouble() < (readProfile switch
                 {
@@ -213,8 +239,8 @@ public sealed class ScrollModel
                 }))
             {
                 int to = Math.Max(100, pos - rnd.Next(80, 200));
-                await SmoothScrollTo(page, to, 800, ct);
-                await Task.Delay(500 + rnd.Next(400), ct);
+                await SmoothScrollTo(page, to, 800, cancellationToken);
+                await Task.Delay(500 + rnd.Next(400), cancellationToken);
                 pos = to;
                 continue;
             }
@@ -233,7 +259,7 @@ public sealed class ScrollModel
                 ReadProfile.SpeedReader => 600 + rnd.Next(300),
                 _ => 1000 + rnd.Next(500)
             };
-            await SmoothScrollTo(page, next, dur, ct);
+            await SmoothScrollTo(page, next, dur, cancellationToken);
 
             int pause = readProfile switch
             {
@@ -241,13 +267,19 @@ public sealed class ScrollModel
                 ReadProfile.SpeedReader => 400 + rnd.Next(250),
                 _ => 900 + rnd.Next(750)
             };
-            await Task.Delay(pause, ct);
+            await Task.Delay(pause, cancellationToken);
             pos = next;
         }
     }
 
-    private async Task ScrollToParagraph(IPage page, int index, int ms, CancellationToken ct)
+    private async Task ScrollToParagraph(
+        IPage page,
+        int index, 
+        int ms, 
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         await page.EvaluateAsync(@"
             ([i, ms]) => new Promise(r => {
                 const fc = document.querySelector('.frame-content');
@@ -260,11 +292,13 @@ public sealed class ScrollModel
                     performance.now() - t0 > ms ? r() : requestAnimationFrame(w);
                 })();
             })", new object[] { index, ms });
-        await Task.Delay(50, ct);
+        await Task.Delay(50, cancellationToken);
     }
 
     private async Task SmoothScrollTo(IPage page, int targetY, int ms, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         await page.EvaluateAsync(@"
             ([y, ms]) => new Promise(r => {
                 const s = window.scrollY;
@@ -288,6 +322,8 @@ public sealed class ScrollModel
 
     private async Task ScrollTo(IPage page, string sel, int dur, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         try
         {
             int top = await page.EvaluateAsync<int>($@"

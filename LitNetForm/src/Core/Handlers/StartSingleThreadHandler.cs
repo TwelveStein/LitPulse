@@ -45,7 +45,7 @@ public class StartSingleThreadHandler
             {
                 logger("Сервис остановлен.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }
@@ -72,7 +72,7 @@ public class StartSingleThreadHandler
             {
                 logger("Сервис остановлен.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }

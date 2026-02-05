@@ -73,10 +73,10 @@ namespace Core.Services
                 await _page.Mouse.ClickAsync(100, 100);
                 await _scrollModel.BrowseBookPageAsync(_page, log, cancellationToken);
             }
-            catch (PlaywrightException ex)
+            catch (PlaywrightException)
             {
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }
@@ -130,6 +130,8 @@ namespace Core.Services
             string url,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             try
             {
                 var elements = await _page.QuerySelectorAllAsync("text=Добавить в библиотеку");
@@ -147,7 +149,7 @@ namespace Core.Services
                     await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }
@@ -158,6 +160,8 @@ namespace Core.Services
             string url,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             try
             {
                 await _page.ClickAsync(
@@ -187,6 +191,8 @@ namespace Core.Services
             Action<string> log,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             // Количество прочитанных страниц
             int sheetsCounter = 0;
             
@@ -233,14 +239,19 @@ namespace Core.Services
             }
             finally
             {
-                // Записываем событие в БД
-                AccountActionDto actionDto = new AccountActionDto(
-                    accountId,
-                    AccountActionType.ReadBook,
-                    url,
-                    sheetsCounter.ToString());
+                if (sheetsCounter > 0)
+                {
+                    // Записываем событие в БД
+                    AccountActionDto actionDto = new AccountActionDto(
+                        accountId,
+                        AccountActionType.ReadBook,
+                        url,
+                        sheetsCounter.ToString());
 
-                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                    // Используем CancellationToken.None, так как основной токен может быть отменён
+                    // Запись о прочитанных страницах, должна попасть в БД
+                    await _accountHistoryService.AddActionAsync(actionDto, CancellationToken.None);
+                }
             }
         }
 

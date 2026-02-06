@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Contracts.DTOs;
+using Core.Entities;
 using Core.Services;
 using Core.Settings;
 using Microsoft.Playwright;
@@ -24,6 +25,7 @@ public sealed class StartLitNetHandler
     /// Старт обработчика LitNet
     /// </summary>
     public async Task HandleAsync(
+        Guid sessionId,
         Account account,
         string[] litNetLinks,
         Action<string> logger,
@@ -49,7 +51,8 @@ public sealed class StartLitNetHandler
                     foreach (var link in litNetLinks)
                     {
                         await _litNetService.BaseActivityBotAsync(
-                            account.Id,
+                            new UserContextDto(account.Id, account.Login),
+                            sessionId,
                             link, 
                             logger, 
                             new StartupSettings(account.AccountSettings),

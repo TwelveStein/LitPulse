@@ -18,6 +18,13 @@ public class AccountActionHistoryConfiguration : IEntityTypeConfiguration<Accoun
         builder.Property(a => a.AccountId)
             .HasColumnName("account_id");
         
+        builder.Property(a => a.SessionId)
+            .HasColumnName("session_id")
+            .HasConversion(
+                id => id.ToByteArray(),
+                id => new Guid(id))
+            .IsRequired();
+        
         builder.Property(a => a.ActionType)
             .HasColumnName("action_type")
             .IsRequired();

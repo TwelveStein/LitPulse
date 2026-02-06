@@ -1,5 +1,5 @@
 ﻿namespace Contracts.DTOs;
 
-public record DelayDto(
+public sealed record DelayDto(
     int ConstantDelay,
     int FloatingIncrementalDelay);

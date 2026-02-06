@@ -1,6 +1,9 @@
 ﻿using Contracts.DTOs;
+using Core.Abstracts;
 using Core.Entities;
+using Core.Enums;
 using Core.Factory;
+using Core.Services;
 
 namespace Core.Handlers;
 
@@ -10,13 +13,17 @@ namespace Core.Handlers;
 public sealed class StartMultithreadHandler : IDisposable
 {
     private readonly ServiceFactory _serviceFactory;
+    private readonly ReportService _reportService;
 
     // Используем примитив синхронизации для ограничения количества потоков
     private SemaphoreSlim _semaphoreSlim = null!;
 
-    public StartMultithreadHandler(ServiceFactory serviceFactory)
+    public StartMultithreadHandler(
+        ServiceFactory serviceFactory, 
+        ReportService reportService)
     {
         _serviceFactory = serviceFactory;
+        _reportService = reportService;
     }
 
     /// <summary>
@@ -31,12 +38,14 @@ public sealed class StartMultithreadHandler : IDisposable
         Action<string> logger,
         CancellationToken cancellationToken)
     {
-        Random random = new Random();
-
         _semaphoreSlim = new SemaphoreSlim(accountsCount);
 
+        Random random = new Random();
         int floatingDelay = random.Next(delayDto.FloatingIncrementalDelay);
         int delay = (delayDto.ConstantDelay + floatingDelay) * 1000;
+
+        Guid sessionId = Guid.NewGuid();
+        WriteStartSession(sessionId);
 
         try
         {
@@ -55,6 +64,7 @@ public sealed class StartMultithreadHandler : IDisposable
                         try
                         {
                             await handler.HandleAsync(
+                                sessionId,
                                 account,
                                 litNetLinks,
                                 logger,
@@ -77,9 +87,13 @@ public sealed class StartMultithreadHandler : IDisposable
                     {
                         await _semaphoreSlim.WaitAsync(cancellationToken);
 
+                        logger($"Задержка перед запуском: {delay / 1000} секунд.");
+                        await Task.Delay(delay, cancellationToken);
+
                         try
                         {
                             await handler.HandleAsync(
+                                sessionId,
                                 account,
                                 litMarketLinks,
                                 logger,
@@ -92,7 +106,6 @@ public sealed class StartMultithreadHandler : IDisposable
                     }))
                     .ToList();
             }
-
             await Task.WhenAll(litNetTasks);
             await Task.WhenAll(litMarketTasks);
         }
@@ -100,10 +113,34 @@ public sealed class StartMultithreadHandler : IDisposable
         {
             logger("Операция остановлена.");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // ignored
         }
+        finally
+        {
+            WriteStopSession(sessionId);
+        }
+    }
+
+    private void WriteStartSession(Guid sessionId)
+    {
+        _reportService.AddReportItem(new ReportDataDto
+        {
+            SessionId = sessionId,
+            Operation = AccountActionType.StartSession.ToDisplayString(),
+            SessionDateTime = DateTime.Now
+        });
+    }
+
+    private void WriteStopSession(Guid sessionId)
+    {
+        _reportService.AddReportItem(new ReportDataDto
+        {
+            SessionId = sessionId,
+            Operation = AccountActionType.StopSession.ToDisplayString(),
+            SessionDateTime = DateTime.Now
+        });
     }
 
     public void Dispose()

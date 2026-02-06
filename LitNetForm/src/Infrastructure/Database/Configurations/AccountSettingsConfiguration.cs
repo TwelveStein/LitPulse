@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
-using Contracts.Enums;
 using Core.Entities;
 using Core.Entities.ValueObjects;
+using Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

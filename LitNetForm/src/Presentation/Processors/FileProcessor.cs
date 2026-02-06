@@ -10,7 +10,7 @@ public class FileProcessor
 
     public async Task<IReadOnlyList<AccountDto>> AccountsFileProcess(CancellationToken cancellationToken)
     {
-        string[] fileRows = await TxtFileInAccountListAsync(cancellationToken);
+        string[] fileRows = await TxtFileInAccountsListAsync(cancellationToken);
 
         List<AccountDto> accountsDto = [];
         foreach (string line in fileRows)
@@ -50,7 +50,7 @@ public class FileProcessor
         return accountsDto;
     }
 
-    private async Task<string[]> TxtFileInAccountListAsync(CancellationToken cancellationToken)
+    private async Task<string[]> TxtFileInAccountsListAsync(CancellationToken cancellationToken)
     {
         using var openFileDialog = new OpenFileDialog();
 

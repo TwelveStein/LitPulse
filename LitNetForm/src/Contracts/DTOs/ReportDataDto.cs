@@ -1,7 +1,8 @@
 ﻿namespace Contracts.DTOs;
 
-public record ReportDataDto
+public sealed record ReportDataDto
 {
+    public Guid? SessionId { get; init; }
     public string? User { get; init; }
     public string? IpAddress { get; init; }
     public string? Operation { get; init; }

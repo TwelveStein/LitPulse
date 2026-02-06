@@ -24,6 +24,7 @@ public sealed class StartLitMarketHandler
     /// Старт обработчика LitMarket
     /// </summary>
     public async Task HandleAsync(
+        Guid sessionId,
         Account account,
         string[] litMarketLinks,
         Action<string> logger,
@@ -48,7 +49,8 @@ public sealed class StartLitMarketHandler
                     foreach (string link in litMarketLinks)
                     {
                         await _litMarketService.ReaderBooks(
-                            account.Id,
+                            new UserContextDto(account.Id, account.Login),
+                            sessionId,
                             link,
                             logger,
                             new StartupSettings(account.AccountSettings),

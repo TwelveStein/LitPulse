@@ -1,7 +1,7 @@
 ﻿using Contracts.DTOs;
-using Contracts.Enums;
 using Core.Abstracts;
 using Core.Entities.ValueObjects;
+using Core.Enums;
 using Core.Settings;
 using Microsoft.Playwright;
 
@@ -134,7 +134,7 @@ namespace Core.Services
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -167,29 +167,30 @@ namespace Core.Services
         /// </summary>
         /// <returns></returns>
         public async Task ReaderBooks(
-            int accountId,
-            string link,
+            UserContextDto userContext,
+            Guid sessionId,
+            string bookLink,
             Action<string> log,
             StartupSettings startupSettings,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            await _page.GotoAsync(link);
+            await _page.GotoAsync(bookLink);
 
             var actions = new List<(SettingState settings, Func<Task> action)>
             {
                 (startupSettings.LikeTheBook, async () =>
-                    await LikeTheBookAsync(accountId, link, cancellationToken)),
+                    await LikeTheBookAsync(userContext, sessionId, bookLink, cancellationToken)),
 
                 (startupSettings.AddToLibrary, async () =>
-                    await AddToLibraryAsync(accountId, link, cancellationToken)),
+                    await AddToLibraryAsync(userContext, sessionId, bookLink, cancellationToken)),
 
                 (startupSettings.ReadBook, async () =>
-                    await ReadBookAsync(accountId, link, startupSettings.ReadProfile, log, cancellationToken)),
+                    await ReadBookAsync(userContext, sessionId, bookLink, startupSettings.ReadProfile, log, cancellationToken)),
 
                 (startupSettings.SubscribeToTheAuthor, async () =>
-                    await SubscribeToTheAuthorAsync(accountId, link, cancellationToken))
+                    await SubscribeToTheAuthorAsync(userContext, sessionId, bookLink, cancellationToken))
             };
 
             foreach (var item in actions
@@ -203,24 +204,27 @@ namespace Core.Services
             await _page.WaitForTimeoutAsync(3000);
         }
 
-        private async Task SubscribeToTheAuthorAsync(int accountId, string link, CancellationToken cancellationToken)
+        private async Task SubscribeToTheAuthorAsync(
+            UserContextDto userContext, 
+            Guid sessionId,
+            string bookLink, 
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var subscribeResult = await IsButtonClickable(".card-share__subscribe-button");
             if (subscribeResult)
             {
-                AccountActionDto actionDto = new AccountActionDto(
-                    accountId,
-                    AccountActionType.SubscribeToTheAuthor,
-                    link,
-                    string.Empty);
-
-                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink);
+                await _accountHistoryService.SaveActionSubscribeToTheAuthorAsync(actionDto, cancellationToken);
             }
         }
 
-        private async Task LikeTheBookAsync(int accountId, string link, CancellationToken cancellationToken)
+        private async Task LikeTheBookAsync(
+            UserContextDto userContext, 
+            Guid sessionId,
+            string bookLink, 
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -236,13 +240,8 @@ namespace Core.Services
                         .ClickAsync();
 
                     // Записываем событие в БД
-                    AccountActionDto actionDto = new AccountActionDto(
-                        accountId,
-                        AccountActionType.LikeBook,
-                        link,
-                        string.Empty);
-
-                    await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                    ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink);
+                    await _accountHistoryService.SaveActionLikeTheBookAsync(actionDto, cancellationToken);
                 }
                 catch
                 {
@@ -260,41 +259,36 @@ namespace Core.Services
             }
         }
 
-        private async Task AddToLibraryAsync(int accountId, string link, CancellationToken cancellationToken)
+        private async Task AddToLibraryAsync(
+            UserContextDto userContext,
+            Guid sessionId,
+            string linkBook, 
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            await _page.GotoAsync(link);
-
+            await _page.GotoAsync(linkBook);
+            
+            ActionDto actionDto = new ActionDto(userContext, sessionId, linkBook);
             bool inLibraryResult = await IsButtonClickable("a:has-text('В библиотеку')");
             if (inLibraryResult)
             {
                 // Сохраняем событие в БД
-                AccountActionDto actionDto = new AccountActionDto(
-                    accountId,
-                    AccountActionType.AddToLibrary,
-                    link,
-                    string.Empty);
-
-                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                
+                await _accountHistoryService.SaveActionToLibraryAsync(actionDto, cancellationToken);
             }
 
             bool toFavorites = await IsButtonClickable("button:has-text('Избранное')");
             if (toFavorites)
             {
                 // Сохраняем событие в БД
-                AccountActionDto actionDto = new AccountActionDto(
-                    accountId,
-                    AccountActionType.AddToFavorites,
-                    link,
-                    string.Empty);
-
-                await _accountHistoryService.AddActionAsync(actionDto, cancellationToken);
+                await _accountHistoryService.SaveActionToFavoriteAsync(actionDto, cancellationToken);
             }
         }
 
         private async Task ReadBookAsync(
-            int accountId,
+            UserContextDto userContext,
+            Guid sessionId,
             string link,
             ReadProfile readProfile,
             Action<string> log,
@@ -349,15 +343,14 @@ namespace Core.Services
                 {
                     if (sheetsCounter > 0)
                     {
-                        AccountActionDto actionDto = new AccountActionDto(
-                            accountId,
-                            AccountActionType.ReadBook,
+                        ReadActionDto readActionDto = new ReadActionDto(
+                            userContext,
+                            sessionId,
                             link,
-                            sheetsCounter.ToString());
-
-                        // Используем CancellationToken.None, так как основной токен может быть отменён
+                            sheetsCounter);
+                        
                         // Запись о прочитанных страницах, должна попасть в БД
-                        await _accountHistoryService.AddActionAsync(actionDto, CancellationToken.None);
+                        await _accountHistoryService.SaveActionReadBookAsync(readActionDto);
                     }
                 }
             }

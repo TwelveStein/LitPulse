@@ -1,6 +1,8 @@
 ﻿using Contracts.DTOs;
 using Core.Entities;
+using Core.Enums;
 using Core.Factory;
+using Core.Services;
 
 namespace Core.Handlers;
 
@@ -10,10 +12,12 @@ namespace Core.Handlers;
 public sealed class StartBatchMultithreadHandler
 {
     private readonly ServiceFactory _serviceFactory;
+    private readonly ReportService _reportService;
 
-    public StartBatchMultithreadHandler(ServiceFactory serviceFactory)
+    public StartBatchMultithreadHandler(ServiceFactory serviceFactory, ReportService reportService)
     {
         _serviceFactory = serviceFactory;
+        _reportService = reportService;
     }
 
     /// <summary>
@@ -34,7 +38,10 @@ public sealed class StartBatchMultithreadHandler
         int delay = (delayDto.ConstantDelay + floatingDelay) * 1000;
 
         int batchSize = accountsCount;
-
+        
+        Guid sessionId = Guid.NewGuid();
+        WriteStartSession(sessionId);
+        
         // Делим список аккаунтов на порции (batchSize элементов)
         //
         // Пример:
@@ -70,6 +77,7 @@ public sealed class StartBatchMultithreadHandler
                     {
                         await _serviceFactory.ExecuteInService<StartLitNetHandler>(async handler =>
                             await handler.HandleAsync(
+                                sessionId,
                                 account,
                                 litNetLinks,
                                 logger,
@@ -106,6 +114,7 @@ public sealed class StartBatchMultithreadHandler
                     {
                         await _serviceFactory.ExecuteInService<StartLitMarketHandler>(async handler =>
                             await handler.HandleAsync(
+                                sessionId,
                                 account,
                                 litMarketLinks,
                                 logger,
@@ -119,10 +128,30 @@ public sealed class StartBatchMultithreadHandler
             {
                 logger("Порционная операция отменена.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }
         }
+        WriteStopSession(sessionId);
+    }
+    private void WriteStartSession(Guid sessionId)
+    {
+        _reportService.AddReportItem(new ReportDataDto
+        {
+            SessionId = sessionId,
+            Operation = AccountActionType.StartSession.ToDisplayString(),
+            SessionDateTime = DateTime.Now
+        });
+    }
+
+    private void WriteStopSession(Guid sessionId)
+    {
+        _reportService.AddReportItem(new ReportDataDto
+        {
+            SessionId = sessionId,
+            Operation = AccountActionType.StopSession.ToDisplayString(),
+            SessionDateTime = DateTime.Now
+        });
     }
 }

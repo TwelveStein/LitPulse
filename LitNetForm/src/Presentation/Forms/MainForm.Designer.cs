@@ -36,6 +36,7 @@
             buttonSaveReport = new System.Windows.Forms.Button();
             dataGridViewReport = new System.Windows.Forms.DataGridView();
             User = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            SessionId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             UserIpAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Operation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             Book = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -197,7 +198,7 @@
             dataGridViewReport.AllowUserToOrderColumns = true;
             dataGridViewReport.BackgroundColor = System.Drawing.SystemColors.Control;
             dataGridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime });
+            dataGridViewReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { SessionId, User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime });
             dataGridViewReport.Dock = System.Windows.Forms.DockStyle.Fill;
             dataGridViewReport.Location = new System.Drawing.Point(3, 116);
             dataGridViewReport.Name = "dataGridViewReport";
@@ -213,6 +214,15 @@
             User.Name = "User";
             User.ReadOnly = true;
             User.Width = 125;
+            // 
+            // SessionId
+            // 
+            SessionId.DataPropertyName = "SessionId";
+            SessionId.HeaderText = "ID сессии";
+            SessionId.MinimumWidth = 6;
+            SessionId.Name = "SessionId";
+            SessionId.ReadOnly = true;
+            SessionId.Width = 125;
             // 
             // UserIpAddress
             // 
@@ -1048,6 +1058,7 @@
         private System.Windows.Forms.Button buttonSaveReport;
         private System.Windows.Forms.DataGridView dataGridViewReport;
         private System.Windows.Forms.DataGridViewTextBoxColumn User;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SessionId;
         private System.Windows.Forms.DataGridViewTextBoxColumn UserIpAddress;
         private System.Windows.Forms.DataGridViewTextBoxColumn Book;
         private System.Windows.Forms.DataGridViewTextBoxColumn SheetsCount;

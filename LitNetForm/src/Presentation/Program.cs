@@ -20,10 +20,10 @@ namespace LitPulse
             services.AddPresentation();
             services.AddCore();
             services.AddInfrastructure();
-            
+
             using var provider = services.BuildServiceProvider();
-            
-            using (var scope = provider.CreateAsyncScope())
+
+            using (var scope = provider.CreateScope())
             {
                 DatabaseInitializer dbInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
                 dbInitializer.Initialize();

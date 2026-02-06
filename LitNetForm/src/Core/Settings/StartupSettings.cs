@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Contracts.Enums;
 using Core.Entities;
 using Core.Entities.ValueObjects;
+using Core.Enums;
 
 namespace Core.Settings
 {

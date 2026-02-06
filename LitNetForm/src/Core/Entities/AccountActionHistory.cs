@@ -1,14 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Contracts.Enums;
+﻿using Core.Enums;
 
 namespace Core.Entities;
 
 public class AccountActionHistory
 {
-    [Key]
     public int Id { get; init; }
 
     public int AccountId { get; private set; }
+    
+    public Guid SessionId { get; private set; }
     
     public AccountActionType ActionType { get; private set; }
     
@@ -23,11 +23,13 @@ public class AccountActionHistory
 
     public AccountActionHistory(
         int accountId, 
+        Guid sessionId,
         AccountActionType actionType, 
         string target,
         string actionResult)
     {
         AccountId = accountId;
+        SessionId = sessionId;
         ActionType = actionType;
         Target = target;
         ActionResult = actionResult;

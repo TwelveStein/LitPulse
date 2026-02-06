@@ -1,8 +1,8 @@
 ﻿using Contracts.DTOs;
-using Contracts.Enums;
 using Core.Abstracts;
 using Core.Entities;
 using Core.Entities.ValueObjects;
+using Core.Enums;
 
 namespace Core.Services;
 

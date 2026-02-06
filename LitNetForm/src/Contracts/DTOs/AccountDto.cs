@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Contracts.DTOs;
 
-public record AccountDto : INotifyPropertyChanged
+public sealed record AccountDto : INotifyPropertyChanged
 {
     private string _login;
     private string _password;
@@ -62,7 +62,7 @@ public record AccountDto : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

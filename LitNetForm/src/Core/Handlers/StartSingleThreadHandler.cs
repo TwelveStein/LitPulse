@@ -1,5 +1,8 @@
-﻿using Core.Entities;
+﻿using Contracts.DTOs;
+using Core.Entities;
+using Core.Enums;
 using Core.Factory;
+using Core.Services;
 
 namespace Core.Handlers;
 
@@ -9,10 +12,12 @@ namespace Core.Handlers;
 public class StartSingleThreadHandler
 {
     private readonly ServiceFactory _serviceFactory;
+    private readonly ReportService _reportService;
 
-    public StartSingleThreadHandler(ServiceFactory serviceFactory)
+    public StartSingleThreadHandler(ServiceFactory serviceFactory, ReportService reportService)
     {
         _serviceFactory = serviceFactory;
+        _reportService = reportService;
     }
 
     /// <summary>
@@ -25,57 +30,94 @@ public class StartSingleThreadHandler
         Action<string> logger,
         CancellationToken cancellationToken)
     {
-        foreach (var account in activeAccounts)
+        Guid sessionId = Guid.NewGuid();
+        WriteStartSession(sessionId);
+        
+        try
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
+            foreach (var account in activeAccounts)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
 
-            if (account.LitNet is false)
-                continue;
+                if (account.LitNet is false)
+                    continue;
 
-            try
-            {
-                await _serviceFactory.ExecuteInService<StartLitNetHandler>(async handler => await handler.HandleAsync(
-                    account,
-                    litNetLinks,
-                    logger,
-                    cancellationToken));
+                try
+                {
+                    await _serviceFactory.ExecuteInService<StartLitNetHandler>(async handler =>
+                        await handler.HandleAsync(
+                            sessionId,
+                            account,
+                            litNetLinks,
+                            logger,
+                            cancellationToken));
+                }
+                catch (OperationCanceledException)
+                {
+                    logger("Сервис остановлен.");
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
-            catch (OperationCanceledException)
+
+            foreach (var account in activeAccounts)
             {
-                logger("Сервис остановлен.");
-            }
-            catch (Exception)
-            {
-                // ignored
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
+                if (account.LitMarket is false)
+                    continue;
+
+                try
+                {
+                    await _serviceFactory.ExecuteInService<StartLitMarketHandler>(async handler =>
+                        await handler.HandleAsync(
+                            sessionId,
+                            account,
+                            litMarketLinks,
+                            logger,
+                            cancellationToken));
+                }
+                catch (OperationCanceledException)
+                {
+                    logger("Сервис остановлен.");
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
         }
-
-        foreach (var account in activeAccounts)
+        finally
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-
-            if (account.LitMarket is false)
-                continue;
-
-            try
-            {
-                await _serviceFactory.ExecuteInService<StartLitMarketHandler>(
-                    async handler => await handler.HandleAsync(
-                        account,
-                        litMarketLinks,
-                        logger,
-                        cancellationToken));
-            }
-            catch (OperationCanceledException)
-            {
-                logger("Сервис остановлен.");
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            WriteStopSession(sessionId);
         }
+    }
+
+    private void WriteStartSession(Guid sessionId)
+    {
+        ReportDataDto reportDataDto = new ReportDataDto
+        {
+            SessionId = sessionId,
+            Operation = AccountActionType.StartSession.ToDisplayString(),
+            SessionDateTime = DateTime.Now,
+        };
+        
+        _reportService.AddReportItem(reportDataDto);
+    }
+    
+    private void WriteStopSession(Guid sessionId)
+    {
+        ReportDataDto reportDataDto = new ReportDataDto
+        {
+            SessionId = sessionId,
+            Operation = AccountActionType.StopSession.ToDisplayString(),
+            SessionDateTime = DateTime.Now,
+        };
+        
+        _reportService.AddReportItem(reportDataDto);
     }
 }

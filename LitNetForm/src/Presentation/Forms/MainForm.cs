@@ -2,6 +2,7 @@
 using Contracts.DTOs;
 using Core.Entities;
 using Core.Handlers;
+using Core.Services;
 using LitPulse.FileProviders;
 using LitPulse.Data;
 using LitPulse.Factory;
@@ -14,19 +15,22 @@ namespace LitPulse.Forms
         private readonly StartSingleThreadHandler _startSingleThreadHandler;
         private readonly StartMultithreadHandler _startMultithreadHandler;
         private readonly StartBatchMultithreadHandler _startBatchMultithreadHandler;
-        
+        private readonly ReportService _reportService;
+
         private CancellationTokenSource _cts;
 
         public MainForm(
             FormFactory formFactory,
             StartSingleThreadHandler startSingleThreadHandler,
             StartMultithreadHandler startMultithreadHandler,
-            StartBatchMultithreadHandler startBatchMultithreadHandler)
+            StartBatchMultithreadHandler startBatchMultithreadHandler,
+            ReportService reportService)
         {
             _formFactory = formFactory;
             _startSingleThreadHandler = startSingleThreadHandler;
             _startMultithreadHandler = startMultithreadHandler;
             _startBatchMultithreadHandler = startBatchMultithreadHandler;
+            _reportService = reportService;
             _cts = new CancellationTokenSource();
 
             InitializeComponent();
@@ -37,6 +41,8 @@ namespace LitPulse.Forms
             dataGridViewAccounts.DataSource = _accounts;
             dataGridViewLinks.DataSource = _links;
             dataGridViewReport.DataSource = _reportDataBindingList;
+
+            _reportService.ReportItemAdded += OnReportItemAdded;
         }
 
         #region Litnet_LitMarket_Parameters
@@ -89,18 +95,18 @@ namespace LitPulse.Forms
             var links = SplitLinksByDomain(_links);
 
             bool runningInMultithreadingMode = checkBoxRunningInMultithreadingMode.Checked;
-            
+
             if (runningInMultithreadingMode)
             {
                 int constantDelay = (int)numericUpDownConstantDelay.Value;
                 int floatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
-                int accountsCount = (int)numericUpDownAccountCount.Value;
+                int multithreadAccountsCount = (int)numericUpDownAccountCount.Value;
 
                 if (checkBoxBatchLaunch.Checked)
                 {
                     await _startBatchMultithreadHandler.HandleAsync(
                         activeAccounts,
-                        accountsCount,
+                        multithreadAccountsCount,
                         links.litnetLinks,
                         links.litmarketLinks,
                         new DelayDto(constantDelay, floatingIncrementalDelay),
@@ -111,7 +117,7 @@ namespace LitPulse.Forms
                 {
                     await _startMultithreadHandler.HandleAsync(
                         activeAccounts,
-                        accountsCount,
+                        multithreadAccountsCount,
                         links.litnetLinks,
                         links.litmarketLinks,
                         new DelayDto(constantDelay, floatingIncrementalDelay),
@@ -127,7 +133,7 @@ namespace LitPulse.Forms
                     links.litmarketLinks,
                     AppendLog,
                     _cts.Token);
-            }   
+            }
         }
 
         private async void buttonStop_Click(object sender, EventArgs e)
@@ -371,7 +377,7 @@ namespace LitPulse.Forms
 
             SaveParameters();*/
         }
-        
+
         private void checkBoxRunningInMultithreadingMode_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxBatchLaunch.Enabled = checkBoxRunningInMultithreadingMode.Checked;
@@ -527,6 +533,17 @@ namespace LitPulse.Forms
             _reportDataBindingList.Add(reportData);
         }
 
+        private void OnReportItemAdded(object sender, ReportDataDto item)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(() => OnReportItemAdded(sender, item));
+                return;
+            }
+
+            _reportDataBindingList.Add(item);
+        }
+
         private async void buttonSaveReport_Click(object sender, EventArgs e)
         {
             await SaveDataToTheReportAsync();
@@ -544,6 +561,9 @@ namespace LitPulse.Forms
                     reportDataList.Add(new ReportDataDto
                     {
                         User = row.Cells["User"].Value?.ToString() ?? string.Empty,
+                        SessionId = Guid.TryParse(row.Cells["SessionId"].Value?.ToString(), out var sessionId)
+                            ? sessionId
+                            : Guid.Empty,
                         IpAddress = row.Cells["UserIpAddress"].Value?.ToString() ?? string.Empty,
                         Operation = row.Cells["Operation"].Value?.ToString() ?? string.Empty,
                         Book = row.Cells["Book"].Value?.ToString() ?? string.Empty,
@@ -551,15 +571,14 @@ namespace LitPulse.Forms
                             ? (count == 0 ? null : count)
                             : null,
                         Status = row.Cells["Status"].Value?.ToString() ?? string.Empty,
-                        SessionDateTime =
-                            DateTime.TryParse(row.Cells["SessionDateTime"].Value?.ToString(), out var date)
+                        SessionDateTime = DateTime.TryParse(row.Cells["SessionDateTime"].Value?.ToString(), out var date)
                                 ? date
                                 : null
                     });
                 }
 
-                ReportExcelProvider reportExcelProvider = new ReportExcelProvider(reportDataList);
-                await reportExcelProvider.SaveFileAsync(_cts.Token);
+                ReportExcelProvider reportExcelProvider = new ReportExcelProvider();
+                await reportExcelProvider.SaveFileAsync(reportDataList, _cts.Token);
             }
         }
 

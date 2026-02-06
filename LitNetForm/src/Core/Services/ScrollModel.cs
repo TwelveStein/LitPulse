@@ -1,4 +1,4 @@
-﻿using Contracts.Enums;
+﻿using Core.Enums;
 using Microsoft.Playwright;
 
 namespace Core.Services;

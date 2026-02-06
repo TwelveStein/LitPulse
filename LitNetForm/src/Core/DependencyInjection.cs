@@ -14,16 +14,18 @@ public static class DependencyInjection
         services.AddScoped<StartBatchMultithreadHandler>();
         services.AddScoped<StartLitNetHandler>();
         services.AddScoped<StartLitMarketHandler>();
-        
+
         services.AddScoped<AccountsService>();
         services.AddScoped<AccountHistoryService>();
         services.AddScoped<LitMarketService>();
         services.AddScoped<LitNetService>();
-        
+
         services.AddScoped<ScrollModel>();
-        
+
         services.AddScoped<ServiceFactory>();
-        
+
+        services.AddSingleton<ReportService>();
+
         return services;
     }
 }

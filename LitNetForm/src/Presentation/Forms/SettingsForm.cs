@@ -1,5 +1,5 @@
-﻿using Contracts.Enums;
-using Core.Entities.ValueObjects;
+﻿using Core.Entities.ValueObjects;
+using Core.Enums;
 using Core.Settings;
 
 namespace LitPulse.Forms

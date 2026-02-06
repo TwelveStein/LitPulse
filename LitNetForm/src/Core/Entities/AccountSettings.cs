@@ -1,5 +1,5 @@
-﻿using Contracts.Enums;
-using Core.Entities.ValueObjects;
+﻿using Core.Entities.ValueObjects;
+using Core.Enums;
 
 namespace Core.Entities
 {

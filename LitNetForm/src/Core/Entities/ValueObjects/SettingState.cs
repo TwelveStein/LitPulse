@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities.ValueObjects;
 
-public record SettingState
+public sealed record SettingState
 {
     public bool Enabled { get; private set; }
     

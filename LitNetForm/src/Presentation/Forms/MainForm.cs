@@ -522,6 +522,9 @@ namespace LitPulse.Forms
         {
             // Отменяем выполнение при помощи токена отмены
             await _cts.CancelAsync();
+
+            // Пересоздаём токен
+            _cts = new CancellationTokenSource();
         }
 
         #endregion
@@ -571,7 +574,8 @@ namespace LitPulse.Forms
                             ? (count == 0 ? null : count)
                             : null,
                         Status = row.Cells["Status"].Value?.ToString() ?? string.Empty,
-                        SessionDateTime = DateTime.TryParse(row.Cells["SessionDateTime"].Value?.ToString(), out var date)
+                        SessionDateTime =
+                            DateTime.TryParse(row.Cells["SessionDateTime"].Value?.ToString(), out var date)
                                 ? date
                                 : null
                     });

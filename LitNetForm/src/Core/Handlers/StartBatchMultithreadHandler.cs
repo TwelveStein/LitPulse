@@ -91,7 +91,7 @@ public sealed class StartBatchMultithreadHandler
             {
                 logger("Порционная операция отменена.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // ignored
             }

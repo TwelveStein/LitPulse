@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LitPulse.Factory;
 
-public class FormFactory
+public sealed class FormFactory
 {
     private readonly IServiceProvider _services;
 

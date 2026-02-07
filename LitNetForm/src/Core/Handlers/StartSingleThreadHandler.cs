@@ -1,6 +1,4 @@
-﻿using Contracts.DTOs;
-using Core.Entities;
-using Core.Enums;
+﻿using Core.Entities;
 using Core.Factory;
 using Core.Services;
 

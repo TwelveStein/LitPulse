@@ -1,7 +1,5 @@
 ﻿using Contracts.DTOs;
-using Core.Abstracts;
 using Core.Entities;
-using Core.Enums;
 using Core.Factory;
 using Core.Services;
 
@@ -45,7 +43,7 @@ public sealed class StartMultithreadHandler : IDisposable
         int delay = (delayDto.ConstantDelay + floatingDelay) * 1000;
 
         Guid sessionId = Guid.NewGuid();
-        WriteStartSession(sessionId);
+        _reportService.WriteStartSession(sessionId);
 
         try
         {
@@ -119,30 +117,10 @@ public sealed class StartMultithreadHandler : IDisposable
         }
         finally
         {
-            WriteStopSession(sessionId);
+            _reportService.WriteStopSession(sessionId);
         }
     }
-
-    private void WriteStartSession(Guid sessionId)
-    {
-        _reportService.AddReportItem(new ReportDataDto
-        {
-            SessionId = sessionId,
-            Operation = AccountActionType.StartSession.ToDisplayString(),
-            SessionDateTime = DateTime.Now
-        });
-    }
-
-    private void WriteStopSession(Guid sessionId)
-    {
-        _reportService.AddReportItem(new ReportDataDto
-        {
-            SessionId = sessionId,
-            Operation = AccountActionType.StopSession.ToDisplayString(),
-            SessionDateTime = DateTime.Now
-        });
-    }
-
+    
     public void Dispose()
     {
         if (_semaphoreSlim is not null)

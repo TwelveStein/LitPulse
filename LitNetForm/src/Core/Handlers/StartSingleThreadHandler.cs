@@ -31,7 +31,7 @@ public class StartSingleThreadHandler
         CancellationToken cancellationToken)
     {
         Guid sessionId = Guid.NewGuid();
-        WriteStartSession(sessionId);
+        _reportService.WriteStartSession(sessionId);
         
         try
         {
@@ -93,31 +93,7 @@ public class StartSingleThreadHandler
         }
         finally
         {
-            WriteStopSession(sessionId);
+            _reportService.WriteStopSession(sessionId);
         }
-    }
-
-    private void WriteStartSession(Guid sessionId)
-    {
-        ReportDataDto reportDataDto = new ReportDataDto
-        {
-            SessionId = sessionId,
-            Operation = AccountActionType.StartSession.ToDisplayString(),
-            SessionDateTime = DateTime.Now,
-        };
-        
-        _reportService.AddReportItem(reportDataDto);
-    }
-    
-    private void WriteStopSession(Guid sessionId)
-    {
-        ReportDataDto reportDataDto = new ReportDataDto
-        {
-            SessionId = sessionId,
-            Operation = AccountActionType.StopSession.ToDisplayString(),
-            SessionDateTime = DateTime.Now,
-        };
-        
-        _reportService.AddReportItem(reportDataDto);
     }
 }

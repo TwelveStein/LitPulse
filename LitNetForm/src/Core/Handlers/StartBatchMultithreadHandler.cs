@@ -40,7 +40,7 @@ public sealed class StartBatchMultithreadHandler
         int batchSize = accountsCount;
         
         Guid sessionId = Guid.NewGuid();
-        WriteStartSession(sessionId);
+        _reportService.WriteStartSession(sessionId);
         
         // Делим список аккаунтов на порции (batchSize элементов)
         //
@@ -133,25 +133,6 @@ public sealed class StartBatchMultithreadHandler
                 // ignored
             }
         }
-        WriteStopSession(sessionId);
-    }
-    private void WriteStartSession(Guid sessionId)
-    {
-        _reportService.AddReportItem(new ReportDataDto
-        {
-            SessionId = sessionId,
-            Operation = AccountActionType.StartSession.ToDisplayString(),
-            SessionDateTime = DateTime.Now
-        });
-    }
-
-    private void WriteStopSession(Guid sessionId)
-    {
-        _reportService.AddReportItem(new ReportDataDto
-        {
-            SessionId = sessionId,
-            Operation = AccountActionType.StopSession.ToDisplayString(),
-            SessionDateTime = DateTime.Now
-        });
+        _reportService.WriteStopSession(sessionId);
     }
 }

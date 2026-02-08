@@ -206,7 +206,7 @@ namespace LitPulse.Forms
         private async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
             UpdateStatementSettings();
-            
+
             List<Account> accountsForUpdate = _accounts
                 .Where(a => a.IsModified)
                 .ToList();
@@ -281,15 +281,15 @@ namespace LitPulse.Forms
                 return;
 
             SettingState readBook = new SettingState(
-                checkBoxReadBook.Checked, 
+                checkBoxReadBook.Checked,
                 (int)numericOrderReadBook.Value);
 
             SettingState addToLibrary = new SettingState(
-                checkBoxAddToLibrary.Checked, 
+                checkBoxAddToLibrary.Checked,
                 (int)numericOrderAddToLibrary.Value);
 
             SettingState likeTheBook = new SettingState(
-                checkBoxLikeTheBook.Checked, 
+                checkBoxLikeTheBook.Checked,
                 (int)numericOrderLikeBook.Value);
 
             SettingState subscribeToTheAuthor = new SettingState(

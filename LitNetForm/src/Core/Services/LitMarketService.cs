@@ -29,6 +29,7 @@ namespace Core.Services
         /// <returns></returns>
         public async Task InitializeAsync()
         {
+
             _playwright = await Playwright.CreateAsync();
             _browser = await _playwright.Chromium.LaunchAsync(new()
             {

@@ -538,6 +538,7 @@
             dataGridViewActiveAccounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             dataGridViewActiveAccounts.Size = new System.Drawing.Size(549, 607);
             dataGridViewActiveAccounts.TabIndex = 3;
+            dataGridViewActiveAccounts.RowEnter += dataGridViewActiveAccounts_RowLeave;
             dataGridViewActiveAccounts.SelectionChanged += dataGridViewActiveAccounts_SelectionChanged;
             // 
             // dataGridViewTextBoxColumn1

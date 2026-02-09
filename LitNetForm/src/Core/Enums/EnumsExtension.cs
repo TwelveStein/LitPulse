@@ -17,7 +17,7 @@ public static class EnumsExtension
         };
         return text;
     }
-    
+
     public static string ToDisplayString(this OperationStatuses operationStatuses)
     {
         string text = operationStatuses switch
@@ -27,5 +27,29 @@ public static class EnumsExtension
             _ => "Неизвестная операция"
         };
         return text;
+    }
+
+    public static string ToDisplayString(this ReadProfile readProfile)
+    {
+        string text = readProfile switch
+        {
+            ReadProfile.DeepReader => "Глубокое чтение",
+            ReadProfile.SpeedReader => "Быстрое чтение",
+            ReadProfile.TiredReader => "Уставшее чтение",
+            _ => "Неизвестная операция"
+        };
+        return text;
+    }
+
+    public static ReadProfile ToReadProfile(this string value)
+    {
+        ReadProfile readProfile = value switch
+        {
+            "Глубокое чтение" => ReadProfile.DeepReader,
+            "Быстрое чтение" => ReadProfile.SpeedReader,
+            "Уставшее чтение" => ReadProfile.TiredReader,
+            _ => ReadProfile.DeepReader
+        };
+        return readProfile;
     }
 }

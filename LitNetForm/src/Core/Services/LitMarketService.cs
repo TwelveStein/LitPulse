@@ -188,7 +188,8 @@ namespace Core.Services
                     await AddToLibraryAsync(userContext, sessionId, bookLink, cancellationToken)),
 
                 (startupSettings.ReadBook, async () =>
-                    await ReadBookAsync(userContext, sessionId, bookLink, startupSettings.ReadProfile, log, cancellationToken)),
+                    await ReadBookAsync(userContext, sessionId, bookLink, startupSettings.ReadProfile, log,
+                        cancellationToken)),
 
                 (startupSettings.SubscribeToTheAuthor, async () =>
                     await SubscribeToTheAuthorAsync(userContext, sessionId, bookLink, cancellationToken))
@@ -206,9 +207,9 @@ namespace Core.Services
         }
 
         private async Task SubscribeToTheAuthorAsync(
-            UserContextDto userContext, 
+            UserContextDto userContext,
             Guid sessionId,
-            string bookLink, 
+            string bookLink,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -222,9 +223,9 @@ namespace Core.Services
         }
 
         private async Task LikeTheBookAsync(
-            UserContextDto userContext, 
+            UserContextDto userContext,
             Guid sessionId,
-            string bookLink, 
+            string bookLink,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -263,19 +264,18 @@ namespace Core.Services
         private async Task AddToLibraryAsync(
             UserContextDto userContext,
             Guid sessionId,
-            string linkBook, 
+            string linkBook,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             await _page.GotoAsync(linkBook);
-            
+
             ActionDto actionDto = new ActionDto(userContext, sessionId, linkBook);
             bool inLibraryResult = await IsButtonClickable("a:has-text('В библиотеку')");
             if (inLibraryResult)
             {
                 // Сохраняем событие в БД
-                
                 await _accountHistoryService.SaveActionToLibraryAsync(actionDto, cancellationToken);
             }
 
@@ -310,54 +310,51 @@ namespace Core.Services
 
             try
             {
-                try
+                while (true)
                 {
-                    while (true)
+                    var urlPage = _page.Url;
+                    await _scrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
+                    sheetsCounter++;
+
+                    var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
+
+                    if (nextButton != null && await nextButton.IsVisibleAsync())
                     {
-                        var urlPage = _page.Url;
-                        await _scrollModel.ReadPageAsync(_page, readProfile, log, cancellationToken);
-                        sheetsCounter++;
+                        // Нажатие на кнопку
+                        await nextButton.ClickAsync();
 
-                        var nextButton = await _page.QuerySelectorAsync("div.chapter-nav__right:has-text('Далее')");
-
-                        if (nextButton != null && await nextButton.IsVisibleAsync())
-                        {
-                            // Нажатие на кнопку
-                            await nextButton.ClickAsync();
-
-                            await _page.WaitForTimeoutAsync(4500); // Пауза для полной загрузки
-                            if (_page.Url == urlPage)
-                            {
-                                break;
-                            }
-
-                            // Ожидание загрузки
-                            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-                        }
-                        else
+                        await _page.WaitForTimeoutAsync(4500); // Пауза для полной загрузки
+                        if (_page.Url == urlPage)
                         {
                             break;
                         }
+
+                        // Ожидание загрузки
+                        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
                     }
-                }
-                finally
-                {
-                    if (sheetsCounter > 0)
+                    else
                     {
-                        ReadActionDto readActionDto = new ReadActionDto(
-                            userContext,
-                            sessionId,
-                            link,
-                            sheetsCounter);
-                        
-                        // Запись о прочитанных страницах, должна попасть в БД
-                        await _accountHistoryService.SaveActionReadBookAsync(readActionDto);
+                        break;
                     }
                 }
             }
-            catch
+            catch (Exception)
             {
                 // ignored
+            }
+            finally
+            {
+                if (sheetsCounter > 0)
+                {
+                    ReadActionDto readActionDto = new ReadActionDto(
+                        userContext,
+                        sessionId,
+                        link,
+                        sheetsCounter);
+
+                    // Запись о прочитанных страницах, должна попасть в БД
+                    await _accountHistoryService.SaveActionReadBookAsync(readActionDto);
+                }
             }
         }
 

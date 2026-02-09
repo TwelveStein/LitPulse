@@ -38,7 +38,8 @@ namespace Core.Entities
             SettingState? subscribeToTheAuthor,
             SettingState? postComment,
             SettingState? makeADonationToTheAuthor,
-            SettingState? buyABook)
+            SettingState? buyABook,
+            ReadProfile readProfile)
         {
             if (readBook is not null)
                 ReadBook = readBook;
@@ -60,6 +61,8 @@ namespace Core.Entities
             
             if (buyABook is not null)
                 BuyABook = buyABook;
+
+            ReadProfile = readProfile;
             
             UpdatedAt = DateTime.UtcNow;
         }

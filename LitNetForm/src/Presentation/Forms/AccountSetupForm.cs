@@ -2,6 +2,7 @@
 using Contracts.DTOs;
 using Core.Entities;
 using Core.Entities.ValueObjects;
+using Core.Enums;
 using Core.Services;
 using LitPulse.Processors;
 
@@ -217,26 +218,27 @@ namespace LitPulse.Forms
 
         private void FillAccountSettingsOnForm(AccountDto accountDto)
         {
-            AccountSettings? accountSettings = _accounts
-                .FirstOrDefault(a => a.Id == accountDto.Id)!.AccountSettings;
+            Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
 
-            if (accountSettings is not null)
+            if (account is not null)
             {
-                checkBoxReadBook.Checked = accountSettings.ReadBook.Enabled;
-                checkBoxLikeTheBook.Checked = accountSettings.LikeTheBook.Enabled;
-                checkBoxAddToLibrary.Checked = accountSettings.AddToLibrary.Enabled;
-                checkBoxSubscribeToTheAuthor.Checked = accountSettings.SubscribeToTheAuthor.Enabled;
-                checkBoxPostComment.Checked = accountSettings.PostComment.Enabled;
-                checkBoxMakeADonationToTheAuthor.Checked = accountSettings.MakeADonationToTheAuthor.Enabled;
-                checkBoxBuyABook.Checked = accountSettings.BuyABook.Enabled;
+                checkBoxReadBook.Checked = account.AccountSettings.ReadBook.Enabled;
+                checkBoxLikeTheBook.Checked = account.AccountSettings.LikeTheBook.Enabled;
+                checkBoxAddToLibrary.Checked = account.AccountSettings.AddToLibrary.Enabled;
+                checkBoxSubscribeToTheAuthor.Checked = account.AccountSettings.SubscribeToTheAuthor.Enabled;
+                checkBoxPostComment.Checked = account.AccountSettings.PostComment.Enabled;
+                checkBoxMakeADonationToTheAuthor.Checked = account.AccountSettings.MakeADonationToTheAuthor.Enabled;
+                checkBoxBuyABook.Checked = account.AccountSettings.BuyABook.Enabled;
 
-                numericOrderReadBook.Value = accountSettings.ReadBook.Order;
-                numericOrderLikeBook.Value = accountSettings.LikeTheBook.Order;
-                numericOrderAddToLibrary.Value = accountSettings.AddToLibrary.Order;
-                numericOrderSubscribeToTheAuthor.Value = accountSettings.SubscribeToTheAuthor.Order;
-                numericOrderPostComment.Value = accountSettings.PostComment.Order;
-                numericOrderDonateAuthor.Value = accountSettings.MakeADonationToTheAuthor.Order;
-                numericOrderBuyABook.Value = accountSettings.BuyABook.Order;
+                numericOrderReadBook.Value = account.AccountSettings.ReadBook.Order;
+                numericOrderLikeBook.Value = account.AccountSettings.LikeTheBook.Order;
+                numericOrderAddToLibrary.Value = account.AccountSettings.AddToLibrary.Order;
+                numericOrderSubscribeToTheAuthor.Value = account.AccountSettings.SubscribeToTheAuthor.Order;
+                numericOrderPostComment.Value = account.AccountSettings.PostComment.Order;
+                numericOrderDonateAuthor.Value = account.AccountSettings.MakeADonationToTheAuthor.Order;
+                numericOrderBuyABook.Value = account.AccountSettings.BuyABook.Order;
+                
+                comboBoxReadProfile.Text = account.AccountSettings.ReadProfile.ToDisplayString();
             }
             else
             {
@@ -277,7 +279,7 @@ namespace LitPulse.Forms
                 return;
 
             Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
-            if (account is null || account.AccountSettings is null)
+            if (account is null)
                 return;
 
             SettingState readBook = new SettingState(
@@ -307,6 +309,8 @@ namespace LitPulse.Forms
                 checkBoxBuyABook.Checked,
                 (int)numericOrderBuyABook.Value);
 
+            ReadProfile readProfile = comboBoxReadProfile.Text.ToReadProfile();
+
             account.AccountSettings.UpdateSettings(
                 readBook,
                 addToLibrary,
@@ -314,7 +318,8 @@ namespace LitPulse.Forms
                 subscribeToTheAuthor,
                 postComment,
                 makeADonation,
-                buyABook);
+                buyABook,
+                readProfile);
 
             account.MarkAsModified();
         }

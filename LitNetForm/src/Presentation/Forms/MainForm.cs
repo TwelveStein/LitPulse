@@ -38,7 +38,6 @@ namespace LitPulse.Forms
             //LoadSettings();
             LoadData();
 
-            dataGridViewAccounts.DataSource = _accounts;
             dataGridViewLinks.DataSource = _links;
             dataGridViewReport.DataSource = _reportDataBindingList;
 
@@ -150,44 +149,6 @@ namespace LitPulse.Forms
         private void buttonAccountGenerator_Click(object sender, EventArgs e)
         {
         }
-
-        #region Accounts
-
-        private void buttonImportAccounts_Click(object sender, EventArgs e)
-        {
-            string[] accounts = TxtFileInList();
-
-            AddAccounts(accounts);
-
-            SaveData();
-        }
-
-        private void buttonAddAccount_Click(object sender, EventArgs e)
-        {
-            _accounts.Add(new Accounts("", ""));
-
-            SaveData();
-        }
-
-        private void buttonDeleteAccount_Click(object sender, EventArgs e)
-        {
-            if (dataGridViewAccounts.CurrentRow != null &&
-                dataGridViewAccounts.CurrentRow.DataBoundItem is Accounts account)
-            {
-                _accounts.Remove(account);
-
-                SaveData();
-            }
-        }
-
-        private void buttonClearAccounts_Click(object sender, EventArgs e)
-        {
-            _accounts.Clear();
-
-            SaveData();
-        }
-
-        #endregion
 
         #region Links
 

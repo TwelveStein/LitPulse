@@ -70,6 +70,10 @@
             numericUpDownFloatingIncrementalDelay = new NumericUpDown();
             label9 = new Label();
             numericUpDownAccountCount = new NumericUpDown();
+            groupBoxProxys = new GroupBox();
+            label1 = new Label();
+            buttonClearProxysList = new Button();
+            buttonLoadProxysList = new Button();
             tableLayoutPanel8 = new TableLayoutPanel();
             richTextBoxLog = new RichTextBox();
             label5 = new Label();
@@ -80,6 +84,7 @@
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
             toolTip1 = new ToolTip(components);
+            richTextBox1 = new RichTextBox();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -97,6 +102,7 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDownConstantDelay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownAccountCount).BeginInit();
+            groupBoxProxys.SuspendLayout();
             tableLayoutPanel8.SuspendLayout();
             tableLayoutPanel12.SuspendLayout();
             SuspendLayout();
@@ -512,6 +518,7 @@
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(groupBox2);
+            flowLayoutPanel1.Controls.Add(groupBoxProxys);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.Location = new Point(3, 5);
@@ -619,6 +626,48 @@
             numericUpDownAccountCount.Size = new Size(83, 27);
             numericUpDownAccountCount.TabIndex = 5;
             numericUpDownAccountCount.Value = new decimal(new int[] { 2, 0, 0, 0 });
+            // 
+            // groupBoxProxys
+            // 
+            groupBoxProxys.Controls.Add(richTextBox1);
+            groupBoxProxys.Controls.Add(label1);
+            groupBoxProxys.Controls.Add(buttonClearProxysList);
+            groupBoxProxys.Controls.Add(buttonLoadProxysList);
+            groupBoxProxys.Location = new Point(439, 3);
+            groupBoxProxys.Name = "groupBoxProxys";
+            groupBoxProxys.Size = new Size(324, 231);
+            groupBoxProxys.TabIndex = 1;
+            groupBoxProxys.TabStop = false;
+            groupBoxProxys.Text = "Прокси";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(6, 98);
+            label1.Name = "label1";
+            label1.Size = new Size(286, 20);
+            label1.TabIndex = 2;
+            label1.Text = "Формат прокси: host:port:login:password";
+            // 
+            // buttonClearProxysList
+            // 
+            buttonClearProxysList.Location = new Point(6, 61);
+            buttonClearProxysList.Name = "buttonClearProxysList";
+            buttonClearProxysList.Size = new Size(225, 29);
+            buttonClearProxysList.TabIndex = 1;
+            buttonClearProxysList.Text = "Очистить список прокси";
+            buttonClearProxysList.UseVisualStyleBackColor = true;
+            buttonClearProxysList.Click += buttonClearProxysList_Click;
+            // 
+            // buttonLoadProxysList
+            // 
+            buttonLoadProxysList.Location = new Point(6, 26);
+            buttonLoadProxysList.Name = "buttonLoadProxysList";
+            buttonLoadProxysList.Size = new Size(225, 29);
+            buttonLoadProxysList.TabIndex = 0;
+            buttonLoadProxysList.Text = "Загрузить список прокси";
+            buttonLoadProxysList.UseVisualStyleBackColor = true;
+            buttonLoadProxysList.Click += buttonLoadProxysList_Click;
             // 
             // tableLayoutPanel8
             // 
@@ -728,6 +777,17 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
+            // richTextBox1
+            // 
+            richTextBox1.BackColor = SystemColors.Control;
+            richTextBox1.BorderStyle = BorderStyle.None;
+            richTextBox1.ForeColor = Color.Red;
+            richTextBox1.Location = new Point(11, 129);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(307, 90);
+            richTextBox1.TabIndex = 3;
+            richTextBox1.Text = "Важно!!! В открытых ботом окнах браузера НЕ открывать замеры скорости интернета!!! При замере израсходуется весь трафик прокси!!!";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -761,6 +821,8 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDownConstantDelay).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownAccountCount).EndInit();
+            groupBoxProxys.ResumeLayout(false);
+            groupBoxProxys.PerformLayout();
             tableLayoutPanel8.ResumeLayout(false);
             tableLayoutPanel8.PerformLayout();
             tableLayoutPanel12.ResumeLayout(false);
@@ -768,9 +830,6 @@
         }
 
         private System.Windows.Forms.CheckBox checkBoxBatchLaunch;
-
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDownAccountCount;
 
         #endregion
 
@@ -813,13 +872,20 @@
         private System.Windows.Forms.Button buttonUploadLogs;
         private System.Windows.Forms.TabControl tabControl2;
         private TabPage tabPage4;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
+        private System.Windows.Forms.CheckBox checkBoxRunningInMultithreadingMode;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private GroupBox groupBox2;
+        private TableLayoutPanel tableLayoutPanel11;
         private Label label7;
         private Label label8;
         private NumericUpDown numericUpDownConstantDelay;
-        private System.Windows.Forms.NumericUpDown numericUpDownFloatingIncrementalDelay;
-        private System.Windows.Forms.CheckBox checkBoxRunningInMultithreadingMode;
+        private NumericUpDown numericUpDownFloatingIncrementalDelay;
+        private Label label9;
+        private NumericUpDown numericUpDownAccountCount;
+        private GroupBox groupBoxProxys;
+        private Label label1;
+        private Button buttonClearProxysList;
+        private Button buttonLoadProxysList;
+        private RichTextBox richTextBox1;
     }
 }

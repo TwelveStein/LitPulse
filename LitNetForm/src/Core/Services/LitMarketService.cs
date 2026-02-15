@@ -29,18 +29,43 @@ namespace Core.Services
         /// <returns></returns>
         public async Task InitializeAsync()
         {
-
-            _playwright = await Playwright.CreateAsync();
-            _browser = await _playwright.Chromium.LaunchAsync(new()
+            var randomProxy = ProxysService.GetRandomProxy();
+            
+             _playwright = await Playwright.CreateAsync();
+            if (randomProxy != null)
             {
-                Channel = "chrome",
-                Headless = false,
-                SlowMo = 1000,
-                Args = new[]
+                Proxy proxy = new Proxy
                 {
-                    "--start-maximized"
-                }
-            });
+                    Server = randomProxy.Server,
+                    Username = randomProxy.Username,
+                    Password = randomProxy.Password
+                };
+
+                _browser = await _playwright.Chromium.LaunchAsync(new()
+                {
+                    Channel = "chrome",
+                    Headless = false,
+                    SlowMo = 1000,
+                    Args = new[]
+                    {
+                        "--start-maximized"
+                    },
+                    Proxy = proxy
+                });
+            }
+            else
+            {
+                _browser = await _playwright.Chromium.LaunchAsync(new()
+                {
+                    Channel = "chrome",
+                    Headless = false,
+                    SlowMo = 1000,
+                    Args = new[]
+                    {
+                        "--start-maximized"
+                    }
+                });
+            }
 
             _context = await _browser.NewContextAsync(new()
             {

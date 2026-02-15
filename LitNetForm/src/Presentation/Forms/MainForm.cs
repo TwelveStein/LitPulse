@@ -548,5 +548,41 @@ namespace LitPulse.Forms
         }
 
         #endregion
+
+        #region Proxys
+        private void buttonLoadProxysList_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.Title = "Выберите файл с прокси";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        ProxysService.LoadFromFile(openFileDialog.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void buttonClearProxysList_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Вы уверены, что хотите удалить все загруженные прокси?",
+                "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                ProxysService.Clear();
+            }
+        }
+        #endregion
     }
 }

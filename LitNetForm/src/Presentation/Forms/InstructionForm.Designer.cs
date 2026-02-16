@@ -243,7 +243,7 @@
             label_VersionApp.Name = "label_VersionApp";
             label_VersionApp.Size = new Size(645, 20);
             label_VersionApp.TabIndex = 3;
-            label_VersionApp.Text = "1.6";
+            label_VersionApp.Text = "1.7";
             label_VersionApp.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label3
@@ -426,7 +426,7 @@
             tabPage2.Margin = new Padding(3, 4, 3, 4);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3, 4, 3, 4);
-            tabPage2.Size = new Size(1002, 715);
+            tabPage2.Size = new Size(1000, 704);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Интерфейс";
             tabPage2.UseVisualStyleBackColor = true;
@@ -446,7 +446,7 @@
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
-            tableLayoutPanel8.Size = new Size(996, 707);
+            tableLayoutPanel8.Size = new Size(994, 696);
             tableLayoutPanel8.TabIndex = 1;
             // 
             // panel5
@@ -458,7 +458,7 @@
             panel5.Location = new Point(3, 4);
             panel5.Margin = new Padding(3, 4, 3, 4);
             panel5.Name = "panel5";
-            panel5.Size = new Size(990, 125);
+            panel5.Size = new Size(988, 125);
             panel5.TabIndex = 0;
             // 
             // tableLayoutPanel9
@@ -478,7 +478,7 @@
             tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel9.Size = new Size(883, 125);
+            tableLayoutPanel9.Size = new Size(881, 125);
             tableLayoutPanel9.TabIndex = 1;
             // 
             // label13
@@ -500,7 +500,7 @@
             label14.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label14.Location = new Point(47, 49);
             label14.Name = "label14";
-            label14.Size = new Size(788, 62);
+            label14.Size = new Size(786, 62);
             label14.TabIndex = 1;
             label14.Text = "Описание и пояснение про каждый доступный на данный момент элемент программы";
             label14.TextAlign = ContentAlignment.MiddleLeft;
@@ -533,7 +533,7 @@
             tabPage4.Location = new Point(4, 29);
             tabPage4.Margin = new Padding(3, 4, 3, 4);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(1002, 715);
+            tabPage4.Size = new Size(1000, 704);
             tabPage4.TabIndex = 3;
             tabPage4.Text = "Алгоритм работы";
             tabPage4.UseVisualStyleBackColor = true;
@@ -554,7 +554,7 @@
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
-            tableLayoutPanel6.Size = new Size(1002, 715);
+            tableLayoutPanel6.Size = new Size(1000, 704);
             tableLayoutPanel6.TabIndex = 0;
             // 
             // panel3
@@ -566,7 +566,7 @@
             panel3.Location = new Point(3, 4);
             panel3.Margin = new Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(996, 125);
+            panel3.Size = new Size(994, 125);
             panel3.TabIndex = 0;
             // 
             // tableLayoutPanel7
@@ -586,7 +586,7 @@
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel7.Size = new Size(889, 125);
+            tableLayoutPanel7.Size = new Size(887, 125);
             tableLayoutPanel7.TabIndex = 1;
             // 
             // label11
@@ -608,7 +608,7 @@
             label12.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label12.Location = new Point(47, 49);
             label12.Name = "label12";
-            label12.Size = new Size(794, 62);
+            label12.Size = new Size(792, 62);
             label12.TabIndex = 1;
             label12.Text = "Как программа автоматизирует просмотр книг и взаимодействие с контентом на платформе";
             label12.TextAlign = ContentAlignment.MiddleLeft;
@@ -666,7 +666,7 @@
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Absolute, 33F));
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel12.Size = new Size(996, 574);
+            tableLayoutPanel12.Size = new Size(994, 563);
             tableLayoutPanel12.TabIndex = 1;
             // 
             // label27
@@ -676,7 +676,7 @@
             label27.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label27.Location = new Point(3, 498);
             label27.Name = "label27";
-            label27.Size = new Size(990, 80);
+            label27.Size = new Size(988, 80);
             label27.TabIndex = 13;
             label27.Text = "По завершении работы программы генерируется подробный отчёт о всех выполненных действиях. Логи и отчёт помогают проанализировать результаты и убедиться, что все задачи были выполнены корректно.";
             label27.TextAlign = ContentAlignment.MiddleLeft;
@@ -688,7 +688,7 @@
             label26.Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label26.Location = new Point(3, 465);
             label26.Name = "label26";
-            label26.Size = new Size(990, 33);
+            label26.Size = new Size(988, 33);
             label26.TabIndex = 12;
             label26.Text = "Завершение работы";
             label26.TextAlign = ContentAlignment.MiddleLeft;
@@ -700,7 +700,7 @@
             label25.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label25.Location = new Point(3, 385);
             label25.Name = "label25";
-            label25.Size = new Size(990, 80);
+            label25.Size = new Size(988, 80);
             label25.TabIndex = 10;
             label25.Text = resources.GetString("label25.Text");
             label25.TextAlign = ContentAlignment.MiddleLeft;
@@ -712,7 +712,7 @@
             label24.Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label24.Location = new Point(3, 352);
             label24.Name = "label24";
-            label24.Size = new Size(990, 33);
+            label24.Size = new Size(988, 33);
             label24.TabIndex = 9;
             label24.Text = "Цикл работы с аккаунтами";
             label24.TextAlign = ContentAlignment.MiddleLeft;
@@ -724,7 +724,7 @@
             label23.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label23.Location = new Point(3, 272);
             label23.Name = "label23";
-            label23.Size = new Size(990, 80);
+            label23.Size = new Size(988, 80);
             label23.TabIndex = 8;
             label23.Text = resources.GetString("label23.Text");
             label23.TextAlign = ContentAlignment.MiddleLeft;
@@ -736,7 +736,7 @@
             label21.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label21.Location = new Point(3, 159);
             label21.Name = "label21";
-            label21.Size = new Size(990, 80);
+            label21.Size = new Size(988, 80);
             label21.TabIndex = 7;
             label21.Text = resources.GetString("label21.Text");
             label21.TextAlign = ContentAlignment.MiddleLeft;
@@ -748,7 +748,7 @@
             label22.Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label22.Location = new Point(3, 239);
             label22.Name = "label22";
-            label22.Size = new Size(990, 33);
+            label22.Size = new Size(988, 33);
             label22.TabIndex = 5;
             label22.Text = "Просмотр страниц книги";
             label22.TextAlign = ContentAlignment.MiddleLeft;
@@ -760,7 +760,7 @@
             label20.Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label20.Location = new Point(3, 126);
             label20.Name = "label20";
-            label20.Size = new Size(990, 33);
+            label20.Size = new Size(988, 33);
             label20.TabIndex = 3;
             label20.Text = "Обход ссылок перед авторизацией";
             label20.TextAlign = ContentAlignment.MiddleLeft;
@@ -772,7 +772,7 @@
             label19.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label19.Location = new Point(3, 46);
             label19.Name = "label19";
-            label19.Size = new Size(990, 80);
+            label19.Size = new Size(988, 80);
             label19.TabIndex = 2;
             label19.Text = resources.GetString("label19.Text");
             label19.TextAlign = ContentAlignment.MiddleLeft;
@@ -784,7 +784,7 @@
             label17.Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label17.Location = new Point(3, 13);
             label17.Name = "label17";
-            label17.Size = new Size(990, 33);
+            label17.Size = new Size(988, 33);
             label17.TabIndex = 0;
             label17.Text = "Подготовка данных";
             label17.TextAlign = ContentAlignment.MiddleLeft;
@@ -795,7 +795,7 @@
             tabPage5.Location = new Point(4, 29);
             tabPage5.Margin = new Padding(3, 4, 3, 4);
             tabPage5.Name = "tabPage5";
-            tabPage5.Size = new Size(1002, 715);
+            tabPage5.Size = new Size(1000, 704);
             tabPage5.TabIndex = 4;
             tabPage5.Text = "Частые вопросы (FAQ)";
             tabPage5.UseVisualStyleBackColor = true;
@@ -815,7 +815,7 @@
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 27F));
-            tableLayoutPanel10.Size = new Size(1002, 715);
+            tableLayoutPanel10.Size = new Size(1000, 704);
             tableLayoutPanel10.TabIndex = 1;
             // 
             // panel7
@@ -827,7 +827,7 @@
             panel7.Location = new Point(3, 4);
             panel7.Margin = new Padding(3, 4, 3, 4);
             panel7.Name = "panel7";
-            panel7.Size = new Size(996, 125);
+            panel7.Size = new Size(994, 125);
             panel7.TabIndex = 0;
             // 
             // tableLayoutPanel11
@@ -847,7 +847,7 @@
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel11.Size = new Size(889, 125);
+            tableLayoutPanel11.Size = new Size(887, 125);
             tableLayoutPanel11.TabIndex = 1;
             // 
             // label15
@@ -869,7 +869,7 @@
             label16.Font = new Font("Calibri", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             label16.Location = new Point(47, 49);
             label16.Name = "label16";
-            label16.Size = new Size(794, 62);
+            label16.Size = new Size(792, 62);
             label16.TabIndex = 1;
             label16.Text = "Тут собраны ответы на вопросы о работе LitPulse";
             label16.TextAlign = ContentAlignment.MiddleLeft;

@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
-using Contracts.DTOs;
+﻿using Contracts.DTOs;
 using Core.Entities;
 using Core.Entities.ValueObjects;
 using Core.Enums;
 using Core.Services;
 using LitPulse.Processors;
+using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace LitPulse.Forms
 {
@@ -121,6 +122,22 @@ namespace LitPulse.Forms
             ChangeAccountStatus(accountDto);
         }
 
+        private void buttonMoveInactiveAllAccount_Click(object sender, EventArgs e)
+        {
+            for (int i = dataGridViewInactiveAccounts.Rows.Count - 1; i >= 0; i--)
+            {
+                DataGridViewRow row = dataGridViewInactiveAccounts.Rows[i];
+
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    _inactiveAccountsDataBindingList.Remove(accountDto);
+                    _activeAccountsDataBindingList.Add(accountDto);
+
+                    ChangeAccountStatus(accountDto);
+                }
+            }
+        }
+
         private void buttonMoveActiveAccount_Click(object sender, EventArgs e)
         {
             if (dataGridViewActiveAccounts.CurrentRow?.DataBoundItem is not AccountDto accountDto)
@@ -130,6 +147,22 @@ namespace LitPulse.Forms
             _inactiveAccountsDataBindingList.Add(accountDto);
 
             ChangeAccountStatus(accountDto);
+        }
+
+        private void buttonMoveActiveAllAccount_Click(object sender, EventArgs e)
+        {
+            for (int i = dataGridViewActiveAccounts.Rows.Count - 1; i >= 0; i--)
+            {
+                DataGridViewRow row = dataGridViewActiveAccounts.Rows[i];
+
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    _activeAccountsDataBindingList.Remove(accountDto);
+                    _inactiveAccountsDataBindingList.Add(accountDto);
+
+                    ChangeAccountStatus(accountDto);
+                }
+            }
         }
 
         private async void buttonAddAccount_Click(object sender, EventArgs e)
@@ -172,6 +205,9 @@ namespace LitPulse.Forms
 
         private async void buttonImportAccounts_Click(object sender, EventArgs e)
         {
+            // Сохранение изменений в БД
+            await SaveChangesAsync(_cancellationToken);
+
             FileProcessor fileProcessor = new FileProcessor();
             var accountsDto = await fileProcessor.AccountsFileProcess(_cancellationToken);
 
@@ -237,7 +273,7 @@ namespace LitPulse.Forms
                 numericOrderPostComment.Value = account.AccountSettings.PostComment.Order;
                 numericOrderDonateAuthor.Value = account.AccountSettings.MakeADonationToTheAuthor.Order;
                 numericOrderBuyABook.Value = account.AccountSettings.BuyABook.Order;
-                
+
                 comboBoxReadProfile.Text = account.AccountSettings.ReadProfile.ToDisplayString();
             }
             else
@@ -338,5 +374,35 @@ namespace LitPulse.Forms
 
             await _accountsService.RemoveAccountByLoginAsync(accountDto.Login, cancellationToken);
         }
+
+        private async void buttonClearAccounts_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewInactiveAccounts.Rows.Count == 0)
+                return;
+
+            if (MessageBox.Show(
+                    "Удалить все аккаунты?",
+                    "Удаление",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                for (int i = dataGridViewInactiveAccounts.Rows.Count - 1; i >= 0; i--)
+                {
+                    DataGridViewRow row = dataGridViewInactiveAccounts.Rows[i];
+
+                    if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                    {
+                        await RemoveAccountAsync(accountDto, _cancellationToken);
+                        await FillAccountsDataOnFormAsync(_cancellationToken);
+                    }
+                }
+            }
+        }
+
+        private async void dataGridViewInactiveAccounts_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            buttonRemoveAccount_Click(sender, e);
+        }
+
     }
 }

@@ -35,7 +35,6 @@
             tableLayoutPanel4 = new TableLayoutPanel();
             buttonSaveReport = new Button();
             dataGridViewReport = new DataGridView();
-            SessionId = new DataGridViewTextBoxColumn();
             User = new DataGridViewTextBoxColumn();
             UserIpAddress = new DataGridViewTextBoxColumn();
             Operation = new DataGridViewTextBoxColumn();
@@ -43,6 +42,7 @@
             SheetsCount = new DataGridViewTextBoxColumn();
             Status = new DataGridViewTextBoxColumn();
             SessionDateTime = new DataGridViewTextBoxColumn();
+            SessionId = new DataGridViewTextBoxColumn();
             label3 = new Label();
             tableLayoutPanel5 = new TableLayoutPanel();
             checkBoxRunningInMultithreadingMode = new CheckBox();
@@ -71,6 +71,7 @@
             label9 = new Label();
             numericUpDownAccountCount = new NumericUpDown();
             groupBoxProxys = new GroupBox();
+            richTextBox1 = new RichTextBox();
             label1 = new Label();
             buttonClearProxysList = new Button();
             buttonLoadProxysList = new Button();
@@ -84,7 +85,6 @@
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
             toolTip1 = new ToolTip(components);
-            richTextBox1 = new RichTextBox();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -181,7 +181,7 @@
             dataGridViewReport.AllowUserToOrderColumns = true;
             dataGridViewReport.BackgroundColor = SystemColors.Control;
             dataGridViewReport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewReport.Columns.AddRange(new DataGridViewColumn[] { SessionId, User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime });
+            dataGridViewReport.Columns.AddRange(new DataGridViewColumn[] { User, UserIpAddress, Operation, Book, SheetsCount, Status, SessionDateTime, SessionId });
             dataGridViewReport.Dock = DockStyle.Fill;
             dataGridViewReport.Location = new Point(3, 206);
             dataGridViewReport.Margin = new Padding(3, 5, 3, 5);
@@ -189,15 +189,6 @@
             dataGridViewReport.RowHeadersWidth = 51;
             dataGridViewReport.Size = new Size(774, 221);
             dataGridViewReport.TabIndex = 6;
-            // 
-            // SessionId
-            // 
-            SessionId.DataPropertyName = "SessionId";
-            SessionId.HeaderText = "ID сессии";
-            SessionId.MinimumWidth = 6;
-            SessionId.Name = "SessionId";
-            SessionId.ReadOnly = true;
-            SessionId.Width = 125;
             // 
             // User
             // 
@@ -261,6 +252,15 @@
             SessionDateTime.Name = "SessionDateTime";
             SessionDateTime.ReadOnly = true;
             SessionDateTime.Width = 125;
+            // 
+            // SessionId
+            // 
+            SessionId.DataPropertyName = "SessionId";
+            SessionId.HeaderText = "ID сессии";
+            SessionId.MinimumWidth = 6;
+            SessionId.Name = "SessionId";
+            SessionId.ReadOnly = true;
+            SessionId.Width = 125;
             // 
             // label3
             // 
@@ -336,7 +336,7 @@
             buttonStartSession.Name = "buttonStartSession";
             buttonStartSession.Size = new Size(445, 85);
             buttonStartSession.TabIndex = 6;
-            buttonStartSession.Text = "ЗАПУСК СЕАНСА";
+            buttonStartSession.Text = "ЗАПУСК СЕАНСА / НАСТРОЙКИ АККАУНТОВ";
             buttonStartSession.UseVisualStyleBackColor = false;
             buttonStartSession.Click += buttonStartSession_Click;
             // 
@@ -640,6 +640,17 @@
             groupBoxProxys.TabStop = false;
             groupBoxProxys.Text = "Прокси";
             // 
+            // richTextBox1
+            // 
+            richTextBox1.BackColor = SystemColors.Control;
+            richTextBox1.BorderStyle = BorderStyle.None;
+            richTextBox1.ForeColor = Color.Red;
+            richTextBox1.Location = new Point(11, 129);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(307, 90);
+            richTextBox1.TabIndex = 3;
+            richTextBox1.Text = "Важно!!! В открытых ботом окнах браузера НЕ открывать замеры скорости интернета!!! При замере израсходуется весь трафик прокси!!!";
+            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -777,17 +788,6 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // richTextBox1
-            // 
-            richTextBox1.BackColor = SystemColors.Control;
-            richTextBox1.BorderStyle = BorderStyle.None;
-            richTextBox1.ForeColor = Color.Red;
-            richTextBox1.Location = new Point(11, 129);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(307, 90);
-            richTextBox1.TabIndex = 3;
-            richTextBox1.Text = "Важно!!! В открытых ботом окнах браузера НЕ открывать замеры скорости интернета!!! При замере израсходуется весь трафик прокси!!!";
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -842,14 +842,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonSaveReport;
         private System.Windows.Forms.DataGridView dataGridViewReport;
-        private System.Windows.Forms.DataGridViewTextBoxColumn User;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SessionId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn UserIpAddress;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Book;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SheetsCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Operation;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SessionDateTime;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private Button buttonStartSession;
         private Button buttonStop;
@@ -887,5 +879,13 @@
         private Button buttonClearProxysList;
         private Button buttonLoadProxysList;
         private RichTextBox richTextBox1;
+        private DataGridViewTextBoxColumn User;
+        private DataGridViewTextBoxColumn UserIpAddress;
+        private DataGridViewTextBoxColumn Operation;
+        private DataGridViewTextBoxColumn Book;
+        private DataGridViewTextBoxColumn SheetsCount;
+        private DataGridViewTextBoxColumn Status;
+        private DataGridViewTextBoxColumn SessionDateTime;
+        private DataGridViewTextBoxColumn SessionId;
     }
 }

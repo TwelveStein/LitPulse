@@ -17,6 +17,8 @@ namespace Core.Services
         private IBrowserContext _context = null!;
         private IPage _page = null!;
 
+        private string ip = "localhost";
+
         public LitNetService(ScrollModel scrollModel, AccountHistoryService accountHistoryService)
         {
             _scrollModel = scrollModel;
@@ -68,6 +70,25 @@ namespace Core.Services
             {
                 ViewportSize = ViewportSize.NoViewport
             });
+
+            _page = await _context.NewPageAsync();
+
+            string jsCode = @"
+                async () => {
+                    try {
+                        const response = await fetch('https://api.ipify.org?format=json');
+                        const data = await response.json();
+                        return data.ip;
+                    } catch (error) {
+                        return 'Ошибка: ' + error.message;
+                    }
+                }
+            ";
+
+            ip = await _page.EvaluateAsync<string>(jsCode);
+            ip = ip ?? "localhost";
+
+            await _page.CloseAsync();
 
             _page = await _context.NewPageAsync();
         }
@@ -168,7 +189,7 @@ namespace Core.Services
                     await _page.GetByText("Добавить в библиотеку").ClickAsync();
 
                     // Записываем событие в БД
-                    ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink);
+                    ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink, ip);
                     await _accountHistoryService.SaveActionToLibraryAsync(actionDto, cancellationToken);
                 }
             }
@@ -193,7 +214,7 @@ namespace Core.Services
                     new PageClickOptions { Timeout = 4000 });
 
                 // Записываем событие в БД
-                ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink);
+                ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink, ip);
                 await _accountHistoryService.SaveActionLikeTheBookAsync(actionDto, cancellationToken);
             }
             catch
@@ -262,7 +283,7 @@ namespace Core.Services
                 if (sheetsCounter > 0)
                 {
                     // Запись о прочитанных страницах, должна попасть в БД
-                    ReadActionDto actionDto = new ReadActionDto(userContext, sessionId, bookLink, sheetsCounter);
+                    ReadActionDto actionDto = new ReadActionDto(userContext, sessionId, bookLink, sheetsCounter, ip);
                     await _accountHistoryService.SaveActionReadBookAsync(actionDto);
                 }
             }

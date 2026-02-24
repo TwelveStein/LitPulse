@@ -4,4 +4,5 @@ public sealed record ReadActionDto(
     UserContextDto UserContext,
     Guid SessionId,
     string BookUrl,
-    int SheetsCount);
+    int SheetsCount,
+    string? IpAddress);

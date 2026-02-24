@@ -25,10 +25,11 @@ public sealed class AccountHistoryService
         {
             SessionId = actionDto.SessionId,
             User = actionDto.UserContext.Login,
-            IpAddress = "localhost",
+            IpAddress = actionDto.IpAddress,
             Operation = AccountActionType.LikeBook.ToDisplayString(),
             Book = actionDto.BookUrl,
-            Status = OperationStatuses.Success.ToDisplayString()
+            Status = OperationStatuses.Success.ToDisplayString(),
+            SessionDateTime = DateTime.Now
         };
         _reportService.AddReportItem(reportDataDto);
         
@@ -50,10 +51,11 @@ public sealed class AccountHistoryService
         {
             SessionId = actionDto.SessionId,
             User = actionDto.UserContext.Login,
-            IpAddress = "localhost",
+            IpAddress = actionDto.IpAddress,
             Operation = AccountActionType.SubscribeToTheAuthor.ToDisplayString(),
             Book = actionDto.BookUrl,
-            Status = OperationStatuses.Success.ToDisplayString()
+            Status = OperationStatuses.Success.ToDisplayString(),
+            SessionDateTime = DateTime.Now
         };
         _reportService.AddReportItem(reportDataDto);
         
@@ -75,10 +77,11 @@ public sealed class AccountHistoryService
         {
             SessionId = actionDto.SessionId,
             User = actionDto.UserContext.Login,
-            IpAddress = "localhost",
+            IpAddress = actionDto.IpAddress,
             Operation = AccountActionType.AddToLibrary.ToDisplayString(),
             Book = actionDto.BookUrl,
-            Status = OperationStatuses.Success.ToDisplayString()
+            Status = OperationStatuses.Success.ToDisplayString(),
+            SessionDateTime = DateTime.Now
         };
         _reportService.AddReportItem(reportDataDto);
         
@@ -100,10 +103,11 @@ public sealed class AccountHistoryService
         {
             SessionId = actionDto.SessionId,
             User = actionDto.UserContext.Login,
-            IpAddress = "localhost",
+            IpAddress = actionDto.IpAddress,
             Operation = AccountActionType.AddToFavorites.ToDisplayString(),
             Book = actionDto.BookUrl,
-            Status = OperationStatuses.Success.ToDisplayString()
+            Status = OperationStatuses.Success.ToDisplayString(),
+            SessionDateTime = DateTime.Now
         };
         _reportService.AddReportItem(reportDataDto);
         
@@ -129,11 +133,12 @@ public sealed class AccountHistoryService
         {
             SessionId = readActionDto.SessionId,
             User = readActionDto.UserContext.Login,
-            IpAddress = "localhost",
+            IpAddress = readActionDto.IpAddress,
             Operation = AccountActionType.ReadBook.ToDisplayString(),
             Book = readActionDto.BookUrl,
             SheetsCount = readActionDto.SheetsCount,
-            Status = OperationStatuses.Success.ToDisplayString()
+            Status = OperationStatuses.Success.ToDisplayString(),
+            SessionDateTime = DateTime.Now
         };
         _reportService.AddReportItem(reportDataDto);
         

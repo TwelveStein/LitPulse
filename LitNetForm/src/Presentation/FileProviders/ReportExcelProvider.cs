@@ -12,15 +12,15 @@ public sealed class ReportExcelProvider
     private const int EXCEL_COLUMN_BOOK_WIDTH = 160;
 
     private readonly Dictionary<string, int> _columns = new()
-    {
-        ["SessionId"] = 1,
-        ["User"] = 2,
-        ["UserIpAddress"] = 3,
-        ["Operation"] = 4,
-        ["Book"] = 5,
-        ["SheetsCount"] = 6,
-        ["Status"] = 7,
-        ["SessionDateTime"] = 8
+    {        
+        ["User"] = 1,
+        ["UserIpAddress"] = 2,
+        ["Operation"] = 3,
+        ["Book"] = 4,
+        ["SheetsCount"] = 5,
+        ["Status"] = 6,
+        ["SessionDateTime"] = 7,
+        ["SessionId"] = 8
     };
 
     public async Task SaveFileAsync(
@@ -50,8 +50,7 @@ public sealed class ReportExcelProvider
         workSheet.ColumnWidth = EXCEL_COLUMN_WIDTH;
 
         workSheet.FirstCell().InsertTable(reportData);
-        
-        workSheet.Cell(1, _columns.GetValueOrDefault("SessionId")).Value = "ID сессии";
+           
         workSheet.Cell(1, _columns.GetValueOrDefault("User")).Value = "Пользователь";
         workSheet.Cell(1, _columns.GetValueOrDefault("UserIpAddress")).Value = "IP адрес";
         workSheet.Cell(1, _columns.GetValueOrDefault("Operation")).Value = "Операция";
@@ -59,10 +58,11 @@ public sealed class ReportExcelProvider
         workSheet.Cell(1, _columns.GetValueOrDefault("SheetsCount")).Value = "Кол-во страниц";
         workSheet.Cell(1, _columns.GetValueOrDefault("Status")).Value = "Статус";
         workSheet.Cell(1, _columns.GetValueOrDefault("SessionDateTime")).Value = "Время";
-
-        workSheet.Column(_columns.GetValueOrDefault("SessionId")).Width = EXCEL_COLUMN_SESSION_ID_WIDTH;
+        workSheet.Cell(1, _columns.GetValueOrDefault("SessionId")).Value = "ID сессии";
+        
         workSheet.Column(_columns.GetValueOrDefault("User")).Width = EXCEL_COLUMN_USER_WIDTH;
         workSheet.Column(_columns.GetValueOrDefault("Book")).Width = EXCEL_COLUMN_BOOK_WIDTH;
+        workSheet.Column(_columns.GetValueOrDefault("SessionId")).Width = EXCEL_COLUMN_SESSION_ID_WIDTH;
 
         workBook.SaveAs(stream);
     }

@@ -35,6 +35,7 @@
             buttonImportAccounts = new Button();
             buttonAddAccount = new Button();
             buttonRemoveAccount = new Button();
+            buttonClearAccounts = new Button();
             tableLayoutPanelSettings = new TableLayoutPanel();
             checkBoxReadBook = new CheckBox();
             checkBoxBuyABook = new CheckBox();
@@ -54,6 +55,8 @@
             label2 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
+            buttonMoveActiveAllAccount = new Button();
+            buttonMoveInactiveAllAccount = new Button();
             buttonMoveInactiveAccount = new Button();
             buttonMoveActiveAccount = new Button();
             tableLayoutPanel5 = new TableLayoutPanel();
@@ -129,6 +132,7 @@
             flowLayoutPanel2.Controls.Add(buttonImportAccounts);
             flowLayoutPanel2.Controls.Add(buttonAddAccount);
             flowLayoutPanel2.Controls.Add(buttonRemoveAccount);
+            flowLayoutPanel2.Controls.Add(buttonClearAccounts);
             flowLayoutPanel2.Dock = DockStyle.Top;
             flowLayoutPanel2.Location = new Point(3, 5);
             flowLayoutPanel2.Margin = new Padding(3, 5, 3, 5);
@@ -174,6 +178,20 @@
             toolTip1.SetToolTip(buttonRemoveAccount, "Удалить аккаунт из БД (из таблицы \"Все аккаунты\")");
             buttonRemoveAccount.UseVisualStyleBackColor = true;
             buttonRemoveAccount.Click += buttonRemoveAccount_Click;
+            // 
+            // buttonClearAccounts
+            // 
+            buttonClearAccounts.BackColor = Color.Red;
+            buttonClearAccounts.Dock = DockStyle.Fill;
+            buttonClearAccounts.Image = Properties.Resources.ClearIcon_White;
+            buttonClearAccounts.Location = new Point(440, 5);
+            buttonClearAccounts.Margin = new Padding(3, 5, 3, 5);
+            buttonClearAccounts.Name = "buttonClearAccounts";
+            buttonClearAccounts.Size = new Size(55, 55);
+            buttonClearAccounts.TabIndex = 9;
+            toolTip1.SetToolTip(buttonClearAccounts, "Очистить список ссылок");
+            buttonClearAccounts.UseVisualStyleBackColor = false;
+            buttonClearAccounts.Click += buttonClearAccounts_Click;
             // 
             // tableLayoutPanelSettings
             // 
@@ -389,27 +407,58 @@
             // 
             tableLayoutPanel3.ColumnCount = 1;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 26F));
-            tableLayoutPanel3.Controls.Add(buttonMoveInactiveAccount, 0, 1);
-            tableLayoutPanel3.Controls.Add(buttonMoveActiveAccount, 0, 3);
+            tableLayoutPanel3.Controls.Add(buttonMoveActiveAllAccount, 0, 7);
+            tableLayoutPanel3.Controls.Add(buttonMoveInactiveAllAccount, 0, 1);
+            tableLayoutPanel3.Controls.Add(buttonMoveInactiveAccount, 0, 3);
+            tableLayoutPanel3.Controls.Add(buttonMoveActiveAccount, 0, 5);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(608, 5);
             tableLayoutPanel3.Margin = new Padding(3, 5, 3, 5);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 5;
+            tableLayoutPanel3.RowCount = 9;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 71F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 17F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 5F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 71F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 15F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 71F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 5F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 71F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.Size = new Size(59, 533);
             tableLayoutPanel3.TabIndex = 0;
             // 
+            // buttonMoveActiveAllAccount
+            // 
+            buttonMoveActiveAllAccount.Dock = DockStyle.Fill;
+            buttonMoveActiveAllAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            buttonMoveActiveAllAccount.Location = new Point(3, 355);
+            buttonMoveActiveAllAccount.Margin = new Padding(3, 5, 3, 5);
+            buttonMoveActiveAllAccount.Name = "buttonMoveActiveAllAccount";
+            buttonMoveActiveAllAccount.Size = new Size(53, 61);
+            buttonMoveActiveAllAccount.TabIndex = 3;
+            buttonMoveActiveAllAccount.Text = "<<";
+            buttonMoveActiveAllAccount.UseVisualStyleBackColor = true;
+            buttonMoveActiveAllAccount.Click += buttonMoveActiveAllAccount_Click;
+            // 
+            // buttonMoveInactiveAllAccount
+            // 
+            buttonMoveInactiveAllAccount.Dock = DockStyle.Fill;
+            buttonMoveInactiveAllAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            buttonMoveInactiveAllAccount.Location = new Point(3, 117);
+            buttonMoveInactiveAllAccount.Margin = new Padding(3, 5, 3, 5);
+            buttonMoveInactiveAllAccount.Name = "buttonMoveInactiveAllAccount";
+            buttonMoveInactiveAllAccount.Size = new Size(53, 61);
+            buttonMoveInactiveAllAccount.TabIndex = 2;
+            buttonMoveInactiveAllAccount.Text = ">>";
+            buttonMoveInactiveAllAccount.UseVisualStyleBackColor = true;
+            buttonMoveInactiveAllAccount.Click += buttonMoveInactiveAllAccount_Click;
+            // 
             // buttonMoveInactiveAccount
             // 
             buttonMoveInactiveAccount.Dock = DockStyle.Fill;
             buttonMoveInactiveAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveInactiveAccount.Location = new Point(3, 192);
+            buttonMoveInactiveAccount.Location = new Point(3, 193);
             buttonMoveInactiveAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveInactiveAccount.Name = "buttonMoveInactiveAccount";
             buttonMoveInactiveAccount.Size = new Size(53, 61);
@@ -422,7 +471,7 @@
             // 
             buttonMoveActiveAccount.Dock = DockStyle.Fill;
             buttonMoveActiveAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveActiveAccount.Location = new Point(3, 280);
+            buttonMoveActiveAccount.Location = new Point(3, 279);
             buttonMoveActiveAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveActiveAccount.Name = "buttonMoveActiveAccount";
             buttonMoveActiveAccount.Size = new Size(53, 61);
@@ -473,6 +522,7 @@
             dataGridViewInactiveAccounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewInactiveAccounts.Size = new Size(593, 481);
             dataGridViewInactiveAccounts.TabIndex = 2;
+            dataGridViewInactiveAccounts.UserDeletingRow += dataGridViewInactiveAccounts_UserDeletingRow;
             // 
             // Id
             // 
@@ -530,6 +580,8 @@
             // 
             // dataGridViewActiveAccounts
             // 
+            dataGridViewActiveAccounts.AllowUserToAddRows = false;
+            dataGridViewActiveAccounts.AllowUserToDeleteRows = false;
             dataGridViewActiveAccounts.AllowUserToOrderColumns = true;
             dataGridViewActiveAccounts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewActiveAccounts.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3 });
@@ -726,5 +778,8 @@
         private TableLayoutPanel tableLayoutPanel6;
         private Label label1;
         private ToolTip toolTip1;
+        private Button buttonClearAccounts;
+        private Button buttonMoveActiveAllAccount;
+        private Button buttonMoveInactiveAllAccount;
     }
 }

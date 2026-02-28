@@ -71,6 +71,7 @@
             label9 = new Label();
             numericUpDownAccountCount = new NumericUpDown();
             groupBoxProxys = new GroupBox();
+            buttonProxySettings = new Button();
             richTextBox1 = new RichTextBox();
             label1 = new Label();
             buttonClearProxysList = new Button();
@@ -592,7 +593,6 @@
             numericUpDownConstantDelay.Size = new Size(83, 27);
             numericUpDownConstantDelay.TabIndex = 2;
             numericUpDownConstantDelay.Value = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDownConstantDelay.ValueChanged += numericUpDownConstantDelay_ValueChanged;
             // 
             // numericUpDownFloatingIncrementalDelay
             // 
@@ -604,7 +604,6 @@
             numericUpDownFloatingIncrementalDelay.Size = new Size(83, 27);
             numericUpDownFloatingIncrementalDelay.TabIndex = 3;
             numericUpDownFloatingIncrementalDelay.Value = new decimal(new int[] { 2, 0, 0, 0 });
-            numericUpDownFloatingIncrementalDelay.ValueChanged += numericUpDownFloatingIncrementalDelay_ValueChanged;
             // 
             // label9
             // 
@@ -629,6 +628,7 @@
             // 
             // groupBoxProxys
             // 
+            groupBoxProxys.Controls.Add(buttonProxySettings);
             groupBoxProxys.Controls.Add(richTextBox1);
             groupBoxProxys.Controls.Add(label1);
             groupBoxProxys.Controls.Add(buttonClearProxysList);
@@ -639,6 +639,17 @@
             groupBoxProxys.TabIndex = 1;
             groupBoxProxys.TabStop = false;
             groupBoxProxys.Text = "Прокси";
+            // 
+            // buttonProxySettings
+            // 
+            buttonProxySettings.Enabled = false;
+            buttonProxySettings.Location = new Point(11, 26);
+            buttonProxySettings.Name = "buttonProxySettings";
+            buttonProxySettings.Size = new Size(225, 29);
+            buttonProxySettings.TabIndex = 4;
+            buttonProxySettings.Text = "Настройки прокси";
+            buttonProxySettings.UseVisualStyleBackColor = true;
+            buttonProxySettings.Click += buttonProxySettings_Click;
             // 
             // richTextBox1
             // 
@@ -654,7 +665,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(6, 98);
+            label1.Location = new Point(11, 98);
             label1.Name = "label1";
             label1.Size = new Size(286, 20);
             label1.TabIndex = 2;
@@ -662,9 +673,9 @@
             // 
             // buttonClearProxysList
             // 
-            buttonClearProxysList.Location = new Point(6, 61);
+            buttonClearProxysList.Location = new Point(151, 61);
             buttonClearProxysList.Name = "buttonClearProxysList";
-            buttonClearProxysList.Size = new Size(225, 29);
+            buttonClearProxysList.Size = new Size(85, 29);
             buttonClearProxysList.TabIndex = 1;
             buttonClearProxysList.Text = "Очистить список прокси";
             buttonClearProxysList.UseVisualStyleBackColor = true;
@@ -672,9 +683,9 @@
             // 
             // buttonLoadProxysList
             // 
-            buttonLoadProxysList.Location = new Point(6, 26);
+            buttonLoadProxysList.Location = new Point(11, 61);
             buttonLoadProxysList.Name = "buttonLoadProxysList";
-            buttonLoadProxysList.Size = new Size(225, 29);
+            buttonLoadProxysList.Size = new Size(134, 29);
             buttonLoadProxysList.TabIndex = 0;
             buttonLoadProxysList.Text = "Загрузить список прокси";
             buttonLoadProxysList.UseVisualStyleBackColor = true;
@@ -887,5 +898,6 @@
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn SessionDateTime;
         private DataGridViewTextBoxColumn SessionId;
+        private Button buttonProxySettings;
     }
 }

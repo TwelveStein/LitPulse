@@ -23,8 +23,8 @@ public class StartSingleThreadHandler
     /// </summary>
     public async Task HandleAsync(
         IReadOnlyList<Account> activeAccounts,
-        string[] litNetLinks,
-        string[] litMarketLinks,
+        List<Links> litNetLinks,
+        List<Links> litMarketLinks,
         Action<string> logger,
         CancellationToken cancellationToken)
     {

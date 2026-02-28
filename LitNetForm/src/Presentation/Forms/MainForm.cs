@@ -34,8 +34,6 @@ namespace LitPulse.Forms
             _cts = new CancellationTokenSource();
 
             InitializeComponent();
-            //SetParameters();
-            //LoadSettings();
             LoadData();
 
             dataGridViewLinks.DataSource = _links;
@@ -46,32 +44,14 @@ namespace LitPulse.Forms
 
         #region Litnet_LitMarket_Parameters
 
-        //private StartupSettings _startupSettings = new StartupSettings();
-
-        private static string Link_login =
-            "https://litnet.com/auth/login?classic=1&link=https%3A%2F%2Flitnet.com%2Fru%2Fbook%2Fvozmu-tebya-b531445";
-
-        private string[] ProfileDescription =
-        {
-            "Минимум пауз, почти без возвратов. Подходит для ознакомительного чтения или поиска ключевых моментов. Как человек, который «пробегает глазами».",
-            "Читает медленно, часто возвращается к предыдущим абзацам, делает длинные паузы. Имитирует внимательного, сосредоточенного читателя — как при изучении сложного текста.",
-            "Начинает бодро, но постепенно замедляется, дольше думает, чаще «теряет концентрацию» (доп. паузы в середине и ближе к концу). Реалистично для вечернего чтения."
-        };
-
-        // Старый список аккаунтов
-        private BindingList<Accounts> _accounts = new BindingList<Accounts>();
-        private BindingList<Links> _links = new BindingList<Links>();
+        private BindingList<Data.Links> _links = new BindingList<Data.Links>();
 
         private BindingList<ReportDataDto> _reportDataBindingList = new();
-
-        // Новый список аккаунтов (доделать и в сеансах использовать его)
-        //private List<Account> accounts = new List<Account>();
 
         #endregion
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveParameters();
             SaveData();
         }
 
@@ -84,6 +64,9 @@ namespace LitPulse.Forms
         {
             //Получаем активные аккаунты c настройками
             IReadOnlyList<Account> activeAccounts = await _formFactory.ShowAccountSetupForm();
+
+            LoadData();
+
             if (activeAccounts.Any() is false)
                 return;
 
@@ -163,14 +146,14 @@ namespace LitPulse.Forms
 
         private void buttonAddLink_Click(object sender, EventArgs e)
         {
-            _links.Add(new Links(""));
+            _links.Add(new Data.Links(""));
 
             SaveData();
         }
 
         private void buttonDeleteLink_Click(object sender, EventArgs e)
         {
-            if (dataGridViewLinks.CurrentRow != null && dataGridViewLinks.CurrentRow.DataBoundItem is Links link)
+            if (dataGridViewLinks.CurrentRow != null && dataGridViewLinks.CurrentRow.DataBoundItem is Data.Links link)
             {
                 _links.Remove(link);
 
@@ -221,124 +204,6 @@ namespace LitPulse.Forms
 
         #region Settings
 
-        private void comboBoxReadProfiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*richTextBoxProfile.Text = ProfileDescription[comboBoxReadProfiles.SelectedIndex];
-
-            _startupSettings.ReadProfile = (ReadProfile)comboBoxReadProfiles.SelectedIndex;
-
-            SaveParameters();*/
-        }
-
-        private void checkBoxReadBook_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void checkBoxLikeTheBook_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void checkBoxAddToLibrary_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void checkBoxSubscribeToTheAuthor_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void checkBoxPostComment_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void checkBoxMakeADonationToTheAuthor_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void checkBoxBuyABook_CheckedChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void numericUpDownConstantDelay_ValueChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void numericUpDownFloatingIncrementalDelay_ValueChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-        }
-
-        /*private void LoadSettings()
-        {
-            checkBoxReadBook.Checked = _startupSettings.ReadBook.Enabled;
-
-            checkBoxAddToLibrary.Checked = _startupSettings.AddToLibrary;
-
-            checkBoxLikeTheBook.Checked = _startupSettings.LikeTheBook;
-
-            checkBoxSubscribeToTheAuthor.Checked = _startupSettings.SubscribeToTheAuthor;
-
-            checkBoxPostComment.Checked = _startupSettings.PostComment;
-
-            checkBoxMakeADonationToTheAuthor.Checked = _startupSettings.MakeADonationToTheAuthor;
-
-            checkBoxBuyABook.Checked = _startupSettings.BuyABook;
-
-            numericUpDownConstantDelay.Value = _startupSettings.ConstantDelay;
-
-            numericUpDownFloatingIncrementalDelay.Value = _startupSettings.FloatingIncrementalDelay;
-
-            comboBoxReadProfiles.SelectedIndex = (int)_startupSettings.ReadProfile;
-        }*/
-
-        private void SaveSettings()
-        {
-            /*if (!_settingsAreLoaded)
-            {
-                return;
-            }
-
-            _startupSettings.ReadBook = new SettingState(checkBoxReadBook.Checked, 1);
-
-            _startupSettings.AddToLibrary = checkBoxAddToLibrary.Checked;
-
-            _startupSettings.LikeTheBook = checkBoxLikeTheBook.Checked;
-
-            _startupSettings.SubscribeToTheAuthor = checkBoxSubscribeToTheAuthor.Checked;
-
-            _startupSettings.PostComment = checkBoxPostComment.Checked;
-
-            _startupSettings.MakeADonationToTheAuthor = checkBoxMakeADonationToTheAuthor.Checked;
-
-            _startupSettings.BuyABook = checkBoxBuyABook.Checked;
-
-            _startupSettings.ConstantDelay = (int)numericUpDownConstantDelay.Value;
-
-            _startupSettings.FloatingIncrementalDelay = (int)numericUpDownFloatingIncrementalDelay.Value;
-
-            // Сохранение настроек профилей
-            for (int i = 0; i < comboBoxReadProfiles.Items.Count; i++)
-            {
-                ReadProfile readReadProfile = (ReadProfile)i;
-
-                if (!_startupSettings.ReadProfileSettings.ContainsKey(readReadProfile))
-                {
-                    // Ключа нет - добавляем новую пару
-                    _startupSettings.ReadProfileSettings.Add(readReadProfile,
-                        SettingsManager.CreateDefaultReadProfileSettings(readReadProfile));
-                }
-            }
-
-            SaveParameters();*/
-        }
-
         private void checkBoxRunningInMultithreadingMode_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxBatchLaunch.Enabled = checkBoxRunningInMultithreadingMode.Checked;
@@ -348,16 +213,8 @@ namespace LitPulse.Forms
 
         #region Service_Methods
 
-        private void SetParameters()
-        {
-            /*_startupSettings = SettingsManager.Load();
-
-            comboBoxReadProfiles.SelectedIndex = (int)_startupSettings.ReadProfile;*/
-        }
-
         private void LoadData()
         {
-            _accounts = AccountsManager.Load();
             _links = LinksManager.Load();
         }
 
@@ -390,38 +247,6 @@ namespace LitPulse.Forms
             }
         }
 
-        public void AddAccounts(string[] inputArray)
-        {
-            if (inputArray == null || inputArray.Length == 0)
-                return;
-
-            foreach (string line in inputArray)
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                // Разделяем строку по двоеточию
-                string[] parts = line.Split(':', StringSplitOptions.RemoveEmptyEntries);
-
-                if (parts.Length == 2)
-                {
-                    string login = parts[0].Trim();
-                    string password = parts[1].Trim();
-
-                    _accounts.Add(new Accounts(login, password));
-                }
-                else if (parts.Length > 2)
-                {
-                    // Если в пароле есть двоеточие, обрабатываем особым образом
-                    string login = parts[0].Trim();
-                    string password = string.Join(":", parts.Skip(1)).Trim();
-
-                    _accounts.Add(new Accounts(login, password));
-                }
-                // Игнорируем строки с неверным форматом
-            }
-        }
-
         public void AddLinks(string[] inputArray)
         {
             if (inputArray == null || inputArray.Length == 0)
@@ -434,24 +259,24 @@ namespace LitPulse.Forms
                         !line.StartsWith("https://litmarket.ru/books/")))
                     continue;
 
-                _links.Add(new Links(line));
+                _links.Add(new Data.Links(line));
             }
         }
 
-        public static (string[] litmarketLinks, string[] litnetLinks) SplitLinksByDomain(BindingList<Links> links)
+        public static (List<Core.Entities.Links> litmarketLinks, List<Core.Entities.Links> litnetLinks) SplitLinksByDomain(BindingList<Data.Links> links)
         {
-            List<string> litmarket = new List<string>();
-            List<string> litnet = new List<string>();
+            List< Core.Entities.Links > litmarket = new List<Core.Entities.Links>();
+            List< Core.Entities.Links > litnet = new List<Core.Entities.Links>();
 
-            foreach (Links link in links)
+            foreach (Data.Links link in links)
             {
                 if (link.Link.StartsWith("https://litmarket.ru/"))
-                    litmarket.Add(link.Link);
+                    litmarket.Add(new Core.Entities.Links(link.Link, link.AccountsId));
                 else if (link.Link.StartsWith("https://litnet.com"))
-                    litnet.Add(link.Link);
+                    litnet.Add(new Core.Entities.Links(link.Link, link.AccountsId));
             }
 
-            return (litmarket.ToArray(), litnet.ToArray());
+            return (litmarket, litnet);
         }
 
         public void AppendLog(string message)
@@ -468,14 +293,8 @@ namespace LitPulse.Forms
             }
         }
 
-        public void SaveParameters()
-        {
-            //SettingsManager.Save(_startupSettings);
-        }
-
         public void SaveData()
         {
-            AccountsManager.Save(_accounts);
             LinksManager.Save(_links);
         }
 
@@ -550,6 +369,12 @@ namespace LitPulse.Forms
         #endregion
 
         #region Proxys
+        private void buttonProxySettings_Click(object sender, EventArgs e)
+        {
+            ProxySettingsForm proxySettingsForm = new ProxySettingsForm();
+            proxySettingsForm.Show();
+        }
+
         private void buttonLoadProxysList_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -583,6 +408,8 @@ namespace LitPulse.Forms
                 ProxysService.Clear();
             }
         }
+       
         #endregion
+        
     }
 }

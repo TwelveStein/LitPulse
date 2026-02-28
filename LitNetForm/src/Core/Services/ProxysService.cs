@@ -18,7 +18,7 @@ namespace Core.Services
         {
             // Стандартная директория для хранения данных приложения
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string appFolder = Path.Combine(appDataPath, "ProxysService");
+            string appFolder = Path.Combine(appDataPath, "LitPulse");
 
             if (!Directory.Exists(appFolder))
             {

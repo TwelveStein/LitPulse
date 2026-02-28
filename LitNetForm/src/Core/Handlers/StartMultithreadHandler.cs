@@ -30,8 +30,8 @@ public sealed class StartMultithreadHandler : IDisposable
     public async Task HandleAsync(
         IReadOnlyList<Account> activeAccounts,
         int accountsCount,
-        string[] litNetLinks,
-        string[] litMarketLinks,
+        List<Links> litNetLinks,
+        List<Links> litMarketLinks,
         DelayDto delayDto,
         Action<string> logger,
         CancellationToken cancellationToken)
@@ -48,7 +48,7 @@ public sealed class StartMultithreadHandler : IDisposable
         try
         {
             List<Task> litNetTasks = [];
-            if (litNetLinks.Length > 0)
+            if (litNetLinks.Count > 0)
             {
                 litNetTasks = activeAccounts
                     .Where(account => account.LitNet)
@@ -77,7 +77,7 @@ public sealed class StartMultithreadHandler : IDisposable
             }
 
             List<Task> litMarketTasks = [];
-            if (litMarketLinks.Length > 0)
+            if (litMarketLinks.Count > 0)
             {
                 litMarketTasks = activeAccounts
                     .Where(account => account.LitMarket)

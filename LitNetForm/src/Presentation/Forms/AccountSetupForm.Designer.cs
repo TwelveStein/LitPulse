@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountSetupForm));
             tableLayoutPanel1 = new TableLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
             flowLayoutPanel2 = new FlowLayoutPanel();
@@ -53,7 +54,17 @@
             numericOrderBuyABook = new NumericUpDown();
             comboBoxReadProfile = new ComboBox();
             label2 = new Label();
+            groupBox1 = new GroupBox();
+            buttonClearLinksSelectionForSelectedAccounts = new Button();
+            buttonClearLinksSelectionForAllAccounts = new Button();
+            buttonSelectAllLinksForSelectedAccounts = new Button();
+            buttonSelectAllLinksForAllAccounts = new Button();
             tableLayoutPanel2 = new TableLayoutPanel();
+            tableLayoutPanel7 = new TableLayoutPanel();
+            label3 = new Label();
+            dataGridViewLinks = new DataGridView();
+            dataGridViewTextBoxColumn6 = new DataGridViewCheckBoxColumn();
+            dataGridViewTextBoxColumn5 = new DataGridViewTextBoxColumn();
             tableLayoutPanel3 = new TableLayoutPanel();
             buttonMoveActiveAllAccount = new Button();
             buttonMoveInactiveAllAccount = new Button();
@@ -88,7 +99,10 @@
             ((System.ComponentModel.ISupportInitialize)numericOrderDonateAuthor).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericOrderSubscribeToTheAuthor).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericOrderBuyABook).BeginInit();
+            groupBox1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            tableLayoutPanel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewLinks).BeginInit();
             tableLayoutPanel3.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewInactiveAccounts).BeginInit();
@@ -111,20 +125,21 @@
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 220F));
-            tableLayoutPanel1.Size = new Size(1282, 853);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 250F));
+            tableLayoutPanel1.Size = new Size(1582, 903);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(flowLayoutPanel2);
             flowLayoutPanel1.Controls.Add(tableLayoutPanelSettings);
+            flowLayoutPanel1.Controls.Add(groupBox1);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(3, 640);
+            flowLayoutPanel1.Location = new Point(3, 660);
             flowLayoutPanel1.Margin = new Padding(3, 7, 3, 7);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1276, 206);
+            flowLayoutPanel1.Size = new Size(1576, 236);
             flowLayoutPanel1.TabIndex = 3;
             // 
             // flowLayoutPanel2
@@ -133,11 +148,10 @@
             flowLayoutPanel2.Controls.Add(buttonAddAccount);
             flowLayoutPanel2.Controls.Add(buttonRemoveAccount);
             flowLayoutPanel2.Controls.Add(buttonClearAccounts);
-            flowLayoutPanel2.Dock = DockStyle.Top;
             flowLayoutPanel2.Location = new Point(3, 5);
             flowLayoutPanel2.Margin = new Padding(3, 5, 3, 5);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(1265, 65);
+            flowLayoutPanel2.Size = new Size(503, 65);
             flowLayoutPanel2.TabIndex = 8;
             // 
             // buttonImportAccounts
@@ -196,11 +210,11 @@
             // tableLayoutPanelSettings
             // 
             tableLayoutPanelSettings.ColumnCount = 6;
-            tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 240F));
+            tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 235F));
             tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 57F));
-            tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 240F));
+            tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 235F));
             tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 57F));
-            tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 240F));
+            tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 235F));
             tableLayoutPanelSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 431F));
             tableLayoutPanelSettings.Controls.Add(checkBoxReadBook, 0, 0);
             tableLayoutPanelSettings.Controls.Add(checkBoxBuyABook, 4, 0);
@@ -225,7 +239,7 @@
             tableLayoutPanelSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanelSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanelSettings.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            tableLayoutPanelSettings.Size = new Size(1265, 120);
+            tableLayoutPanelSettings.Size = new Size(1065, 120);
             tableLayoutPanelSettings.TabIndex = 7;
             // 
             // checkBoxReadBook
@@ -243,7 +257,7 @@
             // 
             checkBoxBuyABook.AutoSize = true;
             checkBoxBuyABook.Enabled = false;
-            checkBoxBuyABook.Location = new Point(597, 7);
+            checkBoxBuyABook.Location = new Point(587, 7);
             checkBoxBuyABook.Margin = new Padding(3, 7, 3, 7);
             checkBoxBuyABook.Name = "checkBoxBuyABook";
             checkBoxBuyABook.Size = new Size(200, 24);
@@ -255,7 +269,7 @@
             // 
             checkBoxMakeADonationToTheAuthor.AutoSize = true;
             checkBoxMakeADonationToTheAuthor.Enabled = false;
-            checkBoxMakeADonationToTheAuthor.Location = new Point(300, 87);
+            checkBoxMakeADonationToTheAuthor.Location = new Point(295, 87);
             checkBoxMakeADonationToTheAuthor.Margin = new Padding(3, 7, 3, 7);
             checkBoxMakeADonationToTheAuthor.Name = "checkBoxMakeADonationToTheAuthor";
             checkBoxMakeADonationToTheAuthor.Size = new Size(183, 24);
@@ -267,7 +281,7 @@
             // 
             checkBoxPostComment.AutoSize = true;
             checkBoxPostComment.Enabled = false;
-            checkBoxPostComment.Location = new Point(300, 47);
+            checkBoxPostComment.Location = new Point(295, 47);
             checkBoxPostComment.Margin = new Padding(3, 7, 3, 7);
             checkBoxPostComment.Name = "checkBoxPostComment";
             checkBoxPostComment.Size = new Size(194, 24);
@@ -278,7 +292,7 @@
             // checkBoxSubscribeToTheAuthor
             // 
             checkBoxSubscribeToTheAuthor.AutoSize = true;
-            checkBoxSubscribeToTheAuthor.Location = new Point(300, 7);
+            checkBoxSubscribeToTheAuthor.Location = new Point(295, 7);
             checkBoxSubscribeToTheAuthor.Margin = new Padding(3, 7, 3, 7);
             checkBoxSubscribeToTheAuthor.Name = "checkBoxSubscribeToTheAuthor";
             checkBoxSubscribeToTheAuthor.Size = new Size(194, 24);
@@ -310,7 +324,7 @@
             // 
             // numericOrderReadBook
             // 
-            numericOrderReadBook.Location = new Point(243, 5);
+            numericOrderReadBook.Location = new Point(238, 5);
             numericOrderReadBook.Margin = new Padding(3, 5, 3, 5);
             numericOrderReadBook.Maximum = new decimal(new int[] { 7, 0, 0, 0 });
             numericOrderReadBook.Name = "numericOrderReadBook";
@@ -319,7 +333,7 @@
             // 
             // numericOrderLikeBook
             // 
-            numericOrderLikeBook.Location = new Point(243, 45);
+            numericOrderLikeBook.Location = new Point(238, 45);
             numericOrderLikeBook.Margin = new Padding(3, 5, 3, 5);
             numericOrderLikeBook.Name = "numericOrderLikeBook";
             numericOrderLikeBook.Size = new Size(46, 27);
@@ -327,7 +341,7 @@
             // 
             // numericOrderAddToLibrary
             // 
-            numericOrderAddToLibrary.Location = new Point(243, 85);
+            numericOrderAddToLibrary.Location = new Point(238, 85);
             numericOrderAddToLibrary.Margin = new Padding(3, 5, 3, 5);
             numericOrderAddToLibrary.Name = "numericOrderAddToLibrary";
             numericOrderAddToLibrary.Size = new Size(46, 27);
@@ -335,7 +349,7 @@
             // 
             // numericOrderPostComment
             // 
-            numericOrderPostComment.Location = new Point(540, 45);
+            numericOrderPostComment.Location = new Point(530, 45);
             numericOrderPostComment.Margin = new Padding(3, 5, 3, 5);
             numericOrderPostComment.Name = "numericOrderPostComment";
             numericOrderPostComment.Size = new Size(47, 27);
@@ -343,7 +357,7 @@
             // 
             // numericOrderDonateAuthor
             // 
-            numericOrderDonateAuthor.Location = new Point(540, 85);
+            numericOrderDonateAuthor.Location = new Point(530, 85);
             numericOrderDonateAuthor.Margin = new Padding(3, 5, 3, 5);
             numericOrderDonateAuthor.Name = "numericOrderDonateAuthor";
             numericOrderDonateAuthor.Size = new Size(47, 27);
@@ -351,7 +365,7 @@
             // 
             // numericOrderSubscribeToTheAuthor
             // 
-            numericOrderSubscribeToTheAuthor.Location = new Point(540, 5);
+            numericOrderSubscribeToTheAuthor.Location = new Point(530, 5);
             numericOrderSubscribeToTheAuthor.Margin = new Padding(3, 5, 3, 5);
             numericOrderSubscribeToTheAuthor.Name = "numericOrderSubscribeToTheAuthor";
             numericOrderSubscribeToTheAuthor.Size = new Size(47, 27);
@@ -359,7 +373,7 @@
             // 
             // numericOrderBuyABook
             // 
-            numericOrderBuyABook.Location = new Point(837, 5);
+            numericOrderBuyABook.Location = new Point(822, 5);
             numericOrderBuyABook.Margin = new Padding(3, 5, 3, 5);
             numericOrderBuyABook.Name = "numericOrderBuyABook";
             numericOrderBuyABook.Size = new Size(54, 27);
@@ -370,7 +384,7 @@
             comboBoxReadProfile.Anchor = AnchorStyles.Left;
             comboBoxReadProfile.FormattingEnabled = true;
             comboBoxReadProfile.Items.AddRange(new object[] { "Глубокое чтение", "Быстрое чтение", "Уставшее чтение" });
-            comboBoxReadProfile.Location = new Point(837, 46);
+            comboBoxReadProfile.Location = new Point(822, 46);
             comboBoxReadProfile.Margin = new Padding(3, 4, 3, 4);
             comboBoxReadProfile.Name = "comboBoxReadProfile";
             comboBoxReadProfile.Size = new Size(229, 28);
@@ -379,18 +393,73 @@
             // label2
             // 
             label2.Anchor = AnchorStyles.Left;
-            label2.Location = new Point(597, 42);
+            label2.Location = new Point(587, 42);
             label2.Name = "label2";
             label2.Size = new Size(137, 36);
             label2.TabIndex = 16;
             label2.Text = "Режим чтения:";
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(buttonClearLinksSelectionForSelectedAccounts);
+            groupBox1.Controls.Add(buttonClearLinksSelectionForAllAccounts);
+            groupBox1.Controls.Add(buttonSelectAllLinksForSelectedAccounts);
+            groupBox1.Controls.Add(buttonSelectAllLinksForAllAccounts);
+            groupBox1.Location = new Point(1074, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(493, 197);
+            groupBox1.TabIndex = 9;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Установка настроек чтения ссылок";
+            // 
+            // buttonClearLinksSelectionForSelectedAccounts
+            // 
+            buttonClearLinksSelectionForSelectedAccounts.Location = new Point(15, 156);
+            buttonClearLinksSelectionForSelectedAccounts.Name = "buttonClearLinksSelectionForSelectedAccounts";
+            buttonClearLinksSelectionForSelectedAccounts.Size = new Size(420, 35);
+            buttonClearLinksSelectionForSelectedAccounts.TabIndex = 3;
+            buttonClearLinksSelectionForSelectedAccounts.Text = "Очистить выбор всех книг для выбранного аккаунта";
+            buttonClearLinksSelectionForSelectedAccounts.UseVisualStyleBackColor = true;
+            buttonClearLinksSelectionForSelectedAccounts.Click += buttonClearLinksSelectionForSelectedAccounts_Click;
+            // 
+            // buttonClearLinksSelectionForAllAccounts
+            // 
+            buttonClearLinksSelectionForAllAccounts.Location = new Point(15, 65);
+            buttonClearLinksSelectionForAllAccounts.Name = "buttonClearLinksSelectionForAllAccounts";
+            buttonClearLinksSelectionForAllAccounts.Size = new Size(420, 35);
+            buttonClearLinksSelectionForAllAccounts.TabIndex = 2;
+            buttonClearLinksSelectionForAllAccounts.Text = "Очистить выбор всех книг для всех выбранных аккаунтов";
+            buttonClearLinksSelectionForAllAccounts.UseVisualStyleBackColor = true;
+            buttonClearLinksSelectionForAllAccounts.Click += buttonClearLinksSelectionForAllAccounts_Click;
+            // 
+            // buttonSelectAllLinksForSelectedAccounts
+            // 
+            buttonSelectAllLinksForSelectedAccounts.Location = new Point(15, 115);
+            buttonSelectAllLinksForSelectedAccounts.Name = "buttonSelectAllLinksForSelectedAccounts";
+            buttonSelectAllLinksForSelectedAccounts.Size = new Size(320, 35);
+            buttonSelectAllLinksForSelectedAccounts.TabIndex = 1;
+            buttonSelectAllLinksForSelectedAccounts.Text = "Выбранный аккаунт читает все книги";
+            buttonSelectAllLinksForSelectedAccounts.UseVisualStyleBackColor = true;
+            buttonSelectAllLinksForSelectedAccounts.Click += buttonSelectAllLinksForSelectedAccounts_Click;
+            // 
+            // buttonSelectAllLinksForAllAccounts
+            // 
+            buttonSelectAllLinksForAllAccounts.Location = new Point(15, 24);
+            buttonSelectAllLinksForAllAccounts.Name = "buttonSelectAllLinksForAllAccounts";
+            buttonSelectAllLinksForAllAccounts.Size = new Size(320, 35);
+            buttonSelectAllLinksForAllAccounts.TabIndex = 0;
+            buttonSelectAllLinksForAllAccounts.Text = "Все выбранные аккаунты читают все книги";
+            buttonSelectAllLinksForAllAccounts.UseVisualStyleBackColor = true;
+            buttonSelectAllLinksForAllAccounts.Click += buttonSelectAllLinksForAllAccounts_Click;
+            // 
             // tableLayoutPanel2
             // 
-            tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnCount = 4;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 65F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.Controls.Add(tableLayoutPanel7, 3, 0);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 1, 0);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel5, 0, 0);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel6, 2, 0);
@@ -400,8 +469,74 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(1276, 543);
+            tableLayoutPanel2.Size = new Size(1576, 563);
             tableLayoutPanel2.TabIndex = 0;
+            // 
+            // tableLayoutPanel7
+            // 
+            tableLayoutPanel7.ColumnCount = 1;
+            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 23F));
+            tableLayoutPanel7.Controls.Add(label3, 0, 0);
+            tableLayoutPanel7.Controls.Add(dataGridViewLinks, 0, 1);
+            tableLayoutPanel7.Dock = DockStyle.Fill;
+            tableLayoutPanel7.Location = new Point(1074, 4);
+            tableLayoutPanel7.Margin = new Padding(3, 4, 3, 4);
+            tableLayoutPanel7.Name = "tableLayoutPanel7";
+            tableLayoutPanel7.RowCount = 2;
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel7.Size = new Size(499, 555);
+            tableLayoutPanel7.TabIndex = 6;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Dock = DockStyle.Fill;
+            label3.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold);
+            label3.Location = new Point(3, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(493, 40);
+            label3.TabIndex = 1;
+            label3.Text = "Ссылки";
+            label3.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // dataGridViewLinks
+            // 
+            dataGridViewLinks.AllowUserToAddRows = false;
+            dataGridViewLinks.AllowUserToDeleteRows = false;
+            dataGridViewLinks.AllowUserToOrderColumns = true;
+            dataGridViewLinks.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewLinks.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn6, dataGridViewTextBoxColumn5 });
+            dataGridViewLinks.Dock = DockStyle.Fill;
+            dataGridViewLinks.Location = new Point(3, 47);
+            dataGridViewLinks.Margin = new Padding(3, 7, 3, 7);
+            dataGridViewLinks.MultiSelect = false;
+            dataGridViewLinks.Name = "dataGridViewLinks";
+            dataGridViewLinks.RowHeadersWidth = 51;
+            dataGridViewLinks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewLinks.Size = new Size(493, 501);
+            dataGridViewLinks.TabIndex = 3;
+            dataGridViewLinks.CellContentClick += dataGridViewLinks_CellContentClick;
+            dataGridViewLinks.CellValueChanged += dataGridViewLinks_CellValueChanged;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            dataGridViewTextBoxColumn6.DataPropertyName = "Read";
+            dataGridViewTextBoxColumn6.HeaderText = "Читать";
+            dataGridViewTextBoxColumn6.MinimumWidth = 6;
+            dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            dataGridViewTextBoxColumn6.Resizable = DataGridViewTriState.True;
+            dataGridViewTextBoxColumn6.SortMode = DataGridViewColumnSortMode.Automatic;
+            dataGridViewTextBoxColumn6.Width = 70;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            dataGridViewTextBoxColumn5.DataPropertyName = "Link";
+            dataGridViewTextBoxColumn5.HeaderText = "Ссылка";
+            dataGridViewTextBoxColumn5.MinimumWidth = 100;
+            dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            dataGridViewTextBoxColumn5.Width = 700;
             // 
             // tableLayoutPanel3
             // 
@@ -412,7 +547,7 @@
             tableLayoutPanel3.Controls.Add(buttonMoveInactiveAccount, 0, 3);
             tableLayoutPanel3.Controls.Add(buttonMoveActiveAccount, 0, 5);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(608, 5);
+            tableLayoutPanel3.Location = new Point(506, 5);
             tableLayoutPanel3.Margin = new Padding(3, 5, 3, 5);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 9;
@@ -425,14 +560,14 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 5F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 71F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(59, 533);
+            tableLayoutPanel3.Size = new Size(59, 553);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // buttonMoveActiveAllAccount
             // 
             buttonMoveActiveAllAccount.Dock = DockStyle.Fill;
             buttonMoveActiveAllAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveActiveAllAccount.Location = new Point(3, 355);
+            buttonMoveActiveAllAccount.Location = new Point(3, 365);
             buttonMoveActiveAllAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveActiveAllAccount.Name = "buttonMoveActiveAllAccount";
             buttonMoveActiveAllAccount.Size = new Size(53, 61);
@@ -445,7 +580,7 @@
             // 
             buttonMoveInactiveAllAccount.Dock = DockStyle.Fill;
             buttonMoveInactiveAllAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveInactiveAllAccount.Location = new Point(3, 117);
+            buttonMoveInactiveAllAccount.Location = new Point(3, 127);
             buttonMoveInactiveAllAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveInactiveAllAccount.Name = "buttonMoveInactiveAllAccount";
             buttonMoveInactiveAllAccount.Size = new Size(53, 61);
@@ -458,7 +593,7 @@
             // 
             buttonMoveInactiveAccount.Dock = DockStyle.Fill;
             buttonMoveInactiveAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveInactiveAccount.Location = new Point(3, 193);
+            buttonMoveInactiveAccount.Location = new Point(3, 203);
             buttonMoveInactiveAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveInactiveAccount.Name = "buttonMoveInactiveAccount";
             buttonMoveInactiveAccount.Size = new Size(53, 61);
@@ -471,7 +606,7 @@
             // 
             buttonMoveActiveAccount.Dock = DockStyle.Fill;
             buttonMoveActiveAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveActiveAccount.Location = new Point(3, 279);
+            buttonMoveActiveAccount.Location = new Point(3, 289);
             buttonMoveActiveAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveActiveAccount.Name = "buttonMoveActiveAccount";
             buttonMoveActiveAccount.Size = new Size(53, 61);
@@ -493,7 +628,7 @@
             tableLayoutPanel5.RowCount = 2;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Size = new Size(599, 535);
+            tableLayoutPanel5.Size = new Size(497, 555);
             tableLayoutPanel5.TabIndex = 4;
             // 
             // labelAllAccounts
@@ -503,7 +638,7 @@
             labelAllAccounts.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold);
             labelAllAccounts.Location = new Point(3, 0);
             labelAllAccounts.Name = "labelAllAccounts";
-            labelAllAccounts.Size = new Size(593, 40);
+            labelAllAccounts.Size = new Size(491, 40);
             labelAllAccounts.TabIndex = 0;
             labelAllAccounts.Text = "Все аккаунты";
             labelAllAccounts.TextAlign = ContentAlignment.MiddleLeft;
@@ -520,7 +655,7 @@
             dataGridViewInactiveAccounts.Name = "dataGridViewInactiveAccounts";
             dataGridViewInactiveAccounts.RowHeadersWidth = 51;
             dataGridViewInactiveAccounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewInactiveAccounts.Size = new Size(593, 481);
+            dataGridViewInactiveAccounts.Size = new Size(491, 501);
             dataGridViewInactiveAccounts.TabIndex = 2;
             dataGridViewInactiveAccounts.UserDeletingRow += dataGridViewInactiveAccounts_UserDeletingRow;
             // 
@@ -557,13 +692,13 @@
             tableLayoutPanel6.Controls.Add(label1, 0, 0);
             tableLayoutPanel6.Controls.Add(dataGridViewActiveAccounts, 0, 1);
             tableLayoutPanel6.Dock = DockStyle.Fill;
-            tableLayoutPanel6.Location = new Point(673, 4);
+            tableLayoutPanel6.Location = new Point(571, 4);
             tableLayoutPanel6.Margin = new Padding(3, 4, 3, 4);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Size = new Size(600, 535);
+            tableLayoutPanel6.Size = new Size(497, 555);
             tableLayoutPanel6.TabIndex = 5;
             // 
             // label1
@@ -573,7 +708,7 @@
             label1.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(594, 40);
+            label1.Size = new Size(491, 40);
             label1.TabIndex = 1;
             label1.Text = "Выбранные аккаунты";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -592,7 +727,7 @@
             dataGridViewActiveAccounts.Name = "dataGridViewActiveAccounts";
             dataGridViewActiveAccounts.RowHeadersWidth = 51;
             dataGridViewActiveAccounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewActiveAccounts.Size = new Size(594, 481);
+            dataGridViewActiveAccounts.Size = new Size(491, 501);
             dataGridViewActiveAccounts.TabIndex = 3;
             dataGridViewActiveAccounts.RowEnter += dataGridViewActiveAccounts_RowLeave;
             dataGridViewActiveAccounts.SelectionChanged += dataGridViewActiveAccounts_SelectionChanged;
@@ -638,7 +773,7 @@
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(1276, 70);
+            tableLayoutPanel4.Size = new Size(1576, 70);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // buttonSaveSetupSettings
@@ -693,9 +828,10 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1282, 853);
+            ClientSize = new Size(1582, 903);
             Controls.Add(tableLayoutPanel1);
-            MinimumSize = new Size(1300, 900);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(1600, 950);
             Name = "AccountSetupForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Параметры учетных записей";
@@ -712,7 +848,11 @@
             ((System.ComponentModel.ISupportInitialize)numericOrderDonateAuthor).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericOrderSubscribeToTheAuthor).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericOrderBuyABook).EndInit();
+            groupBox1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel7.ResumeLayout(false);
+            tableLayoutPanel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewLinks).EndInit();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel5.ResumeLayout(false);
             tableLayoutPanel5.PerformLayout();
@@ -767,12 +907,6 @@
         private System.Windows.Forms.CheckBox checkBoxBuyABook;
         private System.Windows.Forms.DataGridView dataGridViewInactiveAccounts;
         private System.Windows.Forms.DataGridView dataGridViewActiveAccounts;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private DataGridViewTextBoxColumn Id;
-        private DataGridViewTextBoxColumn Login;
-        private DataGridViewTextBoxColumn Password;
         private TableLayoutPanel tableLayoutPanel5;
         private Label labelAllAccounts;
         private TableLayoutPanel tableLayoutPanel6;
@@ -781,5 +915,21 @@
         private Button buttonClearAccounts;
         private Button buttonMoveActiveAllAccount;
         private Button buttonMoveInactiveAllAccount;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Login;
+        private DataGridViewTextBoxColumn Password;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private TableLayoutPanel tableLayoutPanel7;
+        private Label label3;
+        private DataGridView dataGridViewLinks;
+        private DataGridViewCheckBoxColumn dataGridViewTextBoxColumn6;
+        private DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private GroupBox groupBox1;
+        private Button buttonClearLinksSelectionForSelectedAccounts;
+        private Button buttonClearLinksSelectionForAllAccounts;
+        private Button buttonSelectAllLinksForSelectedAccounts;
+        private Button buttonSelectAllLinksForAllAccounts;
     }
 }

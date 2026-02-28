@@ -3,6 +3,8 @@ using Core.Entities;
 using Core.Services;
 using Core.Settings;
 using Microsoft.Playwright;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Core.Handlers;
 
@@ -26,14 +28,24 @@ public sealed class StartLitMarketHandler
     public async Task HandleAsync(
         Guid sessionId,
         Account account,
-        string[] litMarketLinks,
+        List<Links> litMarketLinks,
         Action<string> logger,
         CancellationToken cancellationToken)
     {
         try
         {
-            if (litMarketLinks.Length != 0)
+            if (litMarketLinks.Count != 0)
             {
+                List<Links> accountLinks = litMarketLinks
+                    .Where(link => link.AccountsId.Contains(account.Id))
+                    .ToList();
+
+                if (accountLinks.Count == 0)
+                {
+                    logger($"Для выбранного аккаунта {account.Login} не выбрано ссылок LitMarket для чтения");
+                    return;
+                }
+
                 logger("Запуск эмуляции чтения https://litmarket.ru/ ...");
 
                 await _litMarketService.InitializeAsync();
@@ -46,12 +58,12 @@ public sealed class StartLitMarketHandler
                 {
                     logger($"Выполнен вход в аккаунт {account.Login}");
 
-                    foreach (string link in litMarketLinks)
+                    foreach (Links link in accountLinks)
                     {
                         await _litMarketService.ReaderBooks(
                             new UserContextDto(account.Id, account.Login),
                             sessionId,
-                            link,
+                            link.Link,
                             logger,
                             new StartupSettings(account.AccountSettings),
                             cancellationToken);

@@ -27,33 +27,43 @@ public sealed class StartLitNetHandler
     public async Task HandleAsync(
         Guid sessionId,
         Account account,
-        string[] litNetLinks,
+        List<Links> litNetLinks,
         Action<string> logger,
         CancellationToken cancellationToken)
     {
         try
         {
-            if (litNetLinks.Length != 0)
+            if (litNetLinks.Count != 0)
             {
+                List<Links> accountLinks = litNetLinks
+                    .Where(link => link.AccountsId.Contains(account.Id))
+                    .ToList();
+
+                if (accountLinks.Count == 0)
+                {
+                    logger($"Для выбранного аккаунта {account.Login} не выбрано ссылок LitNet для чтения");
+                    return;
+                }
+
                 logger("Запуск эмуляции чтения https://litnet.com ...");
 
                 await _litNetService.InitializeAsync();
 
                 foreach (var link in litNetLinks.Take(3))
                 {
-                    await _litNetService.PrimaryActivity(link, logger, cancellationToken);
+                    await _litNetService.PrimaryActivity(link.Link, logger, cancellationToken);
                 }
 
                 if (await _litNetService.Login(account.Login, account.Password, LIT_NET_LINK_LOGIN))
                 {
                     logger($"Выполнен вход в аккаунт {account.Login}");
 
-                    foreach (var link in litNetLinks)
+                    foreach (var link in accountLinks)
                     {
                         await _litNetService.BaseActivityBotAsync(
                             new UserContextDto(account.Id, account.Login),
                             sessionId,
-                            link, 
+                            link.Link, 
                             logger, 
                             new StartupSettings(account.AccountSettings),
                             cancellationToken);

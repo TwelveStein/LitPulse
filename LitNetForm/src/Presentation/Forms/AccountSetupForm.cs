@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Entities.ValueObjects;
 using Core.Enums;
 using Core.Services;
+using LitPulse.Data;
 using LitPulse.Processors;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -15,6 +16,8 @@ namespace LitPulse.Forms
 
         private readonly BindingList<AccountDto> _activeAccountsDataBindingList = [];
         private readonly BindingList<AccountDto> _inactiveAccountsDataBindingList = [];
+
+        private BindingList<Data.Links> _links = new BindingList<Data.Links>();
 
         private readonly CancellationToken _cancellationToken;
 
@@ -32,7 +35,25 @@ namespace LitPulse.Forms
             dataGridViewInactiveAccounts.DataSource = _inactiveAccountsDataBindingList;
 
             _activeAccountsDataBindingList.ListChanged += ItemIsChanged!;
+
+            LoadData();
         }
+
+        #region Data
+
+        private void LoadData()
+        {
+            _links = LinksManager.Load();
+
+            dataGridViewLinks.DataSource = _links;
+        }
+
+        public void SaveData()
+        {
+            LinksManager.Save(_links);
+        }
+
+        #endregion
 
         private void ItemIsChanged(object sender, ListChangedEventArgs args)
         {
@@ -201,6 +222,8 @@ namespace LitPulse.Forms
                 return;
 
             FillAccountSettingsOnForm(accountDto);
+
+            FillAccountLinksOnForm(accountDto);
         }
 
         private async void buttonImportAccounts_Click(object sender, EventArgs e)
@@ -404,5 +427,172 @@ namespace LitPulse.Forms
             buttonRemoveAccount_Click(sender, e);
         }
 
+        #region Links
+        private void FillAccountLinksOnForm(AccountDto accountDto)
+        {
+            Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
+
+            if (account is not null)
+            {
+                foreach (DataGridViewRow row in dataGridViewLinks.Rows)
+                {
+                    if (!row.IsNewRow && row.DataBoundItem is Data.Links link)
+                    {
+                        if (link.AccountsId != null && link.AccountsId.Contains(account.Id))
+                        {
+                            row.Cells[0].Value = true;
+                        }
+                        else
+                        {
+                            row.Cells[0].Value = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (DataGridViewRow row in dataGridViewLinks.Rows)
+                {
+                    if (!row.IsNewRow)
+                    {
+                        row.Cells[0].Value = false;
+                    }
+                }
+            }
+        }   
+
+        private void dataGridViewLinks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // Если фокус пользователя не на элементе dataGridViewLinks, то не отрабатываем событие
+            if (ActiveControl != null && ActiveControl.Name != dataGridViewLinks.Name)
+            {
+                return;
+            }
+
+            if (dataGridViewLinks.CurrentRow?.DataBoundItem is not Data.Links link ||
+                dataGridViewLinks.RowCount == 0)
+                return;
+
+            if (dataGridViewActiveAccounts.CurrentRow?.DataBoundItem is not AccountDto accountDto ||
+                dataGridViewActiveAccounts.RowCount == 0)
+                return;
+
+            if (link.AccountsId == null)
+            {
+                link.AccountsId = new List<int>();
+            }
+
+            if ((bool)dataGridViewLinks.CurrentCell.Value)
+            {
+                if (!link.AccountsId.Contains(accountDto.Id))
+                {
+                    link.AccountsId.Add(accountDto.Id);
+                }
+            }
+            else
+            {
+                if (link.AccountsId.Contains(accountDto.Id))
+                {
+                    link.AccountsId.Remove(accountDto.Id);
+                }
+            }
+
+            SaveData();
+        }
+
+        private void dataGridViewLinks_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Проверяем, что кликнули по булевой колонке
+            if (e.ColumnIndex == dataGridViewLinks.Columns["dataGridViewTextBoxColumn6"].Index && e.RowIndex >= 0)
+            {
+                // Принудительно фиксируем изменение
+                dataGridViewLinks.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void buttonSelectAllLinksForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    SelectAllLinks(accountDto);
+                }
+            }
+        }
+
+        private void buttonClearLinksSelectionForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    DeselectAllLinks(accountDto);
+                }
+            }
+        }
+
+        private void buttonSelectAllLinksForSelectedAccounts_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewActiveAccounts.CurrentRow?.DataBoundItem is not AccountDto accountDto ||
+                dataGridViewActiveAccounts.RowCount == 0)
+                return;
+
+            SelectAllLinks(accountDto);
+        }
+
+        private void buttonClearLinksSelectionForSelectedAccounts_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewActiveAccounts.CurrentRow?.DataBoundItem is not AccountDto accountDto ||
+                dataGridViewActiveAccounts.RowCount == 0)
+                return;
+
+            DeselectAllLinks(accountDto);
+        }
+
+        private void SelectAllLinks(AccountDto accountDto)
+        {
+            foreach (Data.Links link in _links)
+            {
+                if (link.AccountsId == null)
+                {
+                    link.AccountsId = new List<int>();
+                }
+
+                if (!link.AccountsId.Contains(accountDto.Id))
+                {
+                    link.AccountsId.Add(accountDto.Id);
+                }
+
+                SaveData();
+            }
+
+            LoadData();
+
+            FillAccountLinksOnForm(accountDto);
+        }
+
+        private void DeselectAllLinks(AccountDto accountDto)
+        {
+            foreach (Data.Links link in _links)
+            { 
+                if (link.AccountsId == null)
+                {
+                    link.AccountsId = new List<int>();
+                }
+
+                if (link.AccountsId.Contains(accountDto.Id))
+                {
+                    link.AccountsId.Remove(accountDto.Id);
+                }
+
+                SaveData();
+            }
+
+            LoadData();
+
+            FillAccountLinksOnForm(accountDto);
+        }
+        #endregion        
     }
 }

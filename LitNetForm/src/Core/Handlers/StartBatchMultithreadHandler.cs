@@ -26,8 +26,8 @@ public sealed class StartBatchMultithreadHandler
     public async Task HandleAsync(
         IReadOnlyList<Account> activeAccounts,
         int accountsCount,
-        string[] litNetLinks,
-        string[] litMarketLinks,
+        List<Links> litNetLinks,
+        List<Links> litMarketLinks,
         DelayDto delayDto,
         Action<string> logger,
         CancellationToken cancellationToken)
@@ -63,7 +63,7 @@ public sealed class StartBatchMultithreadHandler
         // Фильтруем и обрабатываем аккаунты LitNet
         foreach (var batch in batches)
         {
-            if (litNetLinks.Length == 0)
+            if (litNetLinks.Count == 0)
                 break;
 
             try
@@ -100,7 +100,7 @@ public sealed class StartBatchMultithreadHandler
         // Фильтруем и обрабатываем аккаунты LitMarket
         foreach (var batch in batches)
         {
-            if (litMarketLinks.Length == 0)
+            if (litMarketLinks.Count == 0)
                 break;
 
             try

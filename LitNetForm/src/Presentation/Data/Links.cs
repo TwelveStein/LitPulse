@@ -7,20 +7,28 @@ namespace LitPulse.Data
     public class Links
     {
         public string? Link { get; set; }
+
+        public List<int> AccountsId { get; set; }
     
         public Links(string link)
         {
             Link = link.Trim();
-        }   
+            AccountsId = new List<int>();
+        }
+
+        // Конструктор без параметров для десериализации
+        public Links()
+        {
+            
+        }
     }
 
     public class LinksManager
     {
         private static readonly string LinksPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "LitNetForm", "Links.json");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LitPulse", "Links.json");
 
-        public static void Save(BindingList<Links> accounts)
+        public static void Save(BindingList<Links> links)
         {
             try
             {
@@ -32,12 +40,12 @@ namespace LitPulse.Data
                 }
 
                 var options = GetJsonOptions();
-                string json = JsonSerializer.Serialize(accounts, options);
+                string json = JsonSerializer.Serialize(links, options);
                 File.WriteAllText(LinksPath, json);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка сохранения аккаунтов: {ex.Message}");
+                MessageBox.Show($"Ошибка сохранения ссылок: {ex.Message}");
             }
         }
 
@@ -70,7 +78,7 @@ namespace LitPulse.Data
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки аккаунтов: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки ссылок: {ex.Message}");
                 return CreateDefaultEmptyLinks();
             }
         }

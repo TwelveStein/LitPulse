@@ -243,7 +243,7 @@
             label_VersionApp.Name = "label_VersionApp";
             label_VersionApp.Size = new Size(645, 20);
             label_VersionApp.TabIndex = 3;
-            label_VersionApp.Text = "1.7";
+            label_VersionApp.Text = "1.7.1";
             label_VersionApp.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label3

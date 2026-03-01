@@ -14,6 +14,13 @@ namespace Core.Services
         private static readonly Random _random = new Random();
         private static readonly object _lock = new object();
 
+        // Класс-обертка для хранения данных
+        private class StorageData
+        {
+            public List<Proxys> Proxies { get; set; }
+            public bool UseProxy { get; set; }
+        }
+
         static ProxysService()
         {
             // Стандартная директория для хранения данных приложения
@@ -34,6 +41,8 @@ namespace Core.Services
         public static IReadOnlyList<Proxys> Proxies => _proxies.AsReadOnly();
 
         public static int Count => _proxies.Count;
+
+        public static bool UseProxy = false;
 
         public static void LoadFromFile(string filePath)
         {
@@ -69,11 +78,17 @@ namespace Core.Services
             }
         }
 
-        private static void SaveToStorage()
+        public static void SaveToStorage()
         {
             try
             {
-                var json = JsonSerializer.Serialize(_proxies);
+                var storageData = new StorageData
+                {
+                    Proxies = _proxies,
+                    UseProxy = UseProxy
+                };
+
+                var json = JsonSerializer.Serialize(storageData, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(_storagePath, json);
             }
             catch (Exception ex)
@@ -90,10 +105,12 @@ namespace Core.Services
                 if (File.Exists(_storagePath))
                 {
                     var json = File.ReadAllText(_storagePath);
-                    var loaded = JsonSerializer.Deserialize<List<Proxys>>(json);
-                    if (loaded != null)
+                    var storageData = JsonSerializer.Deserialize<StorageData>(json);
+
+                    if (storageData != null)
                     {
-                        _proxies = loaded;
+                        _proxies = storageData.Proxies ?? new List<Proxys>();
+                        UseProxy = storageData.UseProxy;
                     }
                 }
             }
@@ -110,6 +127,29 @@ namespace Core.Services
             {
                 _proxies.Clear();
                 SaveToStorage();
+            }
+        }
+
+        /// <summary>
+        /// Удаляет указанный объект прокси из списка и сохраняет изменения
+        /// </summary>
+        /// <param name="proxy">Прокси для удаления</param>
+        /// <returns>true - если прокси был удален, false - если прокси не найден</returns>
+        public static bool RemoveProxy(Proxys proxy)
+        {
+            if (proxy == null)
+                throw new ArgumentNullException(nameof(proxy));
+
+            lock (_lock)
+            {
+                bool removed = _proxies.Remove(proxy);
+
+                if (removed)
+                {
+                    SaveToStorage();
+                }
+
+                return removed;
             }
         }
 

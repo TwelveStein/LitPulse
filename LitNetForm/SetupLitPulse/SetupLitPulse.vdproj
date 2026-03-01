@@ -50,6 +50,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -190,15 +198,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:LitPulse"
-        "ProductCode" = "8:{BCEB4B6B-CD77-46E6-8E12-8577C9657314}"
-        "PackageCode" = "8:{1817721C-C75E-4968-91A9-2078EA588D5B}"
+        "ProductCode" = "8:{201FCB72-BDC2-468E-AE30-33E567B55CD0}"
+        "PackageCode" = "8:{50A4CCB1-3754-462E-91E9-211F5BFACA7F}"
         "UpgradeCode" = "8:{3CA0AE2E-80B8-4722-9F9A-068B366F0C53}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.7.0"
+        "ProductVersion" = "8:1.7.1"
         "Manufacturer" = "8:ByteNex"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

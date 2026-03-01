@@ -32,9 +32,10 @@ namespace Core.Services
         public async Task InitializeAsync()
         {
             var randomProxy = ProxysService.GetRandomProxy();
-            
+            bool useProxy = ProxysService.UseProxy;
+
              _playwright = await Playwright.CreateAsync();
-            if (randomProxy != null)
+            if (useProxy && randomProxy != null)
             {
                 Proxy proxy = new Proxy
                 {

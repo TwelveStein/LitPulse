@@ -72,10 +72,6 @@
             numericUpDownAccountCount = new NumericUpDown();
             groupBoxProxys = new GroupBox();
             buttonProxySettings = new Button();
-            richTextBox1 = new RichTextBox();
-            label1 = new Label();
-            buttonClearProxysList = new Button();
-            buttonLoadProxysList = new Button();
             tableLayoutPanel8 = new TableLayoutPanel();
             richTextBoxLog = new RichTextBox();
             label5 = new Label();
@@ -629,20 +625,15 @@
             // groupBoxProxys
             // 
             groupBoxProxys.Controls.Add(buttonProxySettings);
-            groupBoxProxys.Controls.Add(richTextBox1);
-            groupBoxProxys.Controls.Add(label1);
-            groupBoxProxys.Controls.Add(buttonClearProxysList);
-            groupBoxProxys.Controls.Add(buttonLoadProxysList);
             groupBoxProxys.Location = new Point(439, 3);
             groupBoxProxys.Name = "groupBoxProxys";
-            groupBoxProxys.Size = new Size(324, 231);
+            groupBoxProxys.Size = new Size(324, 66);
             groupBoxProxys.TabIndex = 1;
             groupBoxProxys.TabStop = false;
             groupBoxProxys.Text = "Прокси";
             // 
             // buttonProxySettings
             // 
-            buttonProxySettings.Enabled = false;
             buttonProxySettings.Location = new Point(11, 26);
             buttonProxySettings.Name = "buttonProxySettings";
             buttonProxySettings.Size = new Size(225, 29);
@@ -650,46 +641,6 @@
             buttonProxySettings.Text = "Настройки прокси";
             buttonProxySettings.UseVisualStyleBackColor = true;
             buttonProxySettings.Click += buttonProxySettings_Click;
-            // 
-            // richTextBox1
-            // 
-            richTextBox1.BackColor = SystemColors.Control;
-            richTextBox1.BorderStyle = BorderStyle.None;
-            richTextBox1.ForeColor = Color.Red;
-            richTextBox1.Location = new Point(11, 129);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(307, 90);
-            richTextBox1.TabIndex = 3;
-            richTextBox1.Text = "Важно!!! В открытых ботом окнах браузера НЕ открывать замеры скорости интернета!!! При замере израсходуется весь трафик прокси!!!";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(11, 98);
-            label1.Name = "label1";
-            label1.Size = new Size(286, 20);
-            label1.TabIndex = 2;
-            label1.Text = "Формат прокси: host:port:login:password";
-            // 
-            // buttonClearProxysList
-            // 
-            buttonClearProxysList.Location = new Point(151, 61);
-            buttonClearProxysList.Name = "buttonClearProxysList";
-            buttonClearProxysList.Size = new Size(85, 29);
-            buttonClearProxysList.TabIndex = 1;
-            buttonClearProxysList.Text = "Очистить список прокси";
-            buttonClearProxysList.UseVisualStyleBackColor = true;
-            buttonClearProxysList.Click += buttonClearProxysList_Click;
-            // 
-            // buttonLoadProxysList
-            // 
-            buttonLoadProxysList.Location = new Point(11, 61);
-            buttonLoadProxysList.Name = "buttonLoadProxysList";
-            buttonLoadProxysList.Size = new Size(134, 29);
-            buttonLoadProxysList.TabIndex = 0;
-            buttonLoadProxysList.Text = "Загрузить список прокси";
-            buttonLoadProxysList.UseVisualStyleBackColor = true;
-            buttonLoadProxysList.Click += buttonLoadProxysList_Click;
             // 
             // tableLayoutPanel8
             // 
@@ -833,7 +784,6 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDownFloatingIncrementalDelay).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownAccountCount).EndInit();
             groupBoxProxys.ResumeLayout(false);
-            groupBoxProxys.PerformLayout();
             tableLayoutPanel8.ResumeLayout(false);
             tableLayoutPanel8.PerformLayout();
             tableLayoutPanel12.ResumeLayout(false);
@@ -886,10 +836,6 @@
         private Label label9;
         private NumericUpDown numericUpDownAccountCount;
         private GroupBox groupBoxProxys;
-        private Label label1;
-        private Button buttonClearProxysList;
-        private Button buttonLoadProxysList;
-        private RichTextBox richTextBox1;
         private DataGridViewTextBoxColumn User;
         private DataGridViewTextBoxColumn UserIpAddress;
         private DataGridViewTextBoxColumn Operation;

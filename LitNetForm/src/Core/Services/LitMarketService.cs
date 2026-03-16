@@ -277,16 +277,13 @@ namespace Core.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var likeButton = await _page.QuerySelectorAsync("span.rating-like-label");
+            var likeButton = _page.GetByRole(AriaRole.Button, new() { Name = "Поставить лайк" });
+        
             if (likeButton != null)
             {
                 try
                 {
-                    await _page.GetByRole(AriaRole.Button, new()
-                        {
-                            Name = "Нравится",
-                        })
-                        .ClickAsync();
+                    await likeButton.ClickAsync();
 
                     // Записываем событие в БД
                     ActionDto actionDto = new ActionDto(userContext, sessionId, bookLink, ip);

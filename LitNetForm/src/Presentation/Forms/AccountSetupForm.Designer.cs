@@ -88,6 +88,7 @@
             buttonCancel = new Button();
             openFileDialog = new OpenFileDialog();
             toolTip1 = new ToolTip(components);
+            buttonSetSettingsForAllAccounts = new Button();
             tableLayoutPanel1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
@@ -125,21 +126,22 @@
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 250F));
-            tableLayoutPanel1.Size = new Size(1582, 903);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 262F));
+            tableLayoutPanel1.Size = new Size(1582, 913);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(flowLayoutPanel2);
             flowLayoutPanel1.Controls.Add(tableLayoutPanelSettings);
+            flowLayoutPanel1.Controls.Add(buttonSetSettingsForAllAccounts);
             flowLayoutPanel1.Controls.Add(groupBox1);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(3, 660);
+            flowLayoutPanel1.Location = new Point(3, 658);
             flowLayoutPanel1.Margin = new Padding(3, 7, 3, 7);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(1576, 236);
+            flowLayoutPanel1.Size = new Size(1576, 248);
             flowLayoutPanel1.TabIndex = 3;
             // 
             // flowLayoutPanel2
@@ -469,7 +471,7 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(1576, 563);
+            tableLayoutPanel2.Size = new Size(1576, 561);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel7
@@ -486,7 +488,7 @@
             tableLayoutPanel7.RowCount = 2;
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel7.Size = new Size(499, 555);
+            tableLayoutPanel7.Size = new Size(499, 553);
             tableLayoutPanel7.TabIndex = 6;
             // 
             // label3
@@ -515,7 +517,7 @@
             dataGridViewLinks.Name = "dataGridViewLinks";
             dataGridViewLinks.RowHeadersWidth = 51;
             dataGridViewLinks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewLinks.Size = new Size(493, 501);
+            dataGridViewLinks.Size = new Size(493, 499);
             dataGridViewLinks.TabIndex = 3;
             dataGridViewLinks.CellContentClick += dataGridViewLinks_CellContentClick;
             dataGridViewLinks.CellValueChanged += dataGridViewLinks_CellValueChanged;
@@ -560,14 +562,14 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 5F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 71F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(59, 553);
+            tableLayoutPanel3.Size = new Size(59, 551);
             tableLayoutPanel3.TabIndex = 0;
             // 
             // buttonMoveActiveAllAccount
             // 
             buttonMoveActiveAllAccount.Dock = DockStyle.Fill;
             buttonMoveActiveAllAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveActiveAllAccount.Location = new Point(3, 365);
+            buttonMoveActiveAllAccount.Location = new Point(3, 364);
             buttonMoveActiveAllAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveActiveAllAccount.Name = "buttonMoveActiveAllAccount";
             buttonMoveActiveAllAccount.Size = new Size(53, 61);
@@ -580,7 +582,7 @@
             // 
             buttonMoveInactiveAllAccount.Dock = DockStyle.Fill;
             buttonMoveInactiveAllAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveInactiveAllAccount.Location = new Point(3, 127);
+            buttonMoveInactiveAllAccount.Location = new Point(3, 126);
             buttonMoveInactiveAllAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveInactiveAllAccount.Name = "buttonMoveInactiveAllAccount";
             buttonMoveInactiveAllAccount.Size = new Size(53, 61);
@@ -593,7 +595,7 @@
             // 
             buttonMoveInactiveAccount.Dock = DockStyle.Fill;
             buttonMoveInactiveAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveInactiveAccount.Location = new Point(3, 203);
+            buttonMoveInactiveAccount.Location = new Point(3, 202);
             buttonMoveInactiveAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveInactiveAccount.Name = "buttonMoveInactiveAccount";
             buttonMoveInactiveAccount.Size = new Size(53, 61);
@@ -606,7 +608,7 @@
             // 
             buttonMoveActiveAccount.Dock = DockStyle.Fill;
             buttonMoveActiveAccount.Font = new Font("Segoe UI Black", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            buttonMoveActiveAccount.Location = new Point(3, 289);
+            buttonMoveActiveAccount.Location = new Point(3, 288);
             buttonMoveActiveAccount.Margin = new Padding(3, 5, 3, 5);
             buttonMoveActiveAccount.Name = "buttonMoveActiveAccount";
             buttonMoveActiveAccount.Size = new Size(53, 61);
@@ -628,7 +630,7 @@
             tableLayoutPanel5.RowCount = 2;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Size = new Size(497, 555);
+            tableLayoutPanel5.Size = new Size(497, 553);
             tableLayoutPanel5.TabIndex = 4;
             // 
             // labelAllAccounts
@@ -655,7 +657,7 @@
             dataGridViewInactiveAccounts.Name = "dataGridViewInactiveAccounts";
             dataGridViewInactiveAccounts.RowHeadersWidth = 51;
             dataGridViewInactiveAccounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewInactiveAccounts.Size = new Size(491, 501);
+            dataGridViewInactiveAccounts.Size = new Size(491, 499);
             dataGridViewInactiveAccounts.TabIndex = 2;
             dataGridViewInactiveAccounts.UserDeletingRow += dataGridViewInactiveAccounts_UserDeletingRow;
             // 
@@ -698,7 +700,7 @@
             tableLayoutPanel6.RowCount = 2;
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel6.Size = new Size(497, 555);
+            tableLayoutPanel6.Size = new Size(497, 553);
             tableLayoutPanel6.TabIndex = 5;
             // 
             // label1
@@ -727,7 +729,7 @@
             dataGridViewActiveAccounts.Name = "dataGridViewActiveAccounts";
             dataGridViewActiveAccounts.RowHeadersWidth = 51;
             dataGridViewActiveAccounts.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewActiveAccounts.Size = new Size(491, 501);
+            dataGridViewActiveAccounts.Size = new Size(491, 499);
             dataGridViewActiveAccounts.TabIndex = 3;
             dataGridViewActiveAccounts.RowEnter += dataGridViewActiveAccounts_RowLeave;
             dataGridViewActiveAccounts.SelectionChanged += dataGridViewActiveAccounts_SelectionChanged;
@@ -824,14 +826,24 @@
             buttonCancel.UseVisualStyleBackColor = false;
             buttonCancel.Click += buttonCancel_Click;
             // 
+            // buttonSetSettingsForAllAccounts
+            // 
+            buttonSetSettingsForAllAccounts.Location = new Point(3, 208);
+            buttonSetSettingsForAllAccounts.Name = "buttonSetSettingsForAllAccounts";
+            buttonSetSettingsForAllAccounts.Size = new Size(320, 35);
+            buttonSetSettingsForAllAccounts.TabIndex = 17;
+            buttonSetSettingsForAllAccounts.Text = "Применить настройки для всех аккаунтов";
+            buttonSetSettingsForAllAccounts.UseVisualStyleBackColor = true;
+            buttonSetSettingsForAllAccounts.Click += buttonSetSettingsForAllAccounts_Click;
+            // 
             // AccountSetupForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1582, 903);
+            ClientSize = new Size(1582, 913);
             Controls.Add(tableLayoutPanel1);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(1600, 950);
+            MinimumSize = new Size(1600, 960);
             Name = "AccountSetupForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Параметры учетных записей";
@@ -931,5 +943,6 @@
         private Button buttonClearLinksSelectionForAllAccounts;
         private Button buttonSelectAllLinksForSelectedAccounts;
         private Button buttonSelectAllLinksForAllAccounts;
+        private Button buttonSetSettingsForAllAccounts;
     }
 }

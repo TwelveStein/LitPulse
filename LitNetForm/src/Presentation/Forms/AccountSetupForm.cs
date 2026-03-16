@@ -247,6 +247,60 @@ namespace LitPulse.Forms
             UpdateStatementSettings();
         }
 
+        private void buttonSetSettingsForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
+                    if (account is null)
+                        continue;
+
+                    SettingState readBook = new SettingState(
+                        checkBoxReadBook.Checked,
+                        (int)numericOrderReadBook.Value);
+
+                    SettingState addToLibrary = new SettingState(
+                        checkBoxAddToLibrary.Checked,
+                        (int)numericOrderAddToLibrary.Value);
+
+                    SettingState likeTheBook = new SettingState(
+                        checkBoxLikeTheBook.Checked,
+                        (int)numericOrderLikeBook.Value);
+
+                    SettingState subscribeToTheAuthor = new SettingState(
+                        checkBoxSubscribeToTheAuthor.Checked,
+                        (int)numericOrderSubscribeToTheAuthor.Value);
+
+                    SettingState postComment = new SettingState(
+                        checkBoxPostComment.Checked,
+                        (int)numericOrderPostComment.Value);
+
+                    SettingState makeADonation = new SettingState(checkBoxMakeADonationToTheAuthor.Checked,
+                        (int)numericOrderDonateAuthor.Value);
+
+                    SettingState buyABook = new SettingState(
+                        checkBoxBuyABook.Checked,
+                        (int)numericOrderBuyABook.Value);
+
+                    ReadProfile readProfile = comboBoxReadProfile.Text.ToReadProfile();
+
+                    account.AccountSettings.UpdateSettings(
+                        readBook,
+                        addToLibrary,
+                        likeTheBook,
+                        subscribeToTheAuthor,
+                        postComment,
+                        makeADonation,
+                        buyABook,
+                        readProfile);
+
+                    account.MarkAsModified();
+                }
+            }            
+        }
+
         #endregion
 
         public List<Account> GetActiveAccountsForStart()
@@ -459,7 +513,7 @@ namespace LitPulse.Forms
                     }
                 }
             }
-        }   
+        }
 
         private void dataGridViewLinks_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -575,7 +629,7 @@ namespace LitPulse.Forms
         private void DeselectAllLinks(AccountDto accountDto)
         {
             foreach (Data.Links link in _links)
-            { 
+            {
                 if (link.AccountsId == null)
                 {
                     link.AccountsId = new List<int>();
@@ -593,6 +647,7 @@ namespace LitPulse.Forms
 
             FillAccountLinksOnForm(accountDto);
         }
-        #endregion        
+        #endregion
+    
     }
 }

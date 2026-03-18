@@ -298,7 +298,87 @@ namespace LitPulse.Forms
 
                     account.MarkAsModified();
                 }
-            }            
+            }
+        }
+
+        private async void buttonEnableLitNetForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
+                    if (account is null)
+                        continue;
+
+                    account.LitNet = true;
+
+                    account.MarkAsModified();
+                }
+            }
+
+            // Сохранение изменений в БД
+            await SaveChangesAsync(_cancellationToken);
+        }
+
+        private async void buttonEnableLitMarketForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
+                    if (account is null)
+                        continue;
+
+                    account.LitMarket = true;
+
+                    account.MarkAsModified();
+                }
+            }
+
+            // Сохранение изменений в БД
+            await SaveChangesAsync(_cancellationToken);
+        }
+
+        private async void buttonDisableLitNetForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
+                    if (account is null)
+                        continue;
+
+                    account.LitNet = false;
+
+                    account.MarkAsModified();
+                }
+            }
+
+            // Сохранение изменений в БД
+            await SaveChangesAsync(_cancellationToken);
+        }
+
+        private async void buttonDosableLitMarketForAllAccounts_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewActiveAccounts.Rows)
+            {
+                if (!row.IsNewRow && row.DataBoundItem is AccountDto accountDto)
+                {
+                    Account? account = _accounts.FirstOrDefault(a => a.Id == accountDto.Id);
+                    if (account is null)
+                        continue;
+
+                    account.LitMarket = false;
+
+                    account.MarkAsModified();
+                }
+            }
+
+            // Сохранение изменений в БД
+            await SaveChangesAsync(_cancellationToken);
         }
 
         #endregion
@@ -648,6 +728,6 @@ namespace LitPulse.Forms
             FillAccountLinksOnForm(accountDto);
         }
         #endregion
-    
+  
     }
 }

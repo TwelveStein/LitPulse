@@ -36,7 +36,6 @@ namespace LitPulse.Forms
             InitializeComponent();
             LoadData();
 
-            dataGridViewLinks.DataSource = _links;
             dataGridViewReport.DataSource = _reportDataBindingList;
 
             _reportService.ReportItemAdded += OnReportItemAdded;
@@ -168,6 +167,11 @@ namespace LitPulse.Forms
             SaveData();
         }
 
+        private void dataGridViewLinks_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            SaveData();
+        }
+
         #endregion
 
         #region Logs
@@ -216,6 +220,7 @@ namespace LitPulse.Forms
         private void LoadData()
         {
             _links = LinksManager.Load();
+            dataGridViewLinks.DataSource = _links;
         }
 
         private string[] TxtFileInList()
@@ -265,8 +270,8 @@ namespace LitPulse.Forms
 
         public static (List<Core.Entities.Links> litmarketLinks, List<Core.Entities.Links> litnetLinks) SplitLinksByDomain(BindingList<Data.Links> links)
         {
-            List< Core.Entities.Links > litmarket = new List<Core.Entities.Links>();
-            List< Core.Entities.Links > litnet = new List<Core.Entities.Links>();
+            List<Core.Entities.Links> litmarket = new List<Core.Entities.Links>();
+            List<Core.Entities.Links> litnet = new List<Core.Entities.Links>();
 
             foreach (Data.Links link in links)
             {
@@ -374,8 +379,8 @@ namespace LitPulse.Forms
             ProxySettingsForm proxySettingsForm = new ProxySettingsForm();
             proxySettingsForm.Show();
         }
-       
+
         #endregion
-        
+
     }
 }

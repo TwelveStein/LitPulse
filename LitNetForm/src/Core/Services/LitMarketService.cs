@@ -261,6 +261,8 @@ namespace Core.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            await _page.GotoAsync(bookLink);
+
             var subscribeResult = await IsButtonClickable(".card-share__subscribe-button");
             if (subscribeResult)
             {
@@ -276,6 +278,8 @@ namespace Core.Services
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            await _page.GotoAsync(bookLink);
 
             var likeButton = _page.GetByRole(AriaRole.Button, new() { Name = "Поставить лайк" });
         

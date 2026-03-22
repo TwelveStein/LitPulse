@@ -181,7 +181,9 @@ namespace Core.Services
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
+            await _page.GotoAsync(bookLink);
+
             try
             {
                 var elements = await _page.QuerySelectorAllAsync("text=Добавить в библиотеку");
@@ -207,7 +209,9 @@ namespace Core.Services
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
+            await _page.GotoAsync(bookLink);
+
             try
             {
                 await _page.ClickAsync(
@@ -234,7 +238,9 @@ namespace Core.Services
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
+            await _page.GotoAsync(bookLink);
+
             // Количество прочитанных страниц
             int sheetsCounter = 0;
             

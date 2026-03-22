@@ -32,6 +32,14 @@ namespace LitPulse.Data
         {
             try
             {
+                // Удаление пустых ссылок
+                var itemsToSave = new BindingList<Links>(links.ToList());
+                var itemsToRemove = itemsToSave.Where(l => string.IsNullOrEmpty(l.Link)).ToList();
+                foreach (var item in itemsToRemove)
+                {
+                    itemsToSave.Remove(item);
+                }
+
                 // Создаем директорию, если её нет
                 var directory = Path.GetDirectoryName(LinksPath);
                 if (!Directory.Exists(directory))
@@ -40,7 +48,7 @@ namespace LitPulse.Data
                 }
 
                 var options = GetJsonOptions();
-                string json = JsonSerializer.Serialize(links, options);
+                string json = JsonSerializer.Serialize(itemsToSave, options);
                 File.WriteAllText(LinksPath, json);
             }
             catch (Exception ex)

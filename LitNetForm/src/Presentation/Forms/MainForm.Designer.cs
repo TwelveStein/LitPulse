@@ -378,6 +378,7 @@
             dataGridViewLinks.RowHeadersWidth = 51;
             dataGridViewLinks.Size = new Size(774, 386);
             dataGridViewLinks.TabIndex = 1;
+            dataGridViewLinks.RowLeave += dataGridViewLinks_RowLeave;
             // 
             // Link
             // 
